@@ -1,5 +1,6 @@
 package com.wealthy.machine.quote;
 
+import com.wealthy.machine.StockExchange;
 import lombok.Data;
 
 import java.text.ParseException;
@@ -18,6 +19,10 @@ public class BovespaStockDailyQuote implements StockDailyQuote {
     private final Double maxPrice;
     private final Double avgPrice;
     private final Double volume;
+
+    public StockExchange getStockExchangeName() {
+        return StockExchange.BOVESPA;
+    }
 
     public BovespaStockDailyQuote(String line) {
         line = line.trim();
@@ -45,7 +50,7 @@ public class BovespaStockDailyQuote implements StockDailyQuote {
     }
 
     private Double readDouble(String line, Integer begin, Integer end) {
-        return  Double.parseDouble(line.substring(begin, end).trim())/100;
+        return  Double.parseDouble(readString(line, begin, end))/100;
     }
 
 }

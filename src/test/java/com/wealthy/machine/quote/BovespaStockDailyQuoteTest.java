@@ -22,7 +22,7 @@ public class BovespaStockDailyQuoteTest {
     @Test
     public void createDataInfo() {
         StockDailyQuote bovespaStockDailyQuote = new BovespaStockDailyQuote(getLine());
-        assertEquals(getObjectTested(), bovespaStockDailyQuote.toString());
+        assertEquals("Test if the data is read correctly.", getObjectTested(), bovespaStockDailyQuote.toString());
     }
 
     @Test

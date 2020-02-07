@@ -1,5 +1,7 @@
 package com.wealthy.machine.quote;
 
+import com.wealthy.machine.StockExchange;
+
 import java.util.Date;
 
 public interface StockDailyQuote {
@@ -22,5 +24,6 @@ public interface StockDailyQuote {
 
     Double getVolume();
 
+    StockExchange getStockExchangeName();
 
 }

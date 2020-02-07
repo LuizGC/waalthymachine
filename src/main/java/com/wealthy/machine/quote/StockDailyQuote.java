@@ -1,4 +1,4 @@
-package com.wealthy.machine;
+package com.wealthy.machine.quote;
 
 import java.util.Date;
 

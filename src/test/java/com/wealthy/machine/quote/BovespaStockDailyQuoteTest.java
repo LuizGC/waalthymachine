@@ -1,4 +1,4 @@
-package com.wealthy.machine;
+package com.wealthy.machine.quote;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class BovespaStockDailyQuoteTest {
 
     @Test
     public void createDataInfo() {
-        BovespaStockDailyQuote bovespaStockDailyQuote = new BovespaStockDailyQuote(getLine());
+        StockDailyQuote bovespaStockDailyQuote = new BovespaStockDailyQuote(getLine());
         assertEquals(getObjectTested(), bovespaStockDailyQuote.toString());
     }
 

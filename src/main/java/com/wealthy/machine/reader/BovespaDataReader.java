@@ -12,9 +12,9 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    private String zipFileUrl;
-    byte[] buffer;
-    StringBuilder stringBuilder;
+    private final String zipFileUrl;
+    private final StringBuilder stringBuilder;
+    private byte[] buffer;
 
     public BovespaDataReader(String zipFileUrl) {
         this.zipFileUrl = zipFileUrl;
@@ -34,7 +34,7 @@ public class BovespaDataReader implements DataReader {
                 readEntry(streamBuilder, zipStream);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Problem to process zip file", e);
         }
         return streamBuilder.build();
     }

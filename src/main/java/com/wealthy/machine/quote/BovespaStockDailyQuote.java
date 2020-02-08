@@ -33,7 +33,7 @@ public class BovespaStockDailyQuote implements StockDailyQuote {
         try {
             this.tradingDay = dateFormat.parse(line.substring(2, 10).trim());
         } catch (ParseException e) {
-            throw new RuntimeException("Date is invalid!");
+            throw new RuntimeException("Date is invalid!", e);
         }
         this.stockCode = readString(line, 12, 24);
         this.company = readString(line, 27, 39);

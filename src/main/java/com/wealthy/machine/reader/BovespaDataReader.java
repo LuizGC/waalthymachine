@@ -22,7 +22,7 @@ public class BovespaDataReader implements DataReader {
         this.stringBuilder = new StringBuilder();
     }
 
-    public Stream<BovespaStockDailyQuote> stream() {
+    public Stream<BovespaStockDailyQuote> read() {
         Stream.Builder<BovespaStockDailyQuote> streamBuilder = Stream.builder();
         try {
             URL url = new URL(zipFileUrl);

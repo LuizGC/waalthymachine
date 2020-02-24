@@ -1,12 +1,11 @@
 package com.wealthy.machine.quote;
 
+import junit.framework.TestCase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertEquals;
-
-public class BovespaStockDailyQuoteTest {
+public class BovespaStockDailyQuoteTest extends TestCase {
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();

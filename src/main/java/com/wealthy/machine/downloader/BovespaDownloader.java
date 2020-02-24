@@ -1,4 +1,4 @@
-package com.wealthy.machine.database;
+package com.wealthy.machine.downloader;
 
 import com.wealthy.machine.StockExchange;
 import lombok.Cleanup;
@@ -8,12 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 
-public class BovespaDatabase implements Database {
+public class BovespaDownloader implements Downloader {
 
     private final File folder;
     private final File downloadedHistoric;
 
-    public BovespaDatabase(String destinyPath) {
+    public BovespaDownloader(String destinyPath) {
         this.folder = getDestinyFolder(destinyPath);
         this.downloadedHistoric = new File(folder, "downloadedHistoric");
         createFilesIfNecessary();

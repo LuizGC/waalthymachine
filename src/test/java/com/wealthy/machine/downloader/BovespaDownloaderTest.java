@@ -1,4 +1,4 @@
-package com.wealthy.machine.database;
+package com.wealthy.machine.downloader;
 
 import com.wealthy.machine.StockExchange;
 import org.junit.Test;
@@ -11,13 +11,13 @@ import java.nio.file.Path;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class BovespaDatabaseTest {
+public class BovespaDownloaderTest {
 
     @Test
     public void testDownloadedControl() throws IOException {
         Path destinyFolderPath = Files.createTempDirectory("destinyFolder");
         File bovespaFile = new File(destinyFolderPath.toFile(), StockExchange.BOVESPA.name());
-        BovespaDatabase database = new BovespaDatabase(destinyFolderPath.toString());
+        BovespaDownloader database = new BovespaDownloader(destinyFolderPath.toString());
         assertTrue("Bovespa path exists", bovespaFile.exists());
         assertTrue("Bovespa path is a folder", bovespaFile.isDirectory());
         String urlTested1 = "urlTested1";

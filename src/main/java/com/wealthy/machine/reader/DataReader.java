@@ -5,5 +5,5 @@ import com.wealthy.machine.quote.StockDailyQuote;
 import java.util.stream.Stream;
 
 public interface DataReader {
-    Stream<? extends StockDailyQuote> read();
+    Stream<? extends StockDailyQuote> read(String zipFileUrl);
 }

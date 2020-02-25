@@ -1,13 +1,16 @@
 package com.wealthy.machine.finder;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.time.Year;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class BovespaPathFinderTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class BovespaPathFinderTest {
 
 	@Test
 	public void testUrlsToDownloadsList() {
@@ -18,8 +21,8 @@ public class BovespaPathFinderTest extends TestCase {
 			String url = defaultUrl.replace("{{YYYY}}", String.valueOf(i));
 			correctYearsSet.add(url);
 		}
-		assertEquals("Test if the size of set is correct.", correctYearsSet.size(), setToBeTested.size());
-		assertTrue("Test if the correct set contains all elements tested set.", correctYearsSet.containsAll(setToBeTested));
+		assertEquals(correctYearsSet.size(), setToBeTested.size());
+		assertTrue(correctYearsSet.containsAll(setToBeTested));
 	}
 
 }

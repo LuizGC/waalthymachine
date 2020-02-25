@@ -12,17 +12,7 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    private final String zipFileUrl;
-    private final StringBuilder stringBuilder;
-    private byte[] buffer;
-
-    public BovespaDataReader(String zipFileUrl) {
-        this.zipFileUrl = zipFileUrl;
-        this.buffer = new byte[1];
-        this.stringBuilder = new StringBuilder();
-    }
-
-    public Stream<BovespaStockDailyQuote> read() {
+    public Stream<BovespaStockDailyQuote> read(String zipFileUrl) {
         Stream.Builder<BovespaStockDailyQuote> streamBuilder = Stream.builder();
         try {
             URL url = new URL(zipFileUrl);
@@ -33,6 +23,7 @@ public class BovespaDataReader implements DataReader {
             } else {
                 readEntry(streamBuilder, zipStream);
             }
+            System.out.println("finished: " + zipFileUrl);
         } catch (Exception e) {
             throw new RuntimeException("Problem to process zip file", e);
         }
@@ -40,10 +31,13 @@ public class BovespaDataReader implements DataReader {
     }
 
     private void readEntry(Stream.Builder<BovespaStockDailyQuote> streamBuilder, ZipInputStream zipStream) throws IOException {
+        byte [] buffer = new byte[1];
+        StringBuilder stringBuilder = new StringBuilder();
         while (zipStream.read(buffer) > 0) {
             String character = new String(buffer, StandardCharsets.UTF_8);
             if (isBreakLine(character)){
-                String line = getLine();
+                String line = stringBuilder.toString().trim();
+                stringBuilder.setLength(0);
                 if(line.length() == 245) {
                     streamBuilder.add(new BovespaStockDailyQuote(line));
                 }
@@ -51,12 +45,6 @@ public class BovespaDataReader implements DataReader {
                 stringBuilder.append(character);
             }
         }
-    }
-
-    private String getLine() {
-        String line = stringBuilder.toString().trim();
-        stringBuilder.setLength(0);
-        return line;
     }
 
     private boolean isBreakLine(String character) {

@@ -1,14 +1,12 @@
 package com.wealthy.machine.quote;
 
-import junit.framework.TestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-public class BovespaStockDailyQuoteTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class BovespaStockDailyQuoteTest {
 
     private String getLine(){
         return "012003021202VALE3       010VALE R DOCE ON           R$  000000001050100000000105010000000010250000000001036800000000103210000000010321000000001043800142000000000000069500000000000720641400000000000000009999123100000010000000000000BRVALEACNOR0159";
@@ -21,26 +19,24 @@ public class BovespaStockDailyQuoteTest extends TestCase {
     @Test
     public void createDataInfo() {
         StockDailyQuote bovespaStockDailyQuote = new BovespaStockDailyQuote(getLine());
-        assertEquals("Test if the data is read correctly.", getObjectTested(), bovespaStockDailyQuote.toString());
+        assertEquals(getObjectTested(), bovespaStockDailyQuote.toString());
     }
 
     @Test
     public void errorCreateDataInfoWhenDateIsInvalid() {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Date is invalid!");
-        String line = getLine();
-        line = line.replaceFirst("2003", "200A");
-        new BovespaStockDailyQuote(line);
+        assertThrows(RuntimeException.class, () -> {
+            String line = getLine();
+            line = line.replaceFirst("2003", "200A");
+            new BovespaStockDailyQuote(line);
+        }, "Date is invalid!");
     }
 
     @Test
     public void errorCreateLineWhenLineIsDifferentThan245() {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Line size must be 245!");
-        String line = getLine();
-        line = line.substring(0, line.length() - 3);
-        new BovespaStockDailyQuote(line);
+        assertThrows(RuntimeException.class, () -> {
+            String line = getLine();
+            line = line.substring(0, line.length() - 3);
+            new BovespaStockDailyQuote(line);
+        }, "Line size must be 245!");
     }
-
-
 }

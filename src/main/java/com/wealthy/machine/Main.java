@@ -7,17 +7,14 @@ import com.wealthy.machine.reader.DataReader;
 
 public class Main {
 	public static void main(String[] args) {
-
 		run(new BovespaDataReader(), new BovespaPathFinder());
-
-
 	}
-
 
 	public static void run (DataReader dataReader, PathFinder pathFinder) {
 		pathFinder
 				.getPaths()
-				.stream()
-				.map(dataReader::read);
+				.parallelStream()
+				.map(dataReader::read)
+				.forEach(stream -> stream.forEach(System.out::println));
 	}
 }

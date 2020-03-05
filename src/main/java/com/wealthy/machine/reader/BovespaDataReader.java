@@ -26,8 +26,8 @@ public class BovespaDataReader implements DataReader {
             @Cleanup ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
             @Cleanup FileOutputStream fileOutputStream = new FileOutputStream(tempFile.toFile());
             @Cleanup FileChannel fileChannel = fileOutputStream.getChannel();
-            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             @Cleanup ZipInputStream zipStream =  new ZipInputStream(new FileInputStream(tempFile.toFile()));
+            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             if (zipStream.getNextEntry() == null) {
                 throw new Exception("Zip is not valid!");
             } else {

@@ -46,8 +46,7 @@ public class BovespaDataReader implements DataReader {
         String content = new String(bos.toByteArray(), StandardCharsets.UTF_8);
         return Arrays
                 .stream(content.split("\\r?\\n"))
-                .map(line -> line.trim())
-                .filter(line -> line.length() == 245)
+                .filter(line -> line.trim().length() == 245)
                 .map(BovespaStockDailyQuote::new);
     }
 

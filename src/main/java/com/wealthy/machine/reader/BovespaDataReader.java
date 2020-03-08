@@ -5,6 +5,7 @@ import lombok.Cleanup;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -21,11 +22,10 @@ public class BovespaDataReader implements DataReader {
         try {
             URL url = new URL(zipFileUrl);
             @Cleanup ZipInputStream zipStream =  new ZipInputStream(url.openStream());
-            @Cleanup ReadableByteChannel readableByteChannel = Channels.newChannel(zipStream);
             if (zipStream.getNextEntry() == null) {
                 throw new Exception("Zip is not valid!");
             } else {
-                Stream<BovespaStockDailyQuote> stream = readEntry(readableByteChannel);
+                Stream<BovespaStockDailyQuote> stream = readEntry(zipStream);
 
                 return stream;
             }
@@ -34,7 +34,8 @@ public class BovespaDataReader implements DataReader {
         }
     }
 
-    private Stream<BovespaStockDailyQuote> readEntry(ReadableByteChannel readableByteChannel) throws IOException {
+    private Stream<BovespaStockDailyQuote> readEntry(InputStream zipStream) throws IOException {
+        @Cleanup ReadableByteChannel readableByteChannel = Channels.newChannel(zipStream);
         @Cleanup ByteArrayOutputStream bos = new ByteArrayOutputStream();
         @Cleanup WritableByteChannel out = Channels.newChannel(bos);
         ByteBuffer bb = ByteBuffer.allocate(16384);
@@ -43,9 +44,9 @@ public class BovespaDataReader implements DataReader {
             out.write(bb);
             bb.clear();
         }
-        String content = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+        String[] content = new String(bos.toByteArray(), StandardCharsets.UTF_8).split("\\r?\\n");
         return Arrays
-                .stream(content.split("\\r?\\n"))
+                .stream(content)
                 .filter(line -> line.trim().length() == 245)
                 .map(BovespaStockDailyQuote::new);
     }

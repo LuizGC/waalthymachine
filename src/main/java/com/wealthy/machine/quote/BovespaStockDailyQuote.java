@@ -6,6 +6,7 @@ import lombok.Data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 public class BovespaStockDailyQuote implements StockDailyQuote {
@@ -53,4 +54,18 @@ public class BovespaStockDailyQuote implements StockDailyQuote {
         return  Double.parseDouble(readString(line, begin, end))/100;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BovespaStockDailyQuote that = (BovespaStockDailyQuote) o;
+        return getStockExchangeName().equals(that.getStockExchangeName()) &&
+                getTradingDay().equals(that.getTradingDay()) &&
+                getStockCode().equals(that.getStockCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStockExchangeName(), getTradingDay(), getStockCode());
+    }
 }

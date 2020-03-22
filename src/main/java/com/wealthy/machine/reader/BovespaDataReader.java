@@ -13,32 +13,31 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    public Stream<BovespaStockDailyQuote> read(String zipFileUrl) {
+    public Set<BovespaStockDailyQuote> read(String zipFileUrl) {
         try {
             URL url = new URL(zipFileUrl);
             @Cleanup ZipInputStream zipStream =  new ZipInputStream(url.openStream());
             if (zipStream.getNextEntry() == null) {
                 throw new Exception("Zip is not valid!");
             } else {
-                Stream<BovespaStockDailyQuote> stream = readEntry(zipStream);
-
-                return stream;
+                return readEntry(zipStream);
             }
         } catch (Exception e) {
             throw new RuntimeException("Problem to process zip file", e);
         }
     }
 
-    private Stream<BovespaStockDailyQuote> readEntry(InputStream zipStream) throws IOException {
+    private Set<BovespaStockDailyQuote> readEntry(InputStream zipStream) throws IOException {
         @Cleanup ReadableByteChannel readableByteChannel = Channels.newChannel(zipStream);
         @Cleanup ByteArrayOutputStream bos = new ByteArrayOutputStream();
         @Cleanup WritableByteChannel out = Channels.newChannel(bos);
-        ByteBuffer bb = ByteBuffer.allocate(16384);
+        ByteBuffer bb = ByteBuffer.allocate(4096);
         while ((readableByteChannel.read(bb)) > 0) {
             bb.flip();
             out.write(bb);
@@ -48,7 +47,8 @@ public class BovespaDataReader implements DataReader {
         return Arrays
                 .stream(content)
                 .filter(line -> line.trim().length() == 245)
-                .map(BovespaStockDailyQuote::new);
+                .map(BovespaStockDailyQuote::new)
+                .collect(Collectors.toSet());
     }
 
 }

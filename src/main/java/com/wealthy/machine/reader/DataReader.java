@@ -2,8 +2,8 @@ package com.wealthy.machine.reader;
 
 import com.wealthy.machine.quote.StockDailyQuote;
 
-import java.util.stream.Stream;
+import java.util.Set;
 
 public interface DataReader {
-    Stream<? extends StockDailyQuote> read(String zipFileUrl);
+    Set<? extends StockDailyQuote> read(String zipFileUrl);
 }

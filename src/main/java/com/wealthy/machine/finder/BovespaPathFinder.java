@@ -10,9 +10,9 @@ public class BovespaPathFinder implements PathFinder{
 
 	@Override
 	public Set<String> getPaths() {
-		Set<String> urls = new TreeSet<>();
-		for (int i = 1986; i <= Year.now().getValue(); i++) {
-			String url = DEFAULT_URL.replace("{{YYYY}}", String.valueOf(i));
+		var urls = new TreeSet<String>();
+		for (var i = 1986; i <= Year.now().getValue(); i++) {
+			var url = DEFAULT_URL.replace("{{YYYY}}", String.valueOf(i));
 			urls.add(url);
 		}
 		return urls;

@@ -4,7 +4,7 @@ import com.wealthy.machine.StockExchange;
 
 import java.util.Date;
 
-public interface StockDailyQuote {
+public interface StockDailyShare {
 
     Date getTradingDay();
 

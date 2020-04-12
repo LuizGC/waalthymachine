@@ -1,6 +1,8 @@
 package com.wealthy.machine.sharecode;
 
-public interface ShareCode {
+import java.io.Serializable;
+
+public interface ShareCode extends Serializable {
 
 	String getCode();
 

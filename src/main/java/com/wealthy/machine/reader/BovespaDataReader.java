@@ -1,6 +1,7 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.quote.BovespaStockDailyShare;
+import com.wealthy.machine.quote.BovespaDailyShare;
+import com.wealthy.machine.quote.DailyShare;
 import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.io.ByteArrayOutputStream;
@@ -19,7 +20,7 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    public Set<BovespaStockDailyShare> read(URL zipFileUrl) {
+    public Set<DailyShare> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
             if (zipStream.getNextEntry() == null) {
                 throw new IOException("Zip is not valid!");
@@ -31,11 +32,11 @@ public class BovespaDataReader implements DataReader {
         }
     }
 
-    private Set<BovespaStockDailyShare> readEntry(InputStream zipStream) throws IOException{
+    private Set<DailyShare> readEntry(InputStream zipStream) throws IOException {
         try (
                 var readableByteChannel = Channels.newChannel(zipStream);
                 var bos = new ByteArrayOutputStream();
-                var out = Channels.newChannel(bos);
+                var out = Channels.newChannel(bos)
         ){
             var bb = ByteBuffer.allocate(4096);
             while ((readableByteChannel.read(bb)) > 0) {
@@ -48,14 +49,12 @@ public class BovespaDataReader implements DataReader {
                     .stream(content)
                     .filter(line -> line.trim().length() == 245)
                     .map(this::createQuote)
-                    .filter(BovespaStockDailyShare::isAvaliableInCashMarket)
+                    .filter(BovespaDailyShare::isAvaliableInCashMarket)
                     .collect(Collectors.toUnmodifiableSet());
-        }catch (IOException e) {
-            throw e;
         }
     }
 
-    private BovespaStockDailyShare createQuote(String line) {
+    private BovespaDailyShare createQuote(String line) {
         try {
             line = line.trim();
             var dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -68,7 +67,7 @@ public class BovespaDataReader implements DataReader {
             var maxPrice = readDouble(line, 69, 82);
             var avgPrice = readDouble(line, 97, 108);
             var volume = readDouble(line, 170, 188);
-            return new BovespaStockDailyShare(
+            return new BovespaDailyShare(
                     tradingDay,
                     stockCode,
                     company,

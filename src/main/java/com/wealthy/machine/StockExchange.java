@@ -1,5 +1,7 @@
 package com.wealthy.machine;
 
-public enum StockExchange {
+import java.io.Serializable;
+
+public enum StockExchange implements Serializable {
     BOVESPA
 }

@@ -3,13 +3,14 @@ package com.wealthy.machine.quote;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.ShareCode;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public interface StockDailyShare {
+public interface DailyShare extends Serializable {
 
     Date getTradingDay();
 
-    ShareCode getBovespaShareCode();
+    ShareCode getShareCode();
 
     String getCompany();
 

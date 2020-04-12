@@ -3,9 +3,9 @@ package com.wealthy.machine.finder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Year;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BovespaPathFinder implements PathFinder{
 
@@ -13,15 +13,18 @@ public class BovespaPathFinder implements PathFinder{
 
 	@Override
 	public Set<URL> getPaths() {
+		return IntStream
+				.range(1986, Year.now().getValue())
+				.mapToObj(year -> DEFAULT_URL.replace("{{YYYY}}", String.valueOf(year)))
+				.map(this::createPath)
+				.collect(Collectors.toUnmodifiableSet());
+	}
+
+	private URL createPath(String urlPath) {
 		try {
-			var urls = new HashSet<URL>();
-			for (var i = 1986; i <= Year.now().getValue(); i++) {
-				var url = DEFAULT_URL.replace("{{YYYY}}", String.valueOf(i));
-				urls.add(new URL(url));
-			}
-			return urls;
+			return new URL(urlPath);
 		} catch (MalformedURLException e) {
-			throw new RuntimeException("URL to access the shares data is invelid.", e);
+			throw new RuntimeException(e);
 		}
 	}
 }

@@ -3,9 +3,10 @@ package com.wealthy.machine.finder;
 
 import org.junit.jupiter.api.Test;
 
+import java.net.URL;
 import java.time.Year;
-import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,7 +23,12 @@ public class BovespaPathFinderTest {
 			correctYearsSet.add(url);
 		}
 		assertEquals(correctYearsSet.size(), setToBeTested.size());
-		assertTrue(correctYearsSet.containsAll(setToBeTested));
+		var containsAllCorrectURL = setToBeTested
+				.stream()
+				.map(URL::toString)
+				.collect(Collectors.toUnmodifiableList())
+				.containsAll(correctYearsSet);
+		assertTrue(containsAllCorrectURL);
 	}
 
 }

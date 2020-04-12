@@ -17,8 +17,8 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    public Set<BovespaStockDailyShare> read(String zipFileUrl) {
-        try (ZipInputStream zipStream = new ZipInputStream(new URL(zipFileUrl).openStream())) {
+    public Set<BovespaStockDailyShare> read(URL zipFileUrl) {
+        try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
             if (zipStream.getNextEntry() == null) {
                 throw new IOException("Zip is not valid!");
             } else {

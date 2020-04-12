@@ -1,6 +1,7 @@
 package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
+import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.util.Date;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public final class BovespaStockDailyShare implements StockDailyShare {
     private final static Set<String> CODES_ALLOWED_CASH_MARKET = Set.of("3", "3F", "4", "4F", "11", "11F");
 
     private final Date tradingDay;
-    private final String stockCode;
+    private final BovespaShareCode bovespaShareCode;
     private final String company;
     private final Double openPrice;
     private final Double closePrice;
@@ -22,9 +23,9 @@ public final class BovespaStockDailyShare implements StockDailyShare {
     private final Double avgPrice;
     private final Double volume;
 
-    public BovespaStockDailyShare(Date tradingDay, String stockCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) {
+    public BovespaStockDailyShare(Date tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) {
         this.tradingDay = tradingDay;
-        this.stockCode = stockCode;
+        this.bovespaShareCode = bovespaShareCode;
         this.company = company;
         this.openPrice = openPrice;
         this.closePrice = closePrice;
@@ -44,8 +45,8 @@ public final class BovespaStockDailyShare implements StockDailyShare {
     }
 
     @Override
-    public String getStockCode() {
-        return stockCode;
+    public BovespaShareCode getBovespaShareCode() {
+        return bovespaShareCode;
     }
 
     @Override
@@ -90,16 +91,16 @@ public final class BovespaStockDailyShare implements StockDailyShare {
         BovespaStockDailyShare that = (BovespaStockDailyShare) o;
         return getStockExchangeName().equals(that.getStockExchangeName()) &&
                 getTradingDay().equals(that.getTradingDay()) &&
-                getStockCode().equals(that.getStockCode());
+                getBovespaShareCode().equals(that.getBovespaShareCode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStockExchangeName(), getTradingDay(), getStockCode());
+        return Objects.hash(getStockExchangeName(), getTradingDay(), getBovespaShareCode());
     }
 
     public Boolean isAvaliableInCashMarket() {
-        String type = this.getStockCode().substring(4);
+        String type = this.getBovespaShareCode().getType();
         return CODES_ALLOWED_CASH_MARKET.contains(type);
     }
 }

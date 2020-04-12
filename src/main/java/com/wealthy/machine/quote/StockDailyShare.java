@@ -1,6 +1,7 @@
 package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
+import com.wealthy.machine.sharecode.ShareCode;
 
 import java.util.Date;
 
@@ -8,7 +9,7 @@ public interface StockDailyShare {
 
     Date getTradingDay();
 
-    String getStockCode();
+    ShareCode getBovespaShareCode();
 
     String getCompany();
 

@@ -1,6 +1,7 @@
 package com.wealthy.machine.reader;
 
 import com.wealthy.machine.quote.BovespaStockDailyShare;
+import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,7 +12,8 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
@@ -58,7 +60,7 @@ public class BovespaDataReader implements DataReader {
             line = line.trim();
             var dateFormat = new SimpleDateFormat("yyyyMMdd");
             var tradingDay = dateFormat.parse(line.substring(2, 10).trim());
-            var stockCode = readString(line, 12, 24);
+            var stockCode = new BovespaShareCode(readString(line, 12, 24));
             var company = readString(line, 27, 39);
             var openPrice = readDouble(line, 56, 69);
             var closePrice = readDouble(line, 108, 121);

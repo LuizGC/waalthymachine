@@ -1,6 +1,6 @@
 package com.wealthy.machine.dataaccess;
 
-import com.wealthy.machine.quote.DailyShare;
+import com.wealthy.machine.share.DailyShare;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.util.Set;

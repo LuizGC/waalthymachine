@@ -1,7 +1,7 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.quote.BovespaDailyShare;
-import com.wealthy.machine.quote.DailyShare;
+import com.wealthy.machine.share.BovespaDailyShare;
+import com.wealthy.machine.share.DailyShare;
 import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.io.ByteArrayOutputStream;

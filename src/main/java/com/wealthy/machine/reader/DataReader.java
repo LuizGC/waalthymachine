@@ -1,6 +1,6 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.quote.DailyShare;
+import com.wealthy.machine.share.DailyShare;
 
 import java.net.URL;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.wealthy.machine.quote;
+package com.wealthy.machine.share;
 
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.BovespaShareCode;

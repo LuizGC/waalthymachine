@@ -1,13 +1,12 @@
 package com.wealthy.machine.dataaccess;
 
 import com.wealthy.machine.StockExchange;
-import com.wealthy.machine.quote.DailyShare;
+import com.wealthy.machine.share.DailyShare;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.io.*;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class BovespaStockShareDataAccess implements StockShareDataAccess {

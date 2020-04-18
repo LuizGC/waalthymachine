@@ -58,25 +58,16 @@ public class BovespaDataReader implements DataReader {
         try {
             line = line.trim();
             var dateFormat = new SimpleDateFormat("yyyyMMdd");
-            var tradingDay = dateFormat.parse(line.substring(2, 10).trim());
-            var stockCode = new BovespaShareCode(readString(line, 12, 24));
-            var company = readString(line, 27, 39);
-            var openPrice = readDouble(line, 56, 69);
-            var closePrice = readDouble(line, 108, 121);
-            var minPrice = readDouble(line, 82, 95);
-            var maxPrice = readDouble(line, 69, 82);
-            var avgPrice = readDouble(line, 97, 108);
-            var volume = readDouble(line, 170, 188);
             return new BovespaDailyShare(
-                    tradingDay,
-                    stockCode,
-                    company,
-                    openPrice,
-                    closePrice,
-                    minPrice,
-                    maxPrice,
-                    avgPrice,
-                    volume
+                    dateFormat.parse(line.substring(2, 10).trim()), //tradingDay
+                    new BovespaShareCode(readString(line, 12, 24)), //stockCode
+                    readString(line, 27, 39), //company
+                    readDouble(line, 56, 69), //openPrice
+                    readDouble(line, 108, 121), //closePrice
+                    readDouble(line, 82, 95), //minPrice
+                    readDouble(line, 69, 82), //maxPrice
+                    readDouble(line, 97, 108), //avgPrice
+                    readDouble(line, 170, 188) //volume
             );
         } catch (ParseException e) {
             throw new RuntimeException("The Bovespa quote date is invalid.", e);

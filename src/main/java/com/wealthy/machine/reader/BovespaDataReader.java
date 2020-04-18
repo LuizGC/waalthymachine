@@ -1,7 +1,7 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.share.BovespaDailyShare;
-import com.wealthy.machine.share.DailyShare;
+import com.wealthy.machine.quote.BovespaDailyQuote;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +19,11 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    public Set<DailyShare> read(URL zipFileUrl) {
+    //List with codes of possible cash market stocks: 3 is ON, 4 is PN or 11 UNIT
+    //It must works for fractional share market: 3F, 4F, 11F
+    private final static Set<String> CODES_ALLOWED_CASH_MARKET = Set.of("3", "3F", "4", "4F", "11", "11F");
+
+    public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
             if (zipStream.getNextEntry() == null) {
                 throw new IOException("Zip is not valid!");
@@ -32,7 +35,7 @@ public class BovespaDataReader implements DataReader {
         }
     }
 
-    private Set<DailyShare> readEntry(InputStream zipStream) throws IOException {
+    private Set<DailyQuote> readEntry(InputStream zipStream) throws IOException {
         try (
                 var readableByteChannel = Channels.newChannel(zipStream);
                 var bos = new ByteArrayOutputStream();
@@ -47,20 +50,32 @@ public class BovespaDataReader implements DataReader {
             var content = new String(bos.toByteArray(), StandardCharsets.UTF_8).split("\\r?\\n");
             return Arrays
                     .stream(content)
-                    .filter(line -> line.trim().length() == 245)
+                    .filter(this::isValidQuote)
                     .map(this::createQuote)
-                    .filter(BovespaDailyShare::isAvaliableInCashMarket)
                     .collect(Collectors.toUnmodifiableSet());
         }
     }
 
-    private BovespaDailyShare createQuote(String line) {
+    public Boolean isValidQuote(String line) {
+        line = line.trim();
+        if(line.length() != 245){
+            return false;
+        } else {
+            var type = getShareCode(line).substring(4);
+            return CODES_ALLOWED_CASH_MARKET.contains(type);
+        }
+    }
+
+    private String getShareCode(String line) {
+        return readString(line, 12, 24);
+    }
+
+    private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
-            var dateFormat = new SimpleDateFormat("yyyyMMdd");
-            return new BovespaDailyShare(
-                    dateFormat.parse(line.substring(2, 10).trim()), //tradingDay
-                    new BovespaShareCode(readString(line, 12, 24)), //stockCode
+            return new BovespaDailyQuote(
+                    readString(line, 2, 10), //tradingDay
+                    new BovespaShareCode(getShareCode(line)), //stockCode
                     readString(line, 27, 39), //company
                     readDouble(line, 56, 69), //openPrice
                     readDouble(line, 108, 121), //closePrice

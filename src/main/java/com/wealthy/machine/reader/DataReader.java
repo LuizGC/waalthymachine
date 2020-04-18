@@ -1,10 +1,10 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.share.DailyShare;
+import com.wealthy.machine.quote.DailyQuote;
 
 import java.net.URL;
 import java.util.Set;
 
 public interface DataReader {
-    Set<DailyShare> read(URL zipFileUrl);
+    Set<DailyQuote> read(URL zipFileUrl);
 }

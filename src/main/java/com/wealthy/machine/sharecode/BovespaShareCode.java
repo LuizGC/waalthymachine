@@ -6,15 +6,23 @@ public class BovespaShareCode implements ShareCode{
 
 	private final String code;
 
-	public BovespaShareCode(String code) {
-		if(code.length() < 5 ) {
-			throw new RuntimeException(code + " is invalid share code");
+	private boolean isOnlyLetter(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			if (!Character.isLetter(s.charAt(i))) {
+				return false;
+			}
 		}
-		this.code = code;
+		return true;
 	}
 
-	public String getType() {
-		return this.code.substring(4);
+	public BovespaShareCode(String code) {
+		if(code.length() < 5  || code.length() > 7  ) {
+			throw new RuntimeException(code + " is invalid share code size!");
+		}
+		if(!isOnlyLetter(code.substring(0, 4))){
+			throw new RuntimeException("The four beggining characters must be letters.");
+		}
+		this.code = code;
 	}
 
 	@Override

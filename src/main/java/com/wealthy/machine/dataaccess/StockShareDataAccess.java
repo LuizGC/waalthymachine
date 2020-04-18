@@ -1,14 +1,14 @@
 package com.wealthy.machine.dataaccess;
 
-import com.wealthy.machine.share.DailyShare;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.util.Set;
 
 public interface StockShareDataAccess {
 
-	void save(Set<DailyShare> dailyShareSet);
+	void save(Set<DailyQuote> dailyQuoteSet);
 
-	Set<DailyShare> list(ShareCode shareCode);
+	Set<DailyQuote> list(ShareCode shareCode);
 
 }

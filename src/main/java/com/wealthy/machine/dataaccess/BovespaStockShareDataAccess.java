@@ -1,7 +1,7 @@
 package com.wealthy.machine.dataaccess;
 
 import com.wealthy.machine.StockExchange;
-import com.wealthy.machine.share.DailyShare;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.io.*;
@@ -30,18 +30,18 @@ public class BovespaStockShareDataAccess implements StockShareDataAccess {
 	}
 
 	@Override
-	public synchronized void save(Set<DailyShare> dailyShareSet) {
-		var dailyShareMap = dailyShareSet.stream().collect(Collectors.groupingBy(DailyShare::getShareCode));
-		dailyShareMap.forEach(saveBovespaDaileSaheConsumer(dailyShareSet));
+	public synchronized void save(Set<DailyQuote> dailyQuoteSet) {
+		var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
+		dailyShareMap.forEach(saveBovespaDaileSaheConsumer(dailyQuoteSet));
 	}
 
-	private BiConsumer<ShareCode, List<DailyShare>> saveBovespaDaileSaheConsumer(Set<DailyShare> dailyShareSet) {
+	private BiConsumer<ShareCode, List<DailyQuote>> saveBovespaDaileSaheConsumer(Set<DailyQuote> dailyQuoteSet) {
 		return (shareCode, list) -> {
-			var dailyShareRegisterFile = getDailyShareRegisterFile(shareCode);
-			var setToSave = new HashSet<DailyShare>(dailyShareSet);
+			var dailyQuoteRegisterFile = getDailyQuoteRegisterFile(shareCode);
+			var setToSave = new HashSet<DailyQuote>(dailyQuoteSet);
 			setToSave.addAll(list(shareCode));
 			try (
-					var fos = new FileOutputStream(dailyShareRegisterFile);
+					var fos = new FileOutputStream(dailyQuoteRegisterFile);
 					var oos = new ObjectOutputStream(fos)
 			){
 				oos.writeObject(setToSave);
@@ -51,22 +51,22 @@ public class BovespaStockShareDataAccess implements StockShareDataAccess {
 		};
 	}
 
-	private File getDailyShareRegisterFile(ShareCode shareCode) {
+	private File getDailyQuoteRegisterFile(ShareCode shareCode) {
 		var shareFolder = new File(getBovespaFolder(), shareCode.getCode());
 		shareFolder.mkdirs();
 		return new File(shareFolder, DAILY_SHARE_DATA);
 	}
 
 	@Override
-	public Set<DailyShare> list(ShareCode shareCode) {
-		var dailyShareRegisterFile = getDailyShareRegisterFile(shareCode);
+	public Set<DailyQuote> list(ShareCode shareCode) {
+		var dailyShareRegisterFile = getDailyQuoteRegisterFile(shareCode);
 		try (
 				var fis = new FileInputStream(dailyShareRegisterFile);
 				var ois = new ObjectInputStream(fis)
 		){
-			var treeSet = new TreeSet<>(Comparator.comparing(DailyShare::getTradingDay));
-			treeSet.addAll((Set<DailyShare>) ois.readObject());
-			return Collections.unmodifiableSet(treeSet);
+			var quotesSorted = new TreeSet<>(Comparator.comparing(DailyQuote::getTradingDay));
+			quotesSorted.addAll((Set<DailyQuote>) ois.readObject());
+			return Collections.unmodifiableSet(quotesSorted);
 		} catch (Exception e) {
 			return Collections.emptySet();
 		}

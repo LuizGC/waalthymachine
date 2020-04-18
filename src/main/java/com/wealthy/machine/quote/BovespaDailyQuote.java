@@ -1,18 +1,20 @@
-package com.wealthy.machine.share;
+package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.BovespaShareCode;
 
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 
-public final class BovespaDailyShare implements DailyShare {
+public final class BovespaDailyQuote implements DailyQuote {
 
-    //List with codes of possible cash market stocks: 3 is ON, 4 is PN or 11 UNIT
-    //It must works for fractional share market: 3F, 4F, 11F
-    private final static Set<String> CODES_ALLOWED_CASH_MARKET = Set.of("3", "3F", "4", "4F", "11", "11F");
+    private final static DateFormat date_Format = new SimpleDateFormat("yyyyMMdd");
+
+    // Used for internal purpose inside hash and equals class
+    private final String tradingDayText;
 
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
@@ -24,8 +26,9 @@ public final class BovespaDailyShare implements DailyShare {
     private final Double avgPrice;
     private final Double volume;
 
-    public BovespaDailyShare(Date tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) {
-        this.tradingDay = tradingDay;
+    public BovespaDailyQuote(String tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) throws ParseException {
+        this.tradingDayText = tradingDay.trim();
+        this.tradingDay = date_Format.parse(tradingDayText);
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
         this.openPrice = openPrice;
@@ -85,32 +88,19 @@ public final class BovespaDailyShare implements DailyShare {
         return volume;
     }
 
-    private String getTradingDayFormated() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(tradingDay);
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        return year + "" + month + "" + day;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BovespaDailyShare that = (BovespaDailyShare) o;
+        BovespaDailyQuote that = (BovespaDailyQuote) o;
         return getStockExchangeName().equals(that.getStockExchangeName()) &&
-                getTradingDayFormated().equals(that.getTradingDayFormated()) &&
+                tradingDayText.equals(that.tradingDayText) &&
                 getShareCode().equals(that.getShareCode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStockExchangeName(), getTradingDayFormated(), getShareCode());
+        return Objects.hash(getStockExchangeName(), tradingDayText, getShareCode());
     }
 
-    public Boolean isAvaliableInCashMarket() {
-        String type = this.getShareCode().getType();
-        return CODES_ALLOWED_CASH_MARKET.contains(type);
-    }
 }

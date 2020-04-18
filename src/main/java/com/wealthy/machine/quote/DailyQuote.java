@@ -1,4 +1,4 @@
-package com.wealthy.machine.share;
+package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.ShareCode;
@@ -6,7 +6,7 @@ import com.wealthy.machine.sharecode.ShareCode;
 import java.io.Serializable;
 import java.util.Date;
 
-public interface DailyShare extends Serializable {
+public interface DailyQuote extends Serializable {
 
     Date getTradingDay();
 

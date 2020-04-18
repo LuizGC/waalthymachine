@@ -1,9 +1,9 @@
 package com.wealthy.machine.dataaccess;
 
 import com.wealthy.machine.StockExchange;
-import com.wealthy.machine.share.BovespaDailyShare;
-import com.wealthy.machine.share.DailyShare;
 import com.wealthy.machine.sharecode.BovespaShareCode;
+import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
+import com.wealthy.machine.util.DailyQuoteBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,10 +21,6 @@ public class BovespaStockShareDataAccessTest {
 
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
 
-	private DailyShare createShareDataAccess(Date date, String shareCode){
-		return new BovespaDailyShare(date, new BovespaShareCode(shareCode), "ABCD", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-	}
-
 	@Test
 	public void testSaveFolderConfiguration() throws IOException {
 		var whereToSave = Files.createTempDirectory("test").toFile();
@@ -33,8 +28,8 @@ public class BovespaStockShareDataAccessTest {
 		var bovespaShareDataAccess = new BovespaStockShareDataAccess(whereToSave);
 		Calendar calendar = Calendar.getInstance();
 		var shareListToSave = Set.of(
-				createShareDataAccess(calendar.getTime(), "ABCD3"),
-				createShareDataAccess(calendar.getTime(), "ABCD4")
+				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD3").build(),
+				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD4").build()
 		);
 		bovespaShareDataAccess.save(shareListToSave);
 		shareListToSave.forEach(share -> {
@@ -53,10 +48,10 @@ public class BovespaStockShareDataAccessTest {
 		var whereToList = Files.createTempDirectory("test").toFile();
 		var bovespaFolder = new File(whereToList, StockExchange.BOVESPA.name());
 		Calendar calendar = Calendar.getInstance();
-		var shareCode = "ABCD3";
-		var firstDay = createShareDataAccess(calendar.getTime(), shareCode);
+		var firstDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
+		var shareCode = firstDay.getShareCode().getCode();
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
-		var secondDay = createShareDataAccess(calendar.getTime(), shareCode);
+		var secondDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
 		var shareCodeFolder = new File(bovespaFolder, shareCode);
 		shareCodeFolder.mkdirs();
 		var dailyShareRegisterFile = new File(shareCodeFolder, DAILY_SHARE_DATA);
@@ -77,13 +72,12 @@ public class BovespaStockShareDataAccessTest {
 	public void testIfsaveIsSavingCorrect() throws IOException {
 		var whereToList = Files.createTempDirectory("test").toFile();
 		Calendar calendar = Calendar.getInstance();
-		var shareCodeText = "ABCD3";
-		var firstDay = createShareDataAccess(calendar.getTime(), shareCodeText);
+		var firstDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();;
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
-		var secondDay = createShareDataAccess(calendar.getTime(), shareCodeText);
+		var secondDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();;
 		var bovespaShareDataAccess = new BovespaStockShareDataAccess(whereToList);
 		bovespaShareDataAccess.save(Set.of(firstDay));
-		var shareCode = new BovespaShareCode(shareCodeText);
+		var shareCode = new BovespaShareCode(firstDay.getShareCode().getCode());
 		var arrayDaileShare = bovespaShareDataAccess.list(shareCode).toArray();
 		assertEquals(arrayDaileShare[0], firstDay);
 		bovespaShareDataAccess.save(Set.of(secondDay));

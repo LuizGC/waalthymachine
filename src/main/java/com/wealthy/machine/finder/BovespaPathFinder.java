@@ -15,9 +15,13 @@ public class BovespaPathFinder implements PathFinder{
 	public Set<URL> getPaths() {
 		return IntStream
 				.range(1986, Year.now().getValue())
-				.mapToObj(year -> DEFAULT_URL.replace("{{YYYY}}", String.valueOf(year)))
+				.mapToObj(this::createDownloadURL)
 				.map(this::createPath)
 				.collect(Collectors.toUnmodifiableSet());
+	}
+
+	private String createDownloadURL(int year) {
+		return DEFAULT_URL.replace("{{YYYY}}", String.valueOf(year));
 	}
 
 	private URL createPath(String urlPath) {

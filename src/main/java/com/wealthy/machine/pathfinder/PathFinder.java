@@ -1,4 +1,4 @@
-package com.wealthy.machine.finder;
+package com.wealthy.machine.pathfinder;
 
 import java.net.URL;
 import java.util.Set;

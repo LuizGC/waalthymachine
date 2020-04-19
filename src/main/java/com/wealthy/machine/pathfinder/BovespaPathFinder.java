@@ -1,8 +1,9 @@
-package com.wealthy.machine.finder;
+package com.wealthy.machine.pathfinder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Year;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -14,7 +15,7 @@ public class BovespaPathFinder implements PathFinder{
 	@Override
 	public Set<URL> getPaths() {
 		return IntStream
-				.range(1986, Year.now().getValue())
+				.range(1986, Year.now().getValue() + 1)
 				.mapToObj(this::createDownloadPath)
 				.map(this::createPath)
 				.collect(Collectors.toUnmodifiableSet());

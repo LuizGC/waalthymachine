@@ -20,7 +20,7 @@ public class BovespaShareCode implements ShareCode{
 			throw new RuntimeException(code + " is invalid share code size!");
 		}
 		if(!isOnlyLetter(code.substring(0, 4))){
-			throw new RuntimeException("The four beggining characters must be letters.");
+			throw new RuntimeException(code + "is not valid. The four initials characters must be letters.");
 		}
 		this.code = code;
 	}

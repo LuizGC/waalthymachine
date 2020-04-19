@@ -103,4 +103,11 @@ public final class BovespaDailyQuote implements DailyQuote {
         return Objects.hash(getStockExchangeName(), tradingDayText, getShareCode());
     }
 
+    @Override
+    public int compareTo(Object o) {
+        var dailyQuote = (BovespaDailyQuote)o;
+        return getTradingDay().compareTo(dailyQuote.getTradingDay());
+    }
+
+
 }

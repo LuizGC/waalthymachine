@@ -1,11 +1,11 @@
-package com.wealthy.machine.dataaccess;
+package com.wealthy.machine.dataaccesslayer;
 
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.util.Set;
 
-public interface StockShareDataAccess {
+public interface StockQuoteDataAccessLayer {
 
 	void save(Set<DailyQuote> dailyQuoteSet);
 

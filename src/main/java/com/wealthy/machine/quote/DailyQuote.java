@@ -6,7 +6,7 @@ import com.wealthy.machine.sharecode.ShareCode;
 import java.io.Serializable;
 import java.util.Date;
 
-public interface DailyQuote extends Serializable {
+public interface DailyQuote extends Serializable, Comparable {
 
     Date getTradingDay();
 

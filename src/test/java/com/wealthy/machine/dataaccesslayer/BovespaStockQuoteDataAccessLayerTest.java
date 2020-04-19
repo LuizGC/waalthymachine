@@ -64,9 +64,11 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	@Test
 	public void testTheDataRegistersInCorrectFile() throws IOException {
 		var shareCodeTested = "SANB11";
+		var calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		var setToBeSaved = Set.of(
 				new BovespaDaileQuoteBuilder().shareCode(shareCodeTested).build(),
-				new BovespaDaileQuoteBuilder().build()
+				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build()
 		);
 		var foder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();
 		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(foder);

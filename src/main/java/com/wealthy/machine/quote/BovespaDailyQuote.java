@@ -106,6 +106,12 @@ public final class BovespaDailyQuote implements DailyQuote {
     @Override
     public int compareTo(Object o) {
         var dailyQuote = (BovespaDailyQuote)o;
+        if (!this.getShareCode().equals(dailyQuote.getShareCode())) {
+            throw new RuntimeException("Share code must be the same");
+        }
+        if (!this.getStockExchangeName().equals(dailyQuote.getStockExchangeName())) {
+            throw new RuntimeException("Stock exchange must be the same");
+        }
         return getTradingDay().compareTo(dailyQuote.getTradingDay());
     }
 

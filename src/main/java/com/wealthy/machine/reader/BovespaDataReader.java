@@ -3,6 +3,7 @@ package com.wealthy.machine.reader;
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.BovespaShareCode;
+import com.wealthy.machine.sharecode.BovespaShareCodeValidator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,10 +19,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
-
-    //List with codes of possible cash market stocks: 3 is ON, 4 is PN or 11 UNIT
-    //It must works for fractional share market: 3F, 4F, 11F
-    private final static Set<String> CODES_ALLOWED_CASH_MARKET = Set.of("3", "3F", "4", "4F", "11", "11F");
 
     public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
@@ -50,20 +47,22 @@ public class BovespaDataReader implements DataReader {
             var content = new String(bos.toByteArray(), StandardCharsets.UTF_8).split("\\r?\\n");
             return Arrays
                     .stream(content)
-                    .filter(this::isValidQuote)
+                    .filter(this::isValidLine)
                     .map(this::createQuote)
                     .collect(Collectors.toUnmodifiableSet());
         }
     }
 
-    public Boolean isValidQuote(String line) {
+    private Boolean isValidLine(String line) {
         line = line.trim();
         if(line.length() != 245){
             return false;
-        } else {
-            var type = getShareCode(line).substring(4);
-            return CODES_ALLOWED_CASH_MARKET.contains(type);
         }
+        var shareCode = getShareCode(line);
+        var validador = new BovespaShareCodeValidator(shareCode);
+        return validador.isCorrectSize() &&
+                validador.isFourInitialsOnlyLetter() &&
+                validador.isShareCashMarketAllowed();
     }
 
     private String getShareCode(String line) {

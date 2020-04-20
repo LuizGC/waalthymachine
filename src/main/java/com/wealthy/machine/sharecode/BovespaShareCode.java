@@ -6,21 +6,16 @@ public class BovespaShareCode implements ShareCode{
 
 	private final String code;
 
-	private boolean isOnlyLetter(String s) {
-		for (int i = 0; i < s.length(); i++) {
-			if (!Character.isLetter(s.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
+	public BovespaShareCode(String code) {
+		this(code, new BovespaShareCodeValidator(code));
 	}
 
-	public BovespaShareCode(String code) {
-		if(code.length() < 5  || code.length() > 7  ) {
+	public BovespaShareCode(String code, BovespaShareCodeValidator validator){
+		if(!validator.isCorrectSize()) {
 			throw new RuntimeException(code + " is invalid share code size!");
 		}
-		if(!isOnlyLetter(code.substring(0, 4))){
-			throw new RuntimeException(code + "is not valid. The four initials characters must be letters.");
+		if(!validator.isFourInitialsOnlyLetter()){
+			throw new RuntimeException(code + " is not valid. The four initials characters must be letters.");
 		}
 		this.code = code;
 	}

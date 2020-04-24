@@ -9,7 +9,7 @@ import com.wealthy.machine.reader.DataReader;
 
 import java.io.File;
 
-public class Main {
+public class Worker {
 	public static void main(String[] args) {
 		File file = new File(args[0]);
 		file.mkdirs();
@@ -19,7 +19,7 @@ public class Main {
 	public static void run (DataReader dataReader, PathFinder pathFinder, StockQuoteDataAccessLayer stockShareDataAccessLayer) {
 		pathFinder
 				.getPaths()
-				.stream()
+				.parallelStream()
 				.map(dataReader::read)
 				.forEach(stockShareDataAccessLayer::save);
 	}

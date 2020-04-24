@@ -29,7 +29,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	}
 
 	@Override
-	public void save(Set<DailyQuote> dailyQuoteSet) {
+	public synchronized void save(Set<DailyQuote> dailyQuoteSet) {
 		var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
 		dailyShareMap.forEach(this::saveBovespaDaileSaheConsumer);
 	}

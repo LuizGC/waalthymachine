@@ -13,10 +13,10 @@ public class Worker {
 	public static void main(String[] args) {
 		File file = new File(args[0]);
 		file.mkdirs();
-		run(new BovespaDataReader(), new BovespaPathFinder(), new BovespaStockQuoteDataAccessLayer(file));
+		run(new BovespaPathFinder(), new BovespaDataReader(), new BovespaStockQuoteDataAccessLayer(file));
 	}
 
-	public static void run (DataReader dataReader, PathFinder pathFinder, StockQuoteDataAccessLayer stockShareDataAccessLayer) {
+	public static void run (PathFinder pathFinder, DataReader dataReader, StockQuoteDataAccessLayer stockShareDataAccessLayer) {
 		pathFinder
 				.getPaths()
 				.parallelStream()

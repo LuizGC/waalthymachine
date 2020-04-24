@@ -1,19 +1,16 @@
 package com.wealthy.machine.dataaccesslayer;
 
-import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.BovespaShareCode;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Set;
-import java.util.TreeSet;
 
+import static com.wealthy.machine.StockExchange.BOVESPA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,7 +21,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	@Test
 	public void testFolderConfiguration() throws IOException {
 		var whereToSave = Files.createTempDirectory("testFolderConfiguration").toFile();
-		var bovespaFolder = new File(whereToSave, StockExchange.BOVESPA.name());
+		var bovespaFolder = BOVESPA.getFolder(whereToSave);
 		var bovespaShareDataAccess = new BovespaStockQuoteDataAccessLayer(whereToSave);
 		Calendar calendar = Calendar.getInstance();
 		var shareListToSave = Set.of(

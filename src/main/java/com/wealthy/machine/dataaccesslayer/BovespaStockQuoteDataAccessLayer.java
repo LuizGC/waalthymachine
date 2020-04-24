@@ -1,18 +1,22 @@
 package com.wealthy.machine.dataaccesslayer;
 
-import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import static com.wealthy.machine.StockExchange.BOVESPA;
 
 public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLayer {
 
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
 
-	private final File whereIsData;
+	private final File bovespaFolder;
 
 	public BovespaStockQuoteDataAccessLayer(File whereIsData) {
 		if (!whereIsData.isDirectory()) {
@@ -21,11 +25,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		if (!whereIsData.canWrite() || !whereIsData.canRead()) {
 			throw new RuntimeException("The folder to persist the data must be readable and writable.");
 		}
-		this.whereIsData = whereIsData;
-	}
-
-	private File getBovespaFolder(){
-		return new File(whereIsData, StockExchange.BOVESPA.name());
+		this.bovespaFolder = BOVESPA.getFolder(whereIsData);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	}
 
 	private File getDailyQuoteRegisterFile(ShareCode shareCode) {
-		var shareFolder = new File(getBovespaFolder(), shareCode.getCode());
+		var shareFolder = new File(this.bovespaFolder, shareCode.getCode());
 		shareFolder.mkdirs();
 		return new File(shareFolder, DAILY_SHARE_DATA);
 	}

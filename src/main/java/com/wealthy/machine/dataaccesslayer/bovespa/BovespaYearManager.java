@@ -24,7 +24,7 @@ public class BovespaYearManager {
 		this.yearDownloadedFile = new File(bovespaFolder, YEAR_DOWNLOADED_FILE);
 	}
 
-	public Collection<URL> listUnsavedPaths() {
+	public Set<URL> listUnsavedPaths() {
 		var savedYearSet = listSavedYears();
 		return IntStream
 				.range(INITIAL_YEAR, Year.now().getValue() + 1)

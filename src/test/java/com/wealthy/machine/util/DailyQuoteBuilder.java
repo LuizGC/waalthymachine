@@ -77,7 +77,7 @@ public abstract class DailyQuoteBuilder {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(tradingDay);
 		int year = cal.get(Calendar.YEAR);
-		String month = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.MONTH) + 1);
+		String month = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.MONTH) + 1); // because in calendar january is 0!
 		String day = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.DAY_OF_MONTH));
 		return year + month +  day;
 	}

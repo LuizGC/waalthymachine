@@ -23,9 +23,6 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		if (!whereIsData.isDirectory()) {
 			throw new RuntimeException("The folder to persist the data must be a folder.");
 		}
-		if (!whereIsData.canWrite() || !whereIsData.canRead()) {
-			throw new RuntimeException("The folder to persist the data must be readable and writable.");
-		}
 		this.bovespaFolder = BOVESPA.getFolder(whereIsData);
 		this.yearManager = new BovespaYearManager(this.bovespaFolder);
 	}
@@ -72,7 +69,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	}
 
 	@Override
-	public Collection<URL> listUnsavedPaths() {
+	public Set<URL> listUnsavedPaths() {
 		return this.yearManager.listUnsavedPaths();
 	}
 

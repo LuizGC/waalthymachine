@@ -3,6 +3,7 @@ package com.wealthy.machine.dataaccesslayer;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaYearManager;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
 import com.wealthy.machine.util.DailyQuoteBuilder;
+import com.wealthy.machine.util.UrlToYearConverter;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -36,35 +37,18 @@ public class BovespaYearManagerTest {
 			createBovespaDailyQuote(0).build()
 		);
 		yearManager.updateDownloadedYear(quotesSave);
-		var savedYears = getYearList(yearManager);
+		var savedYears = new UrlToYearConverter(yearManager.listUnsavedPaths()).listYears();
 		assertTrue(savedYears.contains(CURRENT_YEAR), "Should contain the current year!");
 		assertFalse(savedYears.contains(CURRENT_YEAR-1), "Should not contain the previous year!");
 		assertFalse(savedYears.contains(CURRENT_YEAR-2), "Should not contain two year ago!");
 	}
 
-	private Set<Integer> getYearList(BovespaYearManager yearManager) {
-		return yearManager
-					.listUnsavedPaths()
-					.stream()
-					.map(URL::toString)
-					.map(urlText -> urlText.replaceAll("\\D", ""))
-					.map(Integer::valueOf)
-					.collect(Collectors.toUnmodifiableSet());
-	}
+
 
 	private BovespaYearManager getBovespaYearManager() throws IOException {
 		var mainFolder = Files.createTempDirectory("testUpdatingYearListSuccessfully").toFile();
 		var bovespaFolder = BOVESPA.getFolder(mainFolder);
 		return new BovespaYearManager(bovespaFolder);
-	}
-
-	@Test
-	public void testYearListReturningCorrectYear() throws IOException {
-		var yearManager = getBovespaYearManager();
-		Set<Integer> savedYears = getYearList(yearManager);
-		assertTrue(savedYears.contains(CURRENT_YEAR), "Should contain the current year!");
-		assertTrue(savedYears.contains(CURRENT_YEAR-1), "Should contain the previous year!");
-		assertTrue(savedYears.contains(CURRENT_YEAR-2), "Should contain two year ago!");
 	}
 
 }

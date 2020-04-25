@@ -19,6 +19,18 @@ public class BovespaDataReaderTest {
     }
 
     @Test
+    public void stressTheRulesValidQuotes() throws MalformedURLException {
+        var zipFilePath = new URL("http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A1986.ZIP");
+        var reader = new BovespaDataReader();
+        var list = reader.read(zipFilePath);
+        assertEquals(0, list.size());
+        zipFilePath = new URL("http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A2000.ZIP");
+        reader = new BovespaDataReader();
+        list = reader.read(zipFilePath);
+        assertEquals(53273, list.size());
+    }
+
+    @Test
     public void invalidUrl() {
         var reader = new BovespaDataReader();
         assertThrows(RuntimeException.class, () -> reader.read(new URL("https://www.uol.com.br/")));

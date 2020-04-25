@@ -1,13 +1,12 @@
-package com.wealthy.machine.dataaccesslayer;
+package com.wealthy.machine.dataaccesslayer.bovespa;
 
+import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.net.URL;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
@@ -17,6 +16,8 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
 
 	private final File bovespaFolder;
+	private final BovespaYearManager yearManager;
+
 
 	public BovespaStockQuoteDataAccessLayer(File whereIsData) {
 		if (!whereIsData.isDirectory()) {
@@ -26,15 +27,17 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			throw new RuntimeException("The folder to persist the data must be readable and writable.");
 		}
 		this.bovespaFolder = BOVESPA.getFolder(whereIsData);
+		this.yearManager = new BovespaYearManager(this.bovespaFolder);
 	}
 
 	@Override
 	public synchronized void save(Set<DailyQuote> dailyQuoteSet) {
 		var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
-		dailyShareMap.forEach(this::saveBovespaDaileSaheConsumer);
+		dailyShareMap.forEach(this::saveBovespaDailyQuote);
+		this.yearManager.updateDownloadedYear(dailyQuoteSet);
 	}
 
-	private void saveBovespaDaileSaheConsumer(ShareCode shareCode, List<DailyQuote> dailyQuoteSet) {
+	private void saveBovespaDailyQuote(ShareCode shareCode, List<DailyQuote> dailyQuoteSet) {
 		var dailyQuoteRegisterFile = getDailyQuoteRegisterFile(shareCode);
 		var setToSave = new TreeSet<>(list(shareCode));
 		setToSave.addAll(dailyQuoteSet);
@@ -67,4 +70,10 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			return Collections.emptySet();
 		}
 	}
+
+	@Override
+	public Collection<URL> listUnsavedPaths() {
+		return this.yearManager.listUnsavedPaths();
+	}
+
 }

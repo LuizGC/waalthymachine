@@ -2,8 +2,8 @@ package com.wealthy.machine.reader;
 
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
-import com.wealthy.machine.sharecode.BovespaShareCode;
-import com.wealthy.machine.sharecode.BovespaShareCodeValidator;
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCodeValidator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

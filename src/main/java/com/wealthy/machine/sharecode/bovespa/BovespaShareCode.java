@@ -1,8 +1,10 @@
-package com.wealthy.machine.sharecode;
+package com.wealthy.machine.sharecode.bovespa;
+
+import com.wealthy.machine.sharecode.ShareCode;
 
 import java.util.Objects;
 
-public class BovespaShareCode implements ShareCode{
+public class BovespaShareCode implements ShareCode {
 
 	private final String code;
 

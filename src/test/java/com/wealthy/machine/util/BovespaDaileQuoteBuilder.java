@@ -2,7 +2,7 @@ package com.wealthy.machine.util;
 
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
-import com.wealthy.machine.sharecode.BovespaShareCode;
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
 import java.text.ParseException;
 

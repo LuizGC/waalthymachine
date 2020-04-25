@@ -1,7 +1,7 @@
 package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
-import com.wealthy.machine.sharecode.BovespaShareCode;
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
 import java.text.DateFormat;
 import java.text.ParseException;

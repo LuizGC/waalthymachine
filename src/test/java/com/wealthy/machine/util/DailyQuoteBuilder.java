@@ -1,7 +1,6 @@
 package com.wealthy.machine.util;
 
 import com.wealthy.machine.quote.DailyQuote;
-import com.wealthy.machine.sharecode.BovespaShareCode;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -78,9 +77,13 @@ public abstract class DailyQuoteBuilder {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(tradingDay);
 		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		return year + "" + month + "" + day;
+		String month = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.MONTH) + 1);
+		String day = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.DAY_OF_MONTH));
+		return year + month +  day;
+	}
+
+	private String formatAddingLeftZeroWhenNecessary(Integer number) {
+		return String.format("%02d" , number);
 	}
 
 	public abstract DailyQuote build();

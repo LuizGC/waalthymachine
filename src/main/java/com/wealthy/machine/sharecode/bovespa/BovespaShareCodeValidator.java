@@ -1,4 +1,4 @@
-package com.wealthy.machine.sharecode;
+package com.wealthy.machine.sharecode.bovespa;
 
 import java.util.Set;
 

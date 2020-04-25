@@ -1,6 +1,7 @@
 package com.wealthy.machine.dataaccesslayer;
 
-import com.wealthy.machine.sharecode.BovespaShareCode;
+import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
 import org.junit.jupiter.api.Test;
 

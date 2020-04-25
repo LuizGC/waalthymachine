@@ -1,5 +1,6 @@
 package com.wealthy.machine.sharecode;
 
+import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

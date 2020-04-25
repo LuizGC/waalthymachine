@@ -29,11 +29,6 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	}
 
 	@Test
-	public void testGithubActions(){
-		assertTrue(false);
-	}
-
-	@Test
 	public void testFolderConfiguration() throws IOException {
 		var whereToSave = Files.createTempDirectory("testFolderConfiguration").toFile();
 		var bovespaFolder = BOVESPA.getFolder(whereToSave);

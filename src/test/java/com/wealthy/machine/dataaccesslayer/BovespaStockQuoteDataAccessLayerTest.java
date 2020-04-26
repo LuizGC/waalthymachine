@@ -74,9 +74,10 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	public void testTheDataRegistersInCorrectFile() throws IOException {
 		DailyQuote testedQuote = createBovespaDailyQuote();
 		var calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		calendar.add(Calendar.DAY_OF_MONTH, -2);
 		var setToBeSaved = Set.of(
 				testedQuote,
+				new BovespaDaileQuoteBuilder().tradingDay(new Date()).build(),
 				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build()
 		);
 		var folder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();

@@ -20,7 +20,7 @@ public class BovespaShareCodeValidator {
 
 	public Boolean isFourInitialsOnlyLetter() {
 		for (int i = 0; i < 4; i++) {
-			if (!Character.isLetter(code.charAt(i))) {
+			if (!Character.isLetterOrDigit(code.charAt(i))) {
 				return false;
 			}
 		}

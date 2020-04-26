@@ -15,14 +15,14 @@ public class BovespaShareCodeTest {
 	}
 
 	@Test
-	public void testShareCodeHasOnlyLettersBetweenFourCharacters() {
+	public void testShareCodeHasOnlyAlphaNumericBetweenFourCharacters() {
 		var shareCodeTest = "SANB11";
 		var shareCode = new BovespaShareCode(shareCodeTest);
 		assertEquals(shareCode.getCode(), shareCodeTest);
 		shareCodeTest = "SANB11F";
 		shareCode = new BovespaShareCode(shareCodeTest);
 		assertEquals(shareCode.getCode(), shareCodeTest);
-		assertThrows(RuntimeException.class, () -> new BovespaShareCode("S1NB11F"));
+		assertThrows(RuntimeException.class, () -> new BovespaShareCode("SAN 11F"));
 	}
 
 }

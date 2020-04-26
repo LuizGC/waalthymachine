@@ -1,5 +1,6 @@
 package com.wealthy.machine.reader;
 
+import com.wealthy.machine.BigDecimalFactory;
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
@@ -9,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -101,8 +101,7 @@ public class BovespaDataReader implements DataReader {
 
     private BigDecimal readDouble(String line, Integer begin, Integer end) {
         var text = line.substring(begin, end).trim();
-        var number = new BigDecimal(new BigInteger(text), 2);
-        return number;
+        return new BigDecimalFactory(text).newInstance();
     }
 
 }

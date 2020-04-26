@@ -82,7 +82,26 @@ public class BovespaStockQuoteDataAccessLayerTest {
 
 	@Test
 	public void testTheDataRegistersInCorrectFile() throws IOException {
-		DailyQuote testedQuote = createBovespaDailyQuote();
+		var tradingDay = new Date();
+		var shareCode = "SANB11";
+		var company = "Santander";
+		var openPrice = 11.30;
+		var closePrice = 12.30;
+		var minPrice = 10.20;
+		var maxPrice = 13.00;
+		var avgPrice = 12.00;
+		var volume = 10000000.00;
+		DailyQuote testedQuote = new BovespaDaileQuoteBuilder()
+				.tradingDay(tradingDay)
+				.shareCode(shareCode)
+				.company(company)
+				.openPrice(openPrice)
+				.closePrice(closePrice)
+				.minPrice(minPrice)
+				.maxPrice(maxPrice)
+				.avgPrice(avgPrice)
+				.volume(volume)
+				.build();;
 		var calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, -2);
 		var setToBeSaved = Set.of(
@@ -99,29 +118,17 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		assertFalse(setWithData.isEmpty());
 		assertEquals(1, setWithData.size());
 		assertTrue(setWithData.contains(testedQuote));
-		var savedQuote = setWithData.stream().findFirst().orElseThrow();
-		assertEquals(savedQuote.getShareCode(), testedQuote.getShareCode());
-		assertEquals(savedQuote.getCompany(), testedQuote.getCompany());
-		assertEquals(savedQuote.getOpenPrice(), testedQuote.getOpenPrice());
-		assertEquals(savedQuote.getClosePrice(), testedQuote.getClosePrice());
-		assertEquals(savedQuote.getMinPrice(), testedQuote.getMinPrice());
-		assertEquals(savedQuote.getMaxPrice(), testedQuote.getMaxPrice());
-		assertEquals(savedQuote.getAvgPrice(), testedQuote.getAvgPrice());
-		assertEquals(savedQuote.getVolume(), testedQuote.getVolume());
-	}
 
-	private DailyQuote createBovespaDailyQuote() {
-		return new BovespaDaileQuoteBuilder()
-					.tradingDay(new Date())
-					.shareCode("SANB11")
-					.company("Santander")
-					.openPrice(11.30)
-					.closePrice(12.30)
-					.minPrice(10.20)
-					.maxPrice(13.00)
-					.avgPrice(12.00)
-					.volume(10000000)
-					.build();
+		var savedQuote = setWithData.stream().findFirst().orElseThrow();
+		assertEquals(tradingDay, savedQuote.getTradingDay());
+		assertEquals(new BovespaShareCode(shareCode), savedQuote.getShareCode());
+		assertEquals(company, savedQuote.getCompany());
+		assertEquals(openPrice, savedQuote.getOpenPrice().doubleValue());
+		assertEquals(closePrice, savedQuote.getClosePrice().doubleValue());
+		assertEquals(minPrice, savedQuote.getMinPrice().doubleValue());
+		assertEquals(maxPrice, savedQuote.getMaxPrice().doubleValue());
+		assertEquals(avgPrice, savedQuote.getAvgPrice().doubleValue());
+		assertEquals(volume, savedQuote.getVolume().doubleValue());
 	}
 
 	@Test

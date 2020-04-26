@@ -1,5 +1,6 @@
 package com.wealthy.machine.util;
 
+import com.wealthy.machine.BigDecimalFactory;
 import com.wealthy.machine.quote.DailyQuote;
 
 import java.math.BigDecimal;
@@ -20,12 +21,12 @@ public abstract class DailyQuoteBuilder {
 		this.tradingDay = new Date();
 		this.shareCode = "ABCD3";
 		this.company = "ABC";
-		this.openPrice = BigDecimal.ZERO;
-		this.closePrice = BigDecimal.ZERO;
-		this.minPrice = BigDecimal.ZERO;
-		this.maxPrice = BigDecimal.ZERO;
-		this.avgPrice = BigDecimal.ZERO;
-		this.volume = BigDecimal.ZERO;
+		this.openPrice = new BigDecimalFactory().newInstance();
+		this.closePrice = new BigDecimalFactory().newInstance();
+		this.minPrice = new BigDecimalFactory().newInstance();
+		this.maxPrice = new BigDecimalFactory().newInstance();
+		this.avgPrice = new BigDecimalFactory().newInstance();
+		this.volume = new BigDecimalFactory().newInstance();
 	}
 
 	public DailyQuoteBuilder tradingDay(Date tradingDay) {
@@ -44,32 +45,32 @@ public abstract class DailyQuoteBuilder {
 	}
 
 	public DailyQuoteBuilder openPrice(Double openPrice) {
-		this.openPrice = BigDecimal.valueOf(openPrice);
+		this.openPrice = new BigDecimalFactory(openPrice).newInstance();
 		return this;
 	}
 
 	public DailyQuoteBuilder closePrice(Double closePrice) {
-		this.closePrice =  BigDecimal.valueOf(closePrice);
+		this.closePrice =  new BigDecimalFactory(closePrice).newInstance();
 		return this;
 	}
 
 	public DailyQuoteBuilder minPrice(Double minPrice) {
-		this.minPrice =  BigDecimal.valueOf(minPrice);
+		this.minPrice =  new BigDecimalFactory(minPrice).newInstance();
 		return this;
 	}
 
 	public DailyQuoteBuilder maxPrice(Double maxPrice) {
-		this.maxPrice =  BigDecimal.valueOf(maxPrice);
+		this.maxPrice =  new BigDecimalFactory(maxPrice).newInstance();
 		return this;
 	}
 
 	public DailyQuoteBuilder avgPrice(Double avgPrice) {
-		this.avgPrice =  BigDecimal.valueOf(avgPrice);
+		this.avgPrice =  new BigDecimalFactory(avgPrice).newInstance();
 		return this;
 	}
 
-	public DailyQuoteBuilder volume(Integer volume) {
-		this.volume = BigDecimal.valueOf(volume);
+	public DailyQuoteBuilder volume(Double volume) {
+		this.volume = new BigDecimalFactory(volume).newInstance();
 		return this;
 	}
 

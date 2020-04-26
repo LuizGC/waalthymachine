@@ -38,12 +38,12 @@ public final class BovespaDailyQuote implements DailyQuote {
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
-        this.openPrice = openPrice.setScale(2);
-        this.closePrice = closePrice.setScale(2);
-        this.minPrice = minPrice.setScale(2);
-        this.maxPrice = maxPrice.setScale(2);
-        this.avgPrice = avgPrice.setScale(2);
-        this.volume = volume.setScale(2);
+        this.openPrice = openPrice;
+        this.closePrice = closePrice;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+        this.avgPrice = avgPrice;
+        this.volume = volume;
     }
 
     @JsonIgnore

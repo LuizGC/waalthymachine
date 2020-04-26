@@ -1,19 +1,22 @@
 package com.wealthy.machine.dataaccesslayer.bovespa;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.quote.DailyQuote;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Year;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BovespaYearManager {
+
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final TypeReference<LinkedHashSet<Integer>> TYPE_REFERENCE = new TypeReference<>() {};
 
 	private static final Integer INITIAL_YEAR = 2000;
 
@@ -38,12 +41,10 @@ public class BovespaYearManager {
 	}
 
 	private Set<Integer> listSavedYears() {
-		try (
-				var fis = new FileInputStream(this.yearDownloadedFile);
-				var ois = new ObjectInputStream(fis)
-		){
-			return Collections.unmodifiableSet((Set<Integer>) ois.readObject());
-		} catch (Exception e) {
+		try {
+			var quotesSet = MAPPER.readValue(this.yearDownloadedFile, TYPE_REFERENCE);
+			return Collections.unmodifiableSet(quotesSet);
+		} catch (IOException e) {
 			return Collections.emptySet();
 		}
 	}
@@ -52,11 +53,8 @@ public class BovespaYearManager {
 		var newYearsSet = getNewYearsSet(dailyQuoteSet);
 		var yearSet = new TreeSet<>(listSavedYears());
 		yearSet.addAll(newYearsSet);
-		try (
-				var fos = new FileOutputStream(yearDownloadedFile);
-				var oos = new ObjectOutputStream(fos)
-		){
-			oos.writeObject(yearSet);
+		try{
+			MAPPER.writeValue(this.yearDownloadedFile, yearSet);
 		} catch (Exception e) {
 			throw new RuntimeException("There is an issue during saving the daily share set", e);
 		}

@@ -5,6 +5,8 @@ import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCodeValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +16,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(BovespaDataReader.class);
 
     public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
@@ -77,9 +80,9 @@ public class BovespaDataReader implements DataReader {
     private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
-            var tradindDate = readDate(line, 2, 10);
+            LOGGER.info("line={}", line);
             return new BovespaDailyQuote(
-                    tradindDate, //tradingDay
+                    readDate(line, 2, 10), //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode
                     readString(line, 27, 39), //company
                     readDouble(line, 56, 69), //openPrice

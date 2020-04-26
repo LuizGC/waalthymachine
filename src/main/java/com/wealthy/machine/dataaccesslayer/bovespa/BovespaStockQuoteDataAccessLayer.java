@@ -6,10 +6,14 @@ import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,7 +21,10 @@ import static com.wealthy.machine.StockExchange.BOVESPA;
 
 public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLayer {
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(BovespaStockQuoteDataAccessLayer.class);
+
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
+
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final TypeReference<LinkedHashSet<BovespaDailyQuote>> TYPE_REFERENCE = new TypeReference<>() {};
@@ -46,6 +53,11 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		setToSave.addAll(dailyQuoteSet);
 		try {
 			MAPPER.writeValue(dailyQuoteRegisterFile, setToSave);
+			var format = new SimpleDateFormat("dd/MM/yyyy");
+			dailyQuoteSet
+					.forEach(quote -> {
+						LOGGER.info("shareCode={} date={}", quote.getShareCode(), format.format(quote.getTradingDay()));
+					});
 		} catch (Exception e) {
 			throw new RuntimeException("There is an issue during saving the daily share set", e);
 		}

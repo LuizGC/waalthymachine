@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -15,24 +17,24 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
     private final String company;
-    private final Double openPrice;
-    private final Double closePrice;
-    private final Double minPrice;
-    private final Double maxPrice;
-    private final Double avgPrice;
-    private final Integer volume;
+    private final BigDecimal openPrice;
+    private final BigDecimal closePrice;
+    private final BigDecimal minPrice;
+    private final BigDecimal maxPrice;
+    private final BigDecimal avgPrice;
+    private final BigInteger volume;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public BovespaDailyQuote(
             @JsonProperty("tradingDay") Date tradingDay,
             @JsonProperty("shareCode") BovespaShareCode bovespaShareCode,
             @JsonProperty("company") String company,
-            @JsonProperty("openPrice") Double openPrice,
-            @JsonProperty("closePrice") Double closePrice,
-            @JsonProperty("minPrice") Double minPrice,
-            @JsonProperty("maxPrice") Double maxPrice,
-            @JsonProperty("avgPrice") Double avgPrice,
-            @JsonProperty("volume") Integer volume
+            @JsonProperty("openPrice") BigDecimal openPrice,
+            @JsonProperty("closePrice") BigDecimal closePrice,
+            @JsonProperty("minPrice") BigDecimal minPrice,
+            @JsonProperty("maxPrice") BigDecimal maxPrice,
+            @JsonProperty("avgPrice") BigDecimal avgPrice,
+            @JsonProperty("volume") BigInteger volume
     ) {
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
@@ -66,32 +68,32 @@ public final class BovespaDailyQuote implements DailyQuote {
     }
 
     @Override
-    public Double getOpenPrice() {
+    public BigDecimal getOpenPrice() {
         return openPrice;
     }
 
     @Override
-    public Double getClosePrice() {
+    public BigDecimal getClosePrice() {
         return closePrice;
     }
 
     @Override
-    public Double getMinPrice() {
+    public BigDecimal getMinPrice() {
         return minPrice;
     }
 
     @Override
-    public Double getMaxPrice() {
+    public BigDecimal getMaxPrice() {
         return maxPrice;
     }
 
     @Override
-    public Double getAvgPrice() {
+    public BigDecimal getAvgPrice() {
         return avgPrice;
     }
 
     @Override
-    public Integer getVolume() {
+    public BigInteger getVolume() {
         return volume;
     }
 

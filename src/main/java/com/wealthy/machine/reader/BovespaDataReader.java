@@ -8,6 +8,8 @@ import com.wealthy.machine.sharecode.bovespa.BovespaShareCodeValidator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -93,16 +95,16 @@ public class BovespaDataReader implements DataReader {
         }
     }
 
-    private Integer readInteger(String line, int begin, int end) {
-        return Integer.parseInt(readString(line, begin, end));
+    private BigInteger readInteger(String line, int begin, int end) {
+        return new BigInteger(readString(line, begin, end));
     }
 
     private String readString(String line, Integer begin, Integer end) {
         return line.substring(begin, end).trim();
     }
 
-    private Double readDouble(String line, Integer begin, Integer end) {
-        return  Double.parseDouble(readString(line, begin, end))/100;
+    private BigDecimal readDouble(String line, Integer begin, Integer end) {
+        return new BigDecimal(readInteger(line, begin, end)).divide(new BigDecimal("100"));
     }
 
 }

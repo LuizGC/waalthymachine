@@ -18,13 +18,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
-
-    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
@@ -78,7 +77,7 @@ public class BovespaDataReader implements DataReader {
     private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
-            var tradindDate = DATE_FORMAT.parse(readString(line, 2, 10));
+            var tradindDate = readDate(line, 2, 10);
             return new BovespaDailyQuote(
                     tradindDate, //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode
@@ -93,6 +92,10 @@ public class BovespaDataReader implements DataReader {
         } catch (ParseException e) {
             throw new RuntimeException("The Bovespa quote date is invalid.", e);
         }
+    }
+
+    private Date readDate(String line, Integer begin, Integer end) throws ParseException {
+        return new SimpleDateFormat("yyyyMMdd").parse(readString(line, begin, end));
     }
 
     private String readString(String line, Integer begin, Integer end) {

@@ -10,10 +10,7 @@ import com.wealthy.machine.sharecode.ShareCode;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
@@ -23,11 +20,10 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
-	private static final TypeReference<Set<BovespaDailyQuote>> TYPE_REFERENCE = new TypeReference<>() {};
+	private static final TypeReference<LinkedHashSet<BovespaDailyQuote>> TYPE_REFERENCE = new TypeReference<>() {};
 
 	private final File bovespaFolder;
 	private final BovespaYearManager yearManager;
-
 
 	public BovespaStockQuoteDataAccessLayer(File whereIsData) {
 		if (!whereIsData.isDirectory()) {

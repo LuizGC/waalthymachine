@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Year;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,22 +50,34 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		});
 	}
 
+	private DailyQuote[] createSetDiferentsDateQuotes(Integer amount){
+		DailyQuote[] array = new DailyQuote[amount];
+		Calendar calendar = Calendar.getInstance();
+		for(int i = 0; i < amount; i++) {
+			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + i);
+			var quote = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
+			array[i] = quote;
+		}
+		return array;
+	}
+
 	@Test
 	public void testDataRegisteringRightOrder() throws IOException {
 		var whereToSave = Files.createTempDirectory("testDataRegisteringRightOrder").toFile();
-		Calendar calendar = Calendar.getInstance();
-		var firstDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
-		var secondDay = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
 		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(whereToSave);
-		bovespaShareDataAccessLayer.save(Set.of(firstDay));
-		var shareCode = new BovespaShareCode(firstDay.getShareCode().getCode());
-		var arrayDaileShare = bovespaShareDataAccessLayer.list(shareCode).toArray();
-		assertEquals(arrayDaileShare[0], firstDay);
-		bovespaShareDataAccessLayer.save(Set.of(secondDay));
-		arrayDaileShare = bovespaShareDataAccessLayer.list(shareCode).toArray();
-		assertEquals(arrayDaileShare[0], firstDay);
-		assertEquals(arrayDaileShare[1], secondDay);
+		for(var i = 1; i < 20; i++){
+			var arrayQuotes = createSetDiferentsDateQuotes(i);
+			var hashQuotes = new HashSet<>(Arrays.asList(arrayQuotes));
+			bovespaShareDataAccessLayer.save(hashQuotes);
+			var setSaved = bovespaShareDataAccessLayer.list(new BovespaShareCode("ABCD3"));
+			assertFalse(setSaved.isEmpty());
+			assertTrue(setSaved.containsAll(hashQuotes));
+			assertEquals(arrayQuotes.length, setSaved.size());
+			var arraySaved = setSaved.toArray();
+			for(var j = 0; j < arraySaved.length; j++) {
+				assertEquals(arrayQuotes[j], arraySaved[j]);
+			}
+		}
 	}
 
 	@Test

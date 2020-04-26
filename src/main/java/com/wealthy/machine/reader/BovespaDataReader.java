@@ -88,15 +88,11 @@ public class BovespaDataReader implements DataReader {
                     readDouble(line, 82, 95), //minPrice
                     readDouble(line, 69, 82), //maxPrice
                     readDouble(line, 97, 108), //avgPrice
-                    readInteger(line, 170, 188) //volume
+                    readDouble(line, 170, 188) //volume
             );
         } catch (ParseException e) {
             throw new RuntimeException("The Bovespa quote date is invalid.", e);
         }
-    }
-
-    private BigInteger readInteger(String line, int begin, int end) {
-        return new BigInteger(readString(line, begin, end));
     }
 
     private String readString(String line, Integer begin, Integer end) {
@@ -104,7 +100,9 @@ public class BovespaDataReader implements DataReader {
     }
 
     private BigDecimal readDouble(String line, Integer begin, Integer end) {
-        return new BigDecimal(readInteger(line, begin, end)).divide(new BigDecimal("100"));
+        var text = line.substring(begin, end).trim();
+        var number = new BigDecimal(new BigInteger(text), 2);
+        return number;
     }
 
 }

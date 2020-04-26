@@ -5,7 +5,6 @@ import com.wealthy.machine.sharecode.ShareCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 public interface DailyQuote extends Serializable, Comparable {
@@ -26,7 +25,7 @@ public interface DailyQuote extends Serializable, Comparable {
 
     BigDecimal getAvgPrice();
 
-    BigInteger getVolume();
+    BigDecimal getVolume();
 
     StockExchange getStockExchangeName();
 

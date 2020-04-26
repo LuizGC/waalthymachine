@@ -3,7 +3,6 @@ package com.wealthy.machine.util;
 import com.wealthy.machine.quote.DailyQuote;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 public abstract class DailyQuoteBuilder {
@@ -15,7 +14,7 @@ public abstract class DailyQuoteBuilder {
 	protected BigDecimal minPrice;
 	protected BigDecimal maxPrice;
 	protected BigDecimal avgPrice;
-	protected BigInteger volume;
+	protected BigDecimal volume;
 
 	public DailyQuoteBuilder() {
 		this.tradingDay = new Date();
@@ -26,7 +25,7 @@ public abstract class DailyQuoteBuilder {
 		this.minPrice = BigDecimal.ZERO;
 		this.maxPrice = BigDecimal.ZERO;
 		this.avgPrice = BigDecimal.ZERO;
-		this.volume = BigInteger.ZERO;
+		this.volume = BigDecimal.ZERO;
 	}
 
 	public DailyQuoteBuilder tradingDay(Date tradingDay) {
@@ -70,7 +69,7 @@ public abstract class DailyQuoteBuilder {
 	}
 
 	public DailyQuoteBuilder volume(Integer volume) {
-		this.volume = BigInteger.valueOf(volume);
+		this.volume = BigDecimal.valueOf(volume);
 		return this;
 	}
 

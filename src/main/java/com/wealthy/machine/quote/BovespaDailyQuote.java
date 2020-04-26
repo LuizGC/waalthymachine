@@ -7,7 +7,6 @@ import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final BigDecimal minPrice;
     private final BigDecimal maxPrice;
     private final BigDecimal avgPrice;
-    private final BigInteger volume;
+    private final BigDecimal volume;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public BovespaDailyQuote(
@@ -34,17 +33,17 @@ public final class BovespaDailyQuote implements DailyQuote {
             @JsonProperty("minPrice") BigDecimal minPrice,
             @JsonProperty("maxPrice") BigDecimal maxPrice,
             @JsonProperty("avgPrice") BigDecimal avgPrice,
-            @JsonProperty("volume") BigInteger volume
+            @JsonProperty("volume") BigDecimal volume
     ) {
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
-        this.openPrice = openPrice;
-        this.closePrice = closePrice;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
-        this.avgPrice = avgPrice;
-        this.volume = volume;
+        this.openPrice = openPrice.setScale(2);
+        this.closePrice = closePrice.setScale(2);
+        this.minPrice = minPrice.setScale(2);
+        this.maxPrice = maxPrice.setScale(2);
+        this.avgPrice = avgPrice.setScale(2);
+        this.volume = volume.setScale(2);
     }
 
     @JsonIgnore
@@ -93,7 +92,7 @@ public final class BovespaDailyQuote implements DailyQuote {
     }
 
     @Override
-    public BigInteger getVolume() {
+    public BigDecimal getVolume() {
         return volume;
     }
 

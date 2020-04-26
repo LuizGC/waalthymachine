@@ -2,7 +2,6 @@ package com.wealthy.machine.util;
 
 import com.wealthy.machine.quote.DailyQuote;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public abstract class DailyQuoteBuilder {
@@ -71,19 +70,6 @@ public abstract class DailyQuoteBuilder {
 	public DailyQuoteBuilder volume(Double volume) {
 		this.volume = volume;
 		return this;
-	}
-
-	protected String getTextTradingDay() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(tradingDay);
-		int year = cal.get(Calendar.YEAR);
-		String month = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.MONTH) + 1); // because in calendar january is 0!
-		String day = formatAddingLeftZeroWhenNecessary(cal.get(Calendar.DAY_OF_MONTH));
-		return year + month +  day;
-	}
-
-	private String formatAddingLeftZeroWhenNecessary(Integer number) {
-		return String.format("%02d" , number);
 	}
 
 	public abstract DailyQuote build();

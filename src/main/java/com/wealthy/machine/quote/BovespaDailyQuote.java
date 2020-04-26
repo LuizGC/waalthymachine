@@ -3,18 +3,13 @@ package com.wealthy.machine.quote;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
 public final class BovespaDailyQuote implements DailyQuote {
 
-    private final static DateFormat date_Format = new SimpleDateFormat("yyyyMMdd");
 
-    // Used for internal purpose inside hash and equals class
-    private final String tradingDayText;
 
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
@@ -26,9 +21,8 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final Double avgPrice;
     private final Double volume;
 
-    public BovespaDailyQuote(String tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) throws ParseException {
-        this.tradingDayText = tradingDay.trim();
-        this.tradingDay = date_Format.parse(tradingDayText);
+    public BovespaDailyQuote(Date tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) {
+        this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
         this.openPrice = openPrice;
@@ -88,19 +82,28 @@ public final class BovespaDailyQuote implements DailyQuote {
         return volume;
     }
 
+    private String getTextTradingDay() {
+        var cal = Calendar.getInstance();
+        cal.setTime(getTradingDay());
+        var year = cal.get(Calendar.YEAR);
+        var month = cal.get(Calendar.MONTH);
+        var day = cal.get(Calendar.DAY_OF_MONTH);
+        return "" + year + month +  day;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BovespaDailyQuote that = (BovespaDailyQuote) o;
         return getStockExchangeName().equals(that.getStockExchangeName()) &&
-                tradingDayText.equals(that.tradingDayText) &&
+                getTextTradingDay().equals(that.getTextTradingDay()) &&
                 getShareCode().equals(that.getShareCode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStockExchangeName(), tradingDayText, getShareCode());
+        return Objects.hash(getStockExchangeName(), getTextTradingDay(), getShareCode());
     }
 
     @Override

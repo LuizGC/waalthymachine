@@ -12,13 +12,17 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
+
+    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
@@ -72,8 +76,9 @@ public class BovespaDataReader implements DataReader {
     private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
+            var tradindDate = DATE_FORMAT.parse(readString(line, 2, 10));
             return new BovespaDailyQuote(
-                    readString(line, 2, 10), //tradingDay
+                    tradindDate, //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode
                     readString(line, 27, 39), //company
                     readDouble(line, 56, 69), //openPrice

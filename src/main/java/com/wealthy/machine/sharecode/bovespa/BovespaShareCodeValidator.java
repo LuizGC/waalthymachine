@@ -15,7 +15,7 @@ public class BovespaShareCodeValidator {
 	}
 
 	public Boolean isCorrectSize() {
-		return code.length() >= 5  && code.length() <= 7;
+		return code.length() >= 5 && code.length() <= 7;
 	}
 
 	public Boolean isFourInitialsOnlyLetter() {

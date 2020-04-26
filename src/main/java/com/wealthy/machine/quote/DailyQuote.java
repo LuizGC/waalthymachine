@@ -24,7 +24,7 @@ public interface DailyQuote extends Serializable, Comparable {
 
     Double getAvgPrice();
 
-    Double getVolume();
+    Integer getVolume();
 
     StockExchange getStockExchangeName();
 

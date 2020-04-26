@@ -43,7 +43,6 @@ public class BovespaDailyQuoteTest {
 		calendar.set(Calendar.YEAR, 1989);
 		secondQuote = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
 		assertNotEquals(firstQuote.hashCode(), secondQuote.hashCode(), "Those quotes hash code are different!");
-
 	}
 
 }

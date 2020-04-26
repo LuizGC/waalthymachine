@@ -1,12 +1,19 @@
 package com.wealthy.machine.dataaccesslayer.bovespa;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
+import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
@@ -14,6 +21,9 @@ import static com.wealthy.machine.StockExchange.BOVESPA;
 public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLayer {
 
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+
+	private static final TypeReference<Set<BovespaDailyQuote>> TYPE_REFERENCE = new TypeReference<>() {};
 
 	private final File bovespaFolder;
 	private final BovespaYearManager yearManager;
@@ -38,11 +48,8 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		var dailyQuoteRegisterFile = getDailyQuoteRegisterFile(shareCode);
 		var setToSave = new TreeSet<>(list(shareCode));
 		setToSave.addAll(dailyQuoteSet);
-		try (
-				var fos = new FileOutputStream(dailyQuoteRegisterFile);
-				var oos = new ObjectOutputStream(fos)
-		){
-			oos.writeObject(setToSave);
+		try {
+			MAPPER.writeValue(dailyQuoteRegisterFile, setToSave);
 		} catch (Exception e) {
 			throw new RuntimeException("There is an issue during saving the daily share set", e);
 		}
@@ -50,20 +57,24 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	}
 
 	private File getDailyQuoteRegisterFile(ShareCode shareCode) {
-		var shareFolder = new File(this.bovespaFolder, shareCode.getCode());
-		shareFolder.mkdirs();
-		return new File(shareFolder, DAILY_SHARE_DATA);
+		try {
+			var shareFolder = new File(this.bovespaFolder, shareCode.getCode());
+			shareFolder.mkdirs();
+			var shareFile = new File(shareFolder, DAILY_SHARE_DATA);
+			shareFile.createNewFile();
+			return shareFile;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public Set<DailyQuote> list(ShareCode shareCode) {
 		var dailyShareRegisterFile = getDailyQuoteRegisterFile(shareCode);
-		try (
-				var fis = new FileInputStream(dailyShareRegisterFile);
-				var ois = new ObjectInputStream(fis)
-		){
-			return Collections.unmodifiableSet((Set<DailyQuote>) ois.readObject());
-		} catch (Exception e) {
+		try {
+			var quotesSet = MAPPER.readValue(dailyShareRegisterFile, TYPE_REFERENCE);
+			return Collections.unmodifiableSet(quotesSet);
+		} catch (IOException e) {
 			return Collections.emptySet();
 		}
 	}

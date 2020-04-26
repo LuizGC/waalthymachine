@@ -1,7 +1,7 @@
 package com.wealthy.machine;
 
-import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
+import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.reader.BovespaDataReader;
 import com.wealthy.machine.reader.DataReader;
 

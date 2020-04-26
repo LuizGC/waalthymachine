@@ -1,6 +1,7 @@
 package com.wealthy.machine.dataaccesslayer;
 
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
 import com.wealthy.machine.util.UrlToYearConverter;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Year;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
@@ -70,18 +72,45 @@ public class BovespaStockQuoteDataAccessLayerTest {
 
 	@Test
 	public void testTheDataRegistersInCorrectFile() throws IOException {
-		var shareCodeTested = "SANB11";
+		DailyQuote testedQuote = createBovespaDailyQuote();
 		var calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		var setToBeSaved = Set.of(
-				new BovespaDaileQuoteBuilder().shareCode(shareCodeTested).build(),
+				testedQuote,
 				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build()
 		);
-		var foder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();
-		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(foder);
+		var folder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();
+
+		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(folder);
 		bovespaDataLayerAccess.save(setToBeSaved);
-		var setWithData = bovespaDataLayerAccess.list(new BovespaShareCode(shareCodeTested));
+		var setWithData = bovespaDataLayerAccess.list(testedQuote.getShareCode());
+
+		assertFalse(setWithData.isEmpty());
 		assertEquals(1, setWithData.size());
+		assertTrue(setWithData.contains(testedQuote));
+		var savedQuote = setWithData.stream().findFirst().orElseThrow();
+		assertEquals(savedQuote.getShareCode(), testedQuote.getShareCode());
+		assertEquals(savedQuote.getCompany(), testedQuote.getCompany());
+		assertEquals(savedQuote.getOpenPrice(), testedQuote.getOpenPrice());
+		assertEquals(savedQuote.getClosePrice(), testedQuote.getClosePrice());
+		assertEquals(savedQuote.getMinPrice(), testedQuote.getMinPrice());
+		assertEquals(savedQuote.getMaxPrice(), testedQuote.getMaxPrice());
+		assertEquals(savedQuote.getAvgPrice(), testedQuote.getAvgPrice());
+		assertEquals(savedQuote.getVolume(), testedQuote.getVolume());
+	}
+
+	private DailyQuote createBovespaDailyQuote() {
+		return new BovespaDaileQuoteBuilder()
+					.tradingDay(new Date())
+					.shareCode("SANB11")
+					.company("Santander")
+					.openPrice(11.30)
+					.closePrice(12.30)
+					.minPrice(10.20)
+					.maxPrice(13.00)
+					.avgPrice(12.00)
+					.volume(10000000)
+					.build();
 	}
 
 	@Test

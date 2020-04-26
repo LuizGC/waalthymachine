@@ -7,15 +7,14 @@ import com.wealthy.machine.util.UrlToYearConverter;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.time.Year;
 import java.util.Calendar;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BovespaYearManagerTest {
 

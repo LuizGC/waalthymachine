@@ -13,7 +13,7 @@ public abstract class DailyQuoteBuilder {
 	protected Double minPrice;
 	protected Double maxPrice;
 	protected Double avgPrice;
-	protected Double volume;
+	protected Integer volume;
 
 	public DailyQuoteBuilder() {
 		this.tradingDay = new Date();
@@ -24,7 +24,7 @@ public abstract class DailyQuoteBuilder {
 		this.minPrice = 0.0;
 		this.maxPrice = 0.0;
 		this.avgPrice = 0.0;
-		this.volume = 0.0;
+		this.volume = 0;
 	}
 
 	public DailyQuoteBuilder tradingDay(Date tradingDay) {
@@ -67,7 +67,7 @@ public abstract class DailyQuoteBuilder {
 		return this;
 	}
 
-	public DailyQuoteBuilder volume(Double volume) {
+	public DailyQuoteBuilder volume(Integer volume) {
 		this.volume = volume;
 		return this;
 	}

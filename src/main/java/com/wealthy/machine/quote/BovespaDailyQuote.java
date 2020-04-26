@@ -1,5 +1,8 @@
 package com.wealthy.machine.quote;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
@@ -9,8 +12,6 @@ import java.util.Objects;
 
 public final class BovespaDailyQuote implements DailyQuote {
 
-
-
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
     private final String company;
@@ -19,9 +20,20 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final Double minPrice;
     private final Double maxPrice;
     private final Double avgPrice;
-    private final Double volume;
+    private final Integer volume;
 
-    public BovespaDailyQuote(Date tradingDay, BovespaShareCode bovespaShareCode, String company, Double openPrice, Double closePrice, Double minPrice, Double maxPrice, Double avgPrice, Double volume) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public BovespaDailyQuote(
+            @JsonProperty("tradingDay") Date tradingDay,
+            @JsonProperty("shareCode") BovespaShareCode bovespaShareCode,
+            @JsonProperty("company") String company,
+            @JsonProperty("openPrice") Double openPrice,
+            @JsonProperty("closePrice") Double closePrice,
+            @JsonProperty("minPrice") Double minPrice,
+            @JsonProperty("maxPrice") Double maxPrice,
+            @JsonProperty("avgPrice") Double avgPrice,
+            @JsonProperty("volume") Integer volume
+    ) {
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
@@ -33,6 +45,7 @@ public final class BovespaDailyQuote implements DailyQuote {
         this.volume = volume;
     }
 
+    @JsonIgnore
     public StockExchange getStockExchangeName() {
         return StockExchange.BOVESPA;
     }
@@ -78,7 +91,7 @@ public final class BovespaDailyQuote implements DailyQuote {
     }
 
     @Override
-    public Double getVolume() {
+    public Integer getVolume() {
         return volume;
     }
 

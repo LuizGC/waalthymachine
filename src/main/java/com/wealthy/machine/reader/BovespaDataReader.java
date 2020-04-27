@@ -113,7 +113,7 @@ public class BovespaDataReader implements DataReader {
     }
 
     private BigDecimal readDouble(String line, Integer begin, Integer end) {
-        var text = line.substring(begin, end).trim();
+        var text = readString(line, begin, end);
         return new BigDecimalFactory(text).newInstance();
     }
 

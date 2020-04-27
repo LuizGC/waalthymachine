@@ -21,17 +21,22 @@ public class BigDecimalFactory {
 	}
 
 	public BigDecimalFactory(Double value) {
-
-		var text = numberFormatter.format(value).replace(".", "");
+		var text = numberFormatter.format(value);
+		text = cleanNumber(text);
 		this.unscaledVal = new BigInteger(text);
 	}
 
 	public BigDecimalFactory(String text) {
+		text = cleanNumber(text);
 		this.unscaledVal = new BigInteger(text);
 	}
 
 	public BigDecimalFactory(Long value) {
 		this.unscaledVal = new BigInteger(value.toString());
+	}
+
+	private String cleanNumber(String text) {
+		return text.replaceAll("\\.|,", "");
 	}
 
 	public BigDecimal newInstance () {

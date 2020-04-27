@@ -33,11 +33,14 @@ public class BovespaDataReader implements DataReader {
     }
 
     public Set<DailyQuote> read(URL zipFileUrl) {
+        this.logger.info("Starting download url={}", zipFileUrl);
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
             if (zipStream.getNextEntry() == null) {
                 throw new IOException("Zip is not valid!");
             } else {
-                return readEntry(zipStream);
+                var quotes = readEntry(zipStream);
+                this.logger.info("Download completed url={}", zipFileUrl);
+                return quotes;
             }
         } catch (IOException e) {
             throw new RuntimeException("Problem to process zip file", e);

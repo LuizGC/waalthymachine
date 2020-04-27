@@ -3,6 +3,8 @@ package com.wealthy.machine.dataaccesslayer.bovespa;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.quote.DailyQuote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,16 +19,15 @@ public class BovespaYearManager {
 
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private static final TypeReference<LinkedHashSet<Integer>> TYPE_REFERENCE = new TypeReference<>() {};
-
 	private static final Integer INITIAL_YEAR = 2000;
-
 	private static final String YEAR_DOWNLOADED_FILE = "YEAR_DOWNLOADED_FILE";
-
 	private final static String DEFAULT_URL = "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP";
 
 	private final File yearDownloadedFile;
+	private final Logger logger;
 
 	public BovespaYearManager(File bovespaFolder) {
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.yearDownloadedFile = new File(bovespaFolder, YEAR_DOWNLOADED_FILE);
 	}
 
@@ -55,6 +56,7 @@ public class BovespaYearManager {
 		yearSet.addAll(newYearsSet);
 		try{
 			MAPPER.writeValue(this.yearDownloadedFile, yearSet);
+			logger.info("Year={}", newYearsSet);
 		} catch (Exception e) {
 			throw new RuntimeException("There is an issue during saving the daily share set", e);
 		}

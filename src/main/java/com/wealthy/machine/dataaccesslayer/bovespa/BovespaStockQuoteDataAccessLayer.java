@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,18 +20,18 @@ import static com.wealthy.machine.StockExchange.BOVESPA;
 
 public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLayer {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(BovespaStockQuoteDataAccessLayer.class);
-
 	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
 
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final TypeReference<LinkedHashSet<BovespaDailyQuote>> TYPE_REFERENCE = new TypeReference<>() {};
 
+	private final Logger logger;
 	private final File bovespaFolder;
 	private final BovespaYearManager yearManager;
 
 	public BovespaStockQuoteDataAccessLayer(File whereIsData) {
+		this.logger = LoggerFactory.getLogger(this.getClass());
 		if (!whereIsData.isDirectory()) {
 			throw new RuntimeException("The folder to persist the data must be a folder.");
 		}
@@ -53,15 +52,15 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		setToSave.addAll(dailyQuoteSet);
 		try {
 			MAPPER.writeValue(dailyQuoteRegisterFile, setToSave);
-			var format = new SimpleDateFormat("dd/MM/yyyy");
-			dailyQuoteSet
-					.forEach(quote -> {
-						LOGGER.info("shareCode={} date={}", quote.getShareCode(), format.format(quote.getTradingDay()));
-					});
+			dailyQuoteSet.forEach(this::logSaveBovespaDailyQuote);
 		} catch (Exception e) {
 			throw new RuntimeException("There is an issue during saving the daily share set", e);
 		}
+	}
 
+	private void logSaveBovespaDailyQuote(DailyQuote quote) {
+		var format = new SimpleDateFormat("dd/MM/yyyy");
+		logger.info("shareCode={} date={}", quote.getShareCode().getCode(), format.format(quote.getTradingDay()));
 	}
 
 	private File getDailyQuoteRegisterFile(ShareCode shareCode) {

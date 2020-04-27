@@ -26,7 +26,11 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataReader implements DataReader {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(BovespaDataReader.class);
+    private final Logger logger;
+
+    public BovespaDataReader() {
+        this.logger = LoggerFactory.getLogger(this.getClass());
+    }
 
     public Set<DailyQuote> read(URL zipFileUrl) {
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
@@ -80,7 +84,7 @@ public class BovespaDataReader implements DataReader {
     private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
-            LOGGER.info("line={}", line);
+            logger.info("line={}", line);
             return new BovespaDailyQuote(
                     readDate(line, 2, 10), //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode

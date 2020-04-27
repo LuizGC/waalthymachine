@@ -1,0 +1,20 @@
+<configuration>
+	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+	<property name="LOG_FORMAT" value="%d{HH:mm:ss} - %-5level- %logger{0} - %msg%n" />
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_FILE}.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>${LOG_FORMAT}</pattern>
+		</encoder>
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${LOG_FORMAT}</pattern>
+		</encoder>
+	</appender>
+	<root level="DEBUG">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

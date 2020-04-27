@@ -3,7 +3,7 @@
 	<property name="LOG_FORMAT" value="%d{HH:mm:ss} - %-5level- %logger{0} - %msg%n" />
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>${LOG_FILE}.log</file>
-		<append>true</append>
+		<append>false</append>
 		<encoder>
 			<pattern>${LOG_FORMAT}</pattern>
 		</encoder>

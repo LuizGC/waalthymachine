@@ -1,32 +1,31 @@
 package com.wealthy.machine.util;
 
-import com.wealthy.machine.BigDecimalFactory;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public abstract class DailyQuoteBuilder {
 	protected Date tradingDay;
 	protected String shareCode;
 	protected String company;
-	protected BigDecimal openPrice;
-	protected BigDecimal closePrice;
-	protected BigDecimal minPrice;
-	protected BigDecimal maxPrice;
-	protected BigDecimal avgPrice;
-	protected BigDecimal volume;
+	protected WealthNumber openPrice;
+	protected WealthNumber closePrice;
+	protected WealthNumber minPrice;
+	protected WealthNumber maxPrice;
+	protected WealthNumber avgPrice;
+	protected WealthNumber volume;
 
 	public DailyQuoteBuilder() {
 		this.tradingDay = new Date();
 		this.shareCode = "ABCD3";
 		this.company = "ABC";
-		this.openPrice = new BigDecimalFactory().newInstance();
-		this.closePrice = new BigDecimalFactory().newInstance();
-		this.minPrice = new BigDecimalFactory().newInstance();
-		this.maxPrice = new BigDecimalFactory().newInstance();
-		this.avgPrice = new BigDecimalFactory().newInstance();
-		this.volume = new BigDecimalFactory().newInstance();
+		this.openPrice = new WealthNumber("0.0");
+		this.closePrice = new WealthNumber("0.0");
+		this.minPrice = new WealthNumber("0.0");
+		this.maxPrice = new WealthNumber("0.0");
+		this.avgPrice = new WealthNumber("0.0");
+		this.volume = new WealthNumber("0.0");
 	}
 
 	public DailyQuoteBuilder tradingDay(Date tradingDay) {
@@ -44,33 +43,33 @@ public abstract class DailyQuoteBuilder {
 		return this;
 	}
 
-	public DailyQuoteBuilder openPrice(Double openPrice) {
-		this.openPrice = new BigDecimalFactory(openPrice).newInstance();
+	public DailyQuoteBuilder openPrice(String openPrice) {
+		this.openPrice = new WealthNumber(openPrice);
 		return this;
 	}
 
-	public DailyQuoteBuilder closePrice(Double closePrice) {
-		this.closePrice =  new BigDecimalFactory(closePrice).newInstance();
+	public DailyQuoteBuilder closePrice(String closePrice) {
+		this.closePrice =  new WealthNumber(closePrice);
 		return this;
 	}
 
-	public DailyQuoteBuilder minPrice(Double minPrice) {
-		this.minPrice =  new BigDecimalFactory(minPrice).newInstance();
+	public DailyQuoteBuilder minPrice(String minPrice) {
+		this.minPrice =  new WealthNumber(minPrice);
 		return this;
 	}
 
-	public DailyQuoteBuilder maxPrice(Double maxPrice) {
-		this.maxPrice =  new BigDecimalFactory(maxPrice).newInstance();
+	public DailyQuoteBuilder maxPrice(String maxPrice) {
+		this.maxPrice =  new WealthNumber(maxPrice);
 		return this;
 	}
 
-	public DailyQuoteBuilder avgPrice(Double avgPrice) {
-		this.avgPrice =  new BigDecimalFactory(avgPrice).newInstance();
+	public DailyQuoteBuilder avgPrice(String avgPrice) {
+		this.avgPrice =  new WealthNumber(avgPrice);
 		return this;
 	}
 
-	public DailyQuoteBuilder volume(Double volume) {
-		this.volume = new BigDecimalFactory(volume).newInstance();
+	public DailyQuoteBuilder volume(String volume) {
+		this.volume = new WealthNumber(volume);
 		return this;
 	}
 

@@ -1,13 +1,12 @@
 package com.wealthy.machine.quote;
 
 import com.wealthy.machine.StockExchange;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.sharecode.ShareCode;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
-public interface DailyQuote extends Serializable, Comparable {
+public interface DailyQuote extends Comparable {
 
     Date getTradingDay();
 
@@ -15,17 +14,17 @@ public interface DailyQuote extends Serializable, Comparable {
 
     String getCompany();
 
-    BigDecimal getOpenPrice();
+    WealthNumber getOpenPrice();
 
-    BigDecimal getClosePrice();
+    WealthNumber getClosePrice();
 
-    BigDecimal getMinPrice();
+    WealthNumber getMinPrice();
 
-    BigDecimal getMaxPrice();
+    WealthNumber getMaxPrice();
 
-    BigDecimal getAvgPrice();
+    WealthNumber getAvgPrice();
 
-    BigDecimal getVolume();
+    WealthNumber getVolume();
 
     StockExchange getStockExchangeName();
 

@@ -1,6 +1,6 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.BigDecimalFactory;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import org.junit.jupiter.api.Test;
 
@@ -87,12 +87,12 @@ public class BovespaDataReaderTest {
         var b3Quote = list.stream().findFirst().orElseThrow();
         assertEquals(new BovespaShareCode("B3SA3"), b3Quote.getShareCode());
         assertEquals("B3", b3Quote.getCompany());
-        assertEquals(new BigDecimalFactory(4042L).newInstance(), b3Quote.getOpenPrice());
-        assertEquals(new BigDecimalFactory(3700L).newInstance(), b3Quote.getClosePrice());
-        assertEquals(new BigDecimalFactory(3536L).newInstance(), b3Quote.getMinPrice());
-        assertEquals(new BigDecimalFactory(4059L).newInstance(), b3Quote.getMaxPrice());
-        assertEquals(new BigDecimalFactory(3730L).newInstance(), b3Quote.getAvgPrice());
-        assertEquals(new BigDecimalFactory(127007596300L).newInstance(), b3Quote.getVolume());
+        assertEquals(new WealthNumber("40.42"), b3Quote.getOpenPrice());
+        assertEquals(new WealthNumber("37.00"), b3Quote.getClosePrice());
+        assertEquals(new WealthNumber("35.36"), b3Quote.getMinPrice());
+        assertEquals(new WealthNumber("40.59"), b3Quote.getMaxPrice());
+        assertEquals(new WealthNumber("37.30"), b3Quote.getAvgPrice());
+        assertEquals(new WealthNumber("1270075963.00"), b3Quote.getVolume());
     }
 
 }

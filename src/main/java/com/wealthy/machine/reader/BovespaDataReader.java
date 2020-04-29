@@ -1,6 +1,6 @@
 package com.wealthy.machine.reader;
 
-import com.wealthy.machine.BigDecimalFactory;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
@@ -112,9 +112,10 @@ public class BovespaDataReader implements DataReader {
         return line.substring(begin, end).trim();
     }
 
-    private BigDecimal readDouble(String line, Integer begin, Integer end) {
+    private WealthNumber readDouble(String line, Integer begin, Integer end) {
         var text = readString(line, begin, end);
-        return new BigDecimalFactory(text).newInstance();
+        var number = new BigDecimal(text).movePointLeft(2);
+        return new WealthNumber(number.toPlainString());
     }
 
 }

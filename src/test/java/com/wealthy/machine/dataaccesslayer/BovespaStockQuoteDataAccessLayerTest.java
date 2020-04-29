@@ -1,6 +1,7 @@
 package com.wealthy.machine.dataaccesslayer;
 
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
@@ -85,12 +86,12 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		var tradingDay = new Date();
 		var shareCode = "SANB11";
 		var company = "Santander";
-		var openPrice = 11.30;
-		var closePrice = 12.30;
-		var minPrice = 10.20;
-		var maxPrice = 13.00;
-		var avgPrice = 12.00;
-		var volume = 10000000.00;
+		var openPrice = "11.30";
+		var closePrice = "12.30";
+		var minPrice = "10.20";
+		var maxPrice = "13.00";
+		var avgPrice = "12.00";
+		var volume = "10000000.00";
 		DailyQuote testedQuote = new BovespaDaileQuoteBuilder()
 				.tradingDay(tradingDay)
 				.shareCode(shareCode)
@@ -123,12 +124,12 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		assertEquals(tradingDay, savedQuote.getTradingDay());
 		assertEquals(new BovespaShareCode(shareCode), savedQuote.getShareCode());
 		assertEquals(company, savedQuote.getCompany());
-		assertEquals(openPrice, savedQuote.getOpenPrice().doubleValue());
-		assertEquals(closePrice, savedQuote.getClosePrice().doubleValue());
-		assertEquals(minPrice, savedQuote.getMinPrice().doubleValue());
-		assertEquals(maxPrice, savedQuote.getMaxPrice().doubleValue());
-		assertEquals(avgPrice, savedQuote.getAvgPrice().doubleValue());
-		assertEquals(volume, savedQuote.getVolume().doubleValue());
+		assertEquals(new WealthNumber(openPrice), savedQuote.getOpenPrice());
+		assertEquals(new WealthNumber(closePrice), savedQuote.getClosePrice());
+		assertEquals(new WealthNumber(minPrice), savedQuote.getMinPrice());
+		assertEquals(new WealthNumber(maxPrice), savedQuote.getMaxPrice());
+		assertEquals(new WealthNumber(avgPrice), savedQuote.getAvgPrice());
+		assertEquals(new WealthNumber(volume), savedQuote.getVolume());
 	}
 
 	@Test

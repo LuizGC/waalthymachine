@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wealthy.machine.StockExchange;
+import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 
-import java.math.BigDecimal;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -16,24 +17,24 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
     private final String company;
-    private final BigDecimal openPrice;
-    private final BigDecimal closePrice;
-    private final BigDecimal minPrice;
-    private final BigDecimal maxPrice;
-    private final BigDecimal avgPrice;
-    private final BigDecimal volume;
+    private final WealthNumber openPrice;
+    private final WealthNumber closePrice;
+    private final WealthNumber minPrice;
+    private final WealthNumber maxPrice;
+    private final WealthNumber avgPrice;
+    private final WealthNumber volume;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public BovespaDailyQuote(
             @JsonProperty("tradingDay") Date tradingDay,
             @JsonProperty("shareCode") BovespaShareCode bovespaShareCode,
             @JsonProperty("company") String company,
-            @JsonProperty("openPrice") BigDecimal openPrice,
-            @JsonProperty("closePrice") BigDecimal closePrice,
-            @JsonProperty("minPrice") BigDecimal minPrice,
-            @JsonProperty("maxPrice") BigDecimal maxPrice,
-            @JsonProperty("avgPrice") BigDecimal avgPrice,
-            @JsonProperty("volume") BigDecimal volume
+            @JsonProperty("openPrice") WealthNumber openPrice,
+            @JsonProperty("closePrice") WealthNumber closePrice,
+            @JsonProperty("minPrice") WealthNumber minPrice,
+            @JsonProperty("maxPrice") WealthNumber maxPrice,
+            @JsonProperty("avgPrice") WealthNumber avgPrice,
+            @JsonProperty("volume") WealthNumber volume
     ) {
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
@@ -67,32 +68,32 @@ public final class BovespaDailyQuote implements DailyQuote {
     }
 
     @Override
-    public BigDecimal getOpenPrice() {
+    public WealthNumber getOpenPrice() {
         return openPrice;
     }
 
     @Override
-    public BigDecimal getClosePrice() {
+    public WealthNumber getClosePrice() {
         return closePrice;
     }
 
     @Override
-    public BigDecimal getMinPrice() {
+    public WealthNumber getMinPrice() {
         return minPrice;
     }
 
     @Override
-    public BigDecimal getMaxPrice() {
+    public WealthNumber getMaxPrice() {
         return maxPrice;
     }
 
     @Override
-    public BigDecimal getAvgPrice() {
+    public WealthNumber getAvgPrice() {
         return avgPrice;
     }
 
     @Override
-    public BigDecimal getVolume() {
+    public WealthNumber getVolume() {
         return volume;
     }
 

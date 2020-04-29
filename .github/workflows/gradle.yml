@@ -21,7 +21,8 @@ jobs:
         java-version: '11.0.1'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - uses: actions/cache@v1
+    - name: Caching gradlew dependencies
+      uses: actions/cache@v1
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}

@@ -40,4 +40,5 @@ public class WealthNumber {
 	public int hashCode() {
 		return Objects.hash(number);
 	}
+
 }

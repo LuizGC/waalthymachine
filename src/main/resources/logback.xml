@@ -13,7 +13,7 @@
 			<pattern>${LOG_FORMAT}</pattern>
 		</encoder>
 	</appender>
-	<root level="DEBUG">
+	<root level="INFO">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</root>

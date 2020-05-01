@@ -1,12 +1,12 @@
 package com.wealthy.machine.reader;
 
+import com.wealthy.machine.Config;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.BovespaDailyQuote;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCodeValidator;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,7 +29,8 @@ public class BovespaDataReader implements DataReader {
     private final Logger logger;
 
     public BovespaDataReader() {
-        this.logger = LoggerFactory.getLogger(this.getClass());
+        var config = new Config();
+        this.logger = config.getLogger(this.getClass());
     }
 
     public Set<DailyQuote> read(URL zipFileUrl) {
@@ -43,7 +44,8 @@ public class BovespaDataReader implements DataReader {
                 return quotes;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Problem to process zip file", e);
+            this.logger.error("Problem to process zip file", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -87,7 +89,6 @@ public class BovespaDataReader implements DataReader {
     private BovespaDailyQuote createQuote(String line) {
         try {
             line = line.trim();
-            logger.info("line={}", line);
             return new BovespaDailyQuote(
                     readDate(line, 2, 10), //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode
@@ -100,7 +101,8 @@ public class BovespaDataReader implements DataReader {
                     readDouble(line, 170, 188) //volume
             );
         } catch (ParseException e) {
-            throw new RuntimeException("The Bovespa quote date is invalid.", e);
+            this.logger.error("The Bovespa quote date is invalid.", e);
+            throw new RuntimeException(e);
         }
     }
 

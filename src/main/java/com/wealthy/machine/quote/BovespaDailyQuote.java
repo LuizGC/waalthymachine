@@ -3,10 +3,11 @@ package com.wealthy.machine.quote;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wealthy.machine.Config;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
-
+import org.slf4j.Logger;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +24,7 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final WealthNumber maxPrice;
     private final WealthNumber avgPrice;
     private final WealthNumber volume;
+    private final Logger logger;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public BovespaDailyQuote(
@@ -36,6 +38,7 @@ public final class BovespaDailyQuote implements DailyQuote {
             @JsonProperty("avgPrice") WealthNumber avgPrice,
             @JsonProperty("volume") WealthNumber volume
     ) {
+        this.logger = new Config().getLogger(this.getClass());
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
         this.company = company;
@@ -125,10 +128,12 @@ public final class BovespaDailyQuote implements DailyQuote {
     public int compareTo(Object o) {
         var dailyQuote = (BovespaDailyQuote)o;
         if (!this.getShareCode().equals(dailyQuote.getShareCode())) {
-            throw new RuntimeException("Share code must be the same");
+            this.logger.error("Share code must be the same");
+            throw new RuntimeException();
         }
         if (!this.getStockExchangeName().equals(dailyQuote.getStockExchangeName())) {
-            throw new RuntimeException("Stock exchange must be the same");
+            this.logger.error("Stock exchange must be the same");
+            throw new RuntimeException();
         }
         return getTradingDay().compareTo(dailyQuote.getTradingDay());
     }

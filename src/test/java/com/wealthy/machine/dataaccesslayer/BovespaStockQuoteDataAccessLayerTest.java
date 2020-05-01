@@ -1,5 +1,6 @@
 package com.wealthy.machine.dataaccesslayer;
 
+import com.wealthy.machine.Config;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
@@ -19,7 +20,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BovespaStockQuoteDataAccessLayerTest {
 
-	private static final String DAILY_SHARE_DATA = "DAILY_SHARE_DATA";
+	private final String dailyShareDataFilename;
+
+	public BovespaStockQuoteDataAccessLayerTest() {
+		var config = new Config();
+		this.dailyShareDataFilename = config.getDailyShareDataBovespaFilename();
+	}
 
 	@Test
 	public void testConstructorRules() {
@@ -45,7 +51,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 			var folderShareContent = new File(bovespaFolder, shareCode);
 			assertTrue(folderShareContent.exists());
 			assertTrue(folderShareContent.isDirectory());
-			var dataFile = new File(folderShareContent, DAILY_SHARE_DATA);
+			var dataFile = new File(folderShareContent, dailyShareDataFilename);
 			assertTrue(dataFile.isFile());
 			assertTrue(dataFile.length() > 0);
 		});

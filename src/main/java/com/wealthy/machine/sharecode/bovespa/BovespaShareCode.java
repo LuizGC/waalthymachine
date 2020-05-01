@@ -1,23 +1,29 @@
 package com.wealthy.machine.sharecode.bovespa;
 
+import com.wealthy.machine.Config;
 import com.wealthy.machine.sharecode.ShareCode;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
 public class BovespaShareCode implements ShareCode {
 
 	private final String code;
+	private final Logger logger;
 
 	public BovespaShareCode(String code) {
 		this(code, new BovespaShareCodeValidator(code));
 	}
 
 	public BovespaShareCode(String code, BovespaShareCodeValidator validator){
+		this.logger = new Config().getLogger(this.getClass());
 		if(!validator.isCorrectSize()) {
-			throw new RuntimeException(code + " is invalid share code size!");
+			this.logger.error(code + " is invalid share code size!");
+			throw new RuntimeException();
 		}
-		if(!validator.isFourInitialsOnlyLetter()){
-			throw new RuntimeException(code + " is not valid. The four initials characters must be letters.");
+		if(!validator.isFourInitialsOnlyLetter()) {
+			this.logger.error(code + " is not valid. The four initials characters must be letters.");
+			throw new RuntimeException();
 		}
 		this.code = code;
 	}

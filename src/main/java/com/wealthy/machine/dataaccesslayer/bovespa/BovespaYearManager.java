@@ -2,9 +2,9 @@ package com.wealthy.machine.dataaccesslayer.bovespa;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wealthy.machine.Config;
 import com.wealthy.machine.quote.DailyQuote;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,33 +17,36 @@ import java.util.stream.IntStream;
 
 public class BovespaYearManager {
 
-	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private static final TypeReference<LinkedHashSet<Integer>> TYPE_REFERENCE = new TypeReference<>() {};
-	private static final Integer INITIAL_YEAR = 2000;
-	private static final String YEAR_DOWNLOADED_FILE = "YEAR_DOWNLOADED_FILE";
-	private final static String DEFAULT_URL = "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP";
-
+	private final ObjectMapper mapper;
+	private final Integer initialYear;
+	private final String defaultUrl;
 	private final File yearDownloadedFile;
+	private static final TypeReference<LinkedHashSet<Integer>> TYPE_REFERENCE = new TypeReference<>() {};
+
 	private final Logger logger;
 
 	public BovespaYearManager(File bovespaFolder) {
-		this.logger = LoggerFactory.getLogger(this.getClass());
-		this.yearDownloadedFile = new File(bovespaFolder, YEAR_DOWNLOADED_FILE);
+		var config = new Config();
+		this.mapper = config.getJsonMapper();
+		this.initialYear = config.getInitialYear();
+		this.defaultUrl = config.getDefaultBovespaUrl();
+		this.logger = config.getLogger(this.getClass());
+		this.yearDownloadedFile = new File(bovespaFolder, config.getYearDownloadedBovespaFilename());
 	}
 
 	public Set<URL> listUnsavedPaths() {
 		var savedYearSet = listSavedYears();
 		return IntStream
-				.range(INITIAL_YEAR, Year.now().getValue() + 1)
+				.range(initialYear, Year.now().getValue() + 1)
 				.filter(year -> !savedYearSet.contains(year))
-				.mapToObj(year -> DEFAULT_URL.replace("{{YYYY}}", String.valueOf(year)))
+				.mapToObj(year -> defaultUrl.replace("{{YYYY}}", String.valueOf(year)))
 				.map(this::createUrl)
 				.collect(Collectors.toUnmodifiableSet());
 	}
 
 	private Set<Integer> listSavedYears() {
 		try {
-			var quotesSet = MAPPER.readValue(this.yearDownloadedFile, TYPE_REFERENCE);
+			var quotesSet = mapper.readValue(this.yearDownloadedFile, TYPE_REFERENCE);
 			return Collections.unmodifiableSet(quotesSet);
 		} catch (IOException e) {
 			return Collections.emptySet();
@@ -55,10 +58,11 @@ public class BovespaYearManager {
 		var yearSet = new TreeSet<>(listSavedYears());
 		yearSet.addAll(newYearsSet);
 		try{
-			MAPPER.writeValue(this.yearDownloadedFile, yearSet);
-			logger.info("Year={}", newYearsSet);
+			mapper.writeValue(this.yearDownloadedFile, yearSet);
+			logger.info("Completed Year={}", newYearsSet);
 		} catch (Exception e) {
-			throw new RuntimeException("There is an issue during saving the daily share set", e);
+			logger.error("There is an issue during saving the daily share set", e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -79,6 +83,7 @@ public class BovespaYearManager {
 		try {
 			return new URL(urlPath);
 		} catch (MalformedURLException e) {
+			logger.error("Error during Bovespa Url creation.", e);
 			throw new RuntimeException(e);
 		}
 	}

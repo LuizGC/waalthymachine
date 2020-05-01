@@ -1,9 +1,11 @@
 <configuration>
 	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 	<property name="LOG_FORMAT" value="%d{HH:mm:ss} - %-5level- %logger{0} - %msg%n" />
+	<timestamp key="bySecond" datePattern="yyyyMMdd"/>
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>${LOG_FILE}.log</file>
-		<append>false</append>
+		<file>${LOG_FOLDER}/wealth-${bySecond}.log</file>
+		<append>true</append>
+		<immediateFlush>false</immediateFlush>
 		<encoder>
 			<pattern>${LOG_FORMAT}</pattern>
 		</encoder>

@@ -27,10 +27,10 @@ public class Config {
 		){
 			appProps.load(appConfigPath);
 			BOVESPA_URL = appProps.getProperty("bovespaUrl", "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP");
-			DAILY_SHARE_DATA_BOVESPA_FILENAME = appProps.getProperty("dailyShareDataBovespaFilename", "dailyShare.json");
+			DAILY_SHARE_DATA_BOVESPA_FILENAME = appProps.getProperty("dailyShareDataBovespaFilename", "dailyShare");
 			NUMBER_SCALE = appProps.getProperty("numberScale", "2");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
-			YEAR_DOWNLOADED_BOVESPA_FILENAME = appProps.getProperty("yearDownloadedBovespaFilename", "downloadedYear.json");
+			YEAR_DOWNLOADED_BOVESPA_FILENAME = appProps.getProperty("yearDownloadedBovespaFilename", "downloadedYear");
 
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);

@@ -1,11 +1,10 @@
-package com.wealthy.machine.quote;
+package com.wealthy.machine.quote.bovespa;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wealthy.machine.Config;
 import com.wealthy.machine.StockExchange;
 import com.wealthy.machine.math.number.WealthNumber;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import org.slf4j.Logger;
 
@@ -25,16 +24,15 @@ public final class BovespaDailyQuote implements DailyQuote {
     private final WealthNumber volume;
     private final Logger logger;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public BovespaDailyQuote(
-            @JsonProperty("tradingDay") Date tradingDay,
-            @JsonProperty("shareCode") BovespaShareCode bovespaShareCode,
-            @JsonProperty("openPrice") WealthNumber openPrice,
-            @JsonProperty("closePrice") WealthNumber closePrice,
-            @JsonProperty("minPrice") WealthNumber minPrice,
-            @JsonProperty("maxPrice") WealthNumber maxPrice,
-            @JsonProperty("avgPrice") WealthNumber avgPrice,
-            @JsonProperty("volume") WealthNumber volume
+            Date tradingDay,
+            BovespaShareCode bovespaShareCode,
+            WealthNumber openPrice,
+            WealthNumber closePrice,
+            WealthNumber minPrice,
+            WealthNumber maxPrice,
+            WealthNumber avgPrice,
+            WealthNumber volume
     ) {
         this.logger = new Config().getLogger(this.getClass());
         this.tradingDay = tradingDay;

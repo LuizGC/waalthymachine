@@ -1,7 +1,6 @@
 package com.wealthy.machine.dataaccesslayer;
 
 import com.wealthy.machine.Config;
-import com.wealthy.machine.dataaccesslayer.bovespa.BovespaPersistLayerProxy;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
@@ -32,7 +31,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	public void testConstructorRules() {
 		assertThrows(RuntimeException.class, () -> {
 			var file = Files.createTempFile("test", "testConstructorRules").toFile();
-			new BovespaStockQuoteDataAccessLayer(new BovespaPersistLayerProxy(file));
+			new BovespaStockQuoteDataAccessLayer(file);
 		});
 	}
 
@@ -40,7 +39,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	public void testFolderConfiguration() throws IOException {
 		var whereToSave = Files.createTempDirectory("testFolderConfiguration").toFile();
 		var bovespaFolder = BOVESPA.getFolder(whereToSave);
-		var bovespaShareDataAccess = new BovespaStockQuoteDataAccessLayer(new BovespaPersistLayerProxy(whereToSave));
+		var bovespaShareDataAccess = new BovespaStockQuoteDataAccessLayer(whereToSave);
 		Calendar calendar = Calendar.getInstance();
 		var shareListToSave = Set.of(
 				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD3").build(),
@@ -72,7 +71,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	@Test
 	public void testDataRegisteringRightOrder() throws IOException {
 		var whereToSave = Files.createTempDirectory("testDataRegisteringRightOrder").toFile();
-		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(new BovespaPersistLayerProxy(whereToSave));
+		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(whereToSave);
 		for(var i = 1; i < 20; i++){
 			var arrayQuotes = createSetDiferentsDateQuotes(i);
 			var hashQuotes = new HashSet<>(Arrays.asList(arrayQuotes));
@@ -92,7 +91,6 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	public void testTheDataRegistersInCorrectFile() throws IOException {
 		var tradingDay = new Date();
 		var shareCode = "SANB11";
-		var company = "Santander";
 		var openPrice = "11.30";
 		var closePrice = "12.30";
 		var minPrice = "10.20";
@@ -118,7 +116,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		);
 		var folder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();
 
-		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(new BovespaPersistLayerProxy(folder));
+		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(folder);
 		bovespaDataLayerAccess.save(setToBeSaved);
 		var setWithData = bovespaDataLayerAccess.list(testedQuote.getShareCode());
 
@@ -141,7 +139,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 	public void testYearListReturningCorrectYear() throws IOException {
 		var currentYear = Year.now().getValue();
 		var whereToSave = Files.createTempDirectory("testYearListReturningCorrectYear").toFile();
-		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(new BovespaPersistLayerProxy(whereToSave));
+		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(whereToSave);
 		var pathList = bovespaShareDataAccessLayer.listUnsavedPaths();
 		Set<Integer> savedYears =new UrlToYearConverter(pathList).listYears();
 		assertTrue(savedYears.contains(currentYear), "Should contain the current year!");

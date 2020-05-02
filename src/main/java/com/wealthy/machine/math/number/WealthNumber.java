@@ -1,6 +1,5 @@
 package com.wealthy.machine.math.number;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wealthy.machine.Config;
 
@@ -8,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @JsonSerialize(using = WealthNumberSerializer.class)
-@JsonDeserialize(using = WealthNumberDeserializer.class)
 public class WealthNumber {
 
 	private BigDecimal number;

@@ -1,10 +1,12 @@
 package com.wealthy.machine.dataaccesslayer.bovespa;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.Config;
-import com.wealthy.machine.dataaccesslayer.persistlayer.PersistLayer;
 import com.wealthy.machine.quote.DailyQuote;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,14 +20,26 @@ public class BovespaYearManager {
 	private final Integer initialYear;
 	private final String defaultUrl;
 	private final Logger logger;
-	private final BovespaPersistLayerProxy proxy;
+	private final File yearFile;
 
-	public BovespaYearManager(BovespaPersistLayerProxy proxy) {
+	public BovespaYearManager(File bovespaFolder) {
 		var config = new Config();
 		this.initialYear = config.getInitialYear();
 		this.defaultUrl = config.getDefaultBovespaUrl();
 		this.logger = config.getLogger(this.getClass());
-		this.proxy = proxy;
+		if (!bovespaFolder.isDirectory()) {
+			logger.error("The folder to persist the data must be a folder.");
+			throw new RuntimeException();
+		}
+		try {
+			var keyFolder = new File(bovespaFolder, "yearDownloadedFolder");
+			keyFolder.mkdirs();
+			this.yearFile = new File(keyFolder, config.getDefaultFilename());
+			this.yearFile.createNewFile();
+		} catch (IOException e) {
+			logger.error("Error while creating year file", e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Set<URL> listUnsavedPaths() {
@@ -40,7 +54,9 @@ public class BovespaYearManager {
 
 	private Set<Integer> listSavedYears() {
 		try {
-			var quotesSet = this.proxy.readYear();
+			var typeReference = new TypeReference<LinkedHashSet<Integer>>() {};
+			var mapper = new ObjectMapper();
+			var quotesSet = mapper.readValue(this.yearFile, typeReference);
 			return Collections.unmodifiableSet(quotesSet);
 		} catch (IOException e) {
 			return Collections.emptySet();
@@ -52,7 +68,8 @@ public class BovespaYearManager {
 		var yearSet = new HashSet<>(listSavedYears());
 		yearSet.addAll(newYearsSet);
 		try{
-			this.proxy.saveYear(yearSet);
+			var mapper = new ObjectMapper();
+			mapper.writeValue(this.yearFile, yearSet);
 		} catch (Exception e) {
 			logger.error("There is an issue during saving the daily share set", e);
 			throw new RuntimeException(e);

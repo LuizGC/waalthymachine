@@ -16,6 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import static com.wealthy.machine.StockExchange.BOVESPA;
@@ -26,6 +30,8 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private final BovespaYearManager yearManager;
 	private final File bovespaFolder;
 	private final String filename;
+	private final Map<ShareCode, ReentrantLock> lockers;
+	private final Executor executor;
 
 	public BovespaStockQuoteDataAccessLayer(File storageFolder) {
 		var config = new Config();
@@ -37,25 +43,45 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		}
 		this.bovespaFolder = BOVESPA.getFolder(storageFolder);
 		this.yearManager = new BovespaYearManager(this.bovespaFolder);
+		this.executor = config.getDefaultExecutor();
+		this.lockers = new ConcurrentHashMap<>();
 	}
 
 	@Override
-	public synchronized void save(Set<DailyQuote> dailyQuoteSet) {
-		var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
-		dailyShareMap.forEach(this::saveBovespaDailyQuote);
-		this.yearManager.updateDownloadedYear(dailyQuoteSet);
-	}
-
-	private void saveBovespaDailyQuote(ShareCode shareCode, List<DailyQuote> dailyQuoteSet) {
-		var setToSave = new TreeSet<>(list(shareCode));
-		setToSave.addAll(dailyQuoteSet);
+	public void save(Set<DailyQuote> dailyQuoteSet) {
 		try {
-			var mapper = new ObjectMapper();
-			mapper.writeValue(getFile(shareCode), setToSave);
-		} catch (Exception e) {
-			this.logger.error("There is an issue during saving the daily share set", e);
+			var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
+			var latch = new CountDownLatch(dailyShareMap.size());
+			dailyShareMap.forEach(((shareCode, dailyQuotes) -> {
+				if (this.lockers.get(shareCode) == null) {
+					this.lockers.put(shareCode, new ReentrantLock(false));
+				}
+				this.saveBovespaDailyQuote(shareCode, dailyQuotes, latch);
+			}));
+			latch.await();
+			this.yearManager.updateDownloadedYear(dailyQuoteSet);
+		} catch (InterruptedException e) {
+			this.logger.error("Long waiting time in saving quotes", e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void saveBovespaDailyQuote(final ShareCode shareCode, final List<DailyQuote> dailyQuoteSet, final CountDownLatch latch) {
+		this.executor.execute(() -> {
+			try {
+				this.lockers.get(shareCode).lock();
+				var setToSave = new TreeSet<>(list(shareCode));
+				setToSave.addAll(dailyQuoteSet);
+				var mapper = new ObjectMapper();
+				mapper.writeValue(getFile(shareCode), setToSave);
+				this.lockers.get(shareCode).unlock();
+			} catch (Exception e) {
+				this.logger.error("There is an issue during saving the daily share set", e);
+				throw new RuntimeException(e);
+			} finally {
+				latch.countDown();
+			}
+		});
 	}
 
 	private File getFile(ShareCode key) throws IOException {

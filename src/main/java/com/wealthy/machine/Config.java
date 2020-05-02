@@ -1,6 +1,5 @@
 package com.wealthy.machine;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,14 +7,16 @@ import java.io.IOException;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Config {
 
 	private static final String DEFAULT_BOVESPA_URL;
 	private static final String NUMBER_SCALE;
 	private static final String INITIAL_YEAR;
-
 	private static final String DEFAULT_FILENAME;
+	private static final Executor DEFAULT_EXECUTOR;
 
 	static {
 		var appProps = new Properties();
@@ -30,7 +31,7 @@ public class Config {
 			NUMBER_SCALE = appProps.getProperty("numberScale", "2");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
 			DEFAULT_FILENAME = appProps.getProperty("defaultFilename", "data");
-
+			DEFAULT_EXECUTOR = Executors.newCachedThreadPool();
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);
 			logger.error("Error during loading properties", e);
@@ -51,6 +52,11 @@ public class Config {
 
 	public String getDefaultFilename() {
 		return DEFAULT_FILENAME;
+	}
+
+
+	public Executor getDefaultExecutor() {
+		return DEFAULT_EXECUTOR;
 	}
 
 	public String getDefaultBovespaUrl() {

@@ -12,8 +12,7 @@ import java.time.Year;
 import java.util.Calendar;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BovespaYearManagerTest {
 
@@ -28,7 +27,8 @@ public class BovespaYearManagerTest {
 
 	@Test
 	public void testUpdatingYearListSuccessfully() throws IOException {
-		var yearManager = getBovespaYearManager();
+		var mainFolder = Files.createTempDirectory("testUpdatingYearListSuccessfully").toFile();
+		var yearManager =  new BovespaYearManager(mainFolder);
 		var quotesSave = Set.of(
 			createBovespaDailyQuote(-2).build(),
 			createBovespaDailyQuote(-1).build(),
@@ -41,11 +41,10 @@ public class BovespaYearManagerTest {
 		assertFalse(savedYears.contains(CURRENT_YEAR-2), "Should not contain two year ago!");
 	}
 
-
-
-	private BovespaYearManager getBovespaYearManager() throws IOException {
-		var mainFolder = Files.createTempDirectory("testUpdatingYearListSuccessfully").toFile();
-		return new BovespaYearManager(mainFolder);
+	@Test
+	public void shouldThrowExceptionBecauseBovespaFolderIsFile() throws IOException {
+		var file = Files.createTempFile("shouldThrowExceptionBecauseBovespaFolderIsFile", "test").toFile();
+		assertThrows(RuntimeException.class, () -> new BovespaYearManager(file));
 	}
 
 }

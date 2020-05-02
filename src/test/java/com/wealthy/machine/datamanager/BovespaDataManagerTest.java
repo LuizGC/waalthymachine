@@ -5,8 +5,10 @@ import com.wealthy.machine.reader.BovespaDataReader;
 import com.wealthy.machine.util.BovespaDailyQuoteBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
@@ -30,6 +32,12 @@ public class BovespaDataManagerTest {
 		verify(dataReader, times(1)).read(url);
 		verify(dataAccessLayer, times(1)).listUnsavedPaths();
 		verify(dataAccessLayer, times(1)).save(setBovespaDaily);
+	}
+
+	@Test
+	public void shouldCreateBovespaDataManager() throws IOException {
+		var folder = Files.createTempDirectory("shouldCreateBovespaDataManager").toFile();
+		new BovespaDataManager(folder);
 	}
 
 }

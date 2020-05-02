@@ -1,6 +1,6 @@
 package com.wealthy.machine.quote;
 
-import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
+import com.wealthy.machine.util.BovespaDailyQuoteBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -14,32 +14,32 @@ public class BovespaDailyQuoteTest {
 	@Test
 	public void testEqulas(){
 		var random = new Random();
-		var firstQuote = new BovespaDaileQuoteBuilder().build();
-		var secondQuote = new BovespaDaileQuoteBuilder()
+		var firstQuote = new BovespaDailyQuoteBuilder().build();
+		var secondQuote = new BovespaDailyQuoteBuilder()
 				.avgPrice(String.valueOf(random.nextDouble()))
 				.build();
 		assertEquals(firstQuote, secondQuote, "Those quotes must be equals!");
-		secondQuote = new BovespaDaileQuoteBuilder().shareCode("ABCQ1").build();
+		secondQuote = new BovespaDailyQuoteBuilder().shareCode("ABCQ1").build();
 		assertNotEquals(firstQuote, secondQuote, "Those quotes are different!");
 		var calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 1989);
-		secondQuote = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
+		secondQuote = new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).build();
 		assertNotEquals(firstQuote, secondQuote, "Those quotes are different!");
 	}
 
 	@Test
 	public void testHashCode(){
 		var random = new Random();
-		var firstQuote = new BovespaDaileQuoteBuilder().build();
-		var secondQuote = new BovespaDaileQuoteBuilder()
+		var firstQuote = new BovespaDailyQuoteBuilder().build();
+		var secondQuote = new BovespaDailyQuoteBuilder()
 				.avgPrice(String.valueOf(random.nextDouble()))
 				.build();
 		assertEquals(firstQuote.hashCode(), secondQuote.hashCode(), "Those quotes hash code must be equals!");
-		secondQuote = new BovespaDaileQuoteBuilder().shareCode("ABCQ1").build();
+		secondQuote = new BovespaDailyQuoteBuilder().shareCode("ABCQ1").build();
 		assertNotEquals(firstQuote.hashCode(), secondQuote.hashCode(), "Those quotes hash code are different!");
 		var calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 1989);
-		secondQuote = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
+		secondQuote = new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).build();
 		assertNotEquals(firstQuote.hashCode(), secondQuote.hashCode(), "Those quotes hash code are different!");
 	}
 

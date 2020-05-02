@@ -1,7 +1,7 @@
 package com.wealthy.machine.dataaccesslayer;
 
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaYearManager;
-import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
+import com.wealthy.machine.util.BovespaDailyQuoteBuilder;
 import com.wealthy.machine.util.DailyQuoteBuilder;
 import com.wealthy.machine.util.UrlToYearConverter;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class BovespaYearManagerTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, CURRENT_YEAR);
 		calendar.add(Calendar.YEAR, amountYear);
-		return new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime());
+		return new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime());
 	}
 
 	@Test

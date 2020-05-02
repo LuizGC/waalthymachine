@@ -5,7 +5,7 @@ import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLa
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
-import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
+import com.wealthy.machine.util.BovespaDailyQuoteBuilder;
 import com.wealthy.machine.util.UrlToYearConverter;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +42,8 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		var bovespaShareDataAccess = new BovespaStockQuoteDataAccessLayer(whereToSave);
 		Calendar calendar = Calendar.getInstance();
 		var shareListToSave = Set.of(
-				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD3").build(),
-				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD4").build()
+				new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD3").build(),
+				new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).shareCode("ABCD4").build()
 		);
 		bovespaShareDataAccess.save(shareListToSave);
 		shareListToSave.forEach(share -> {
@@ -62,7 +62,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		Calendar calendar = Calendar.getInstance();
 		for(int i = 0; i < amount; i++) {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + i);
-			var quote = new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build();
+			var quote = new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).build();
 			array[i] = quote;
 		}
 		return array;
@@ -97,7 +97,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		var maxPrice = "13.00";
 		var avgPrice = "12.00";
 		var volume = "10000000.00";
-		DailyQuote testedQuote = new BovespaDaileQuoteBuilder()
+		DailyQuote testedQuote = new BovespaDailyQuoteBuilder()
 				.tradingDay(tradingDay)
 				.shareCode(shareCode)
 				.openPrice(openPrice)
@@ -111,8 +111,8 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		calendar.add(Calendar.DAY_OF_MONTH, -2);
 		var setToBeSaved = Set.of(
 				testedQuote,
-				new BovespaDaileQuoteBuilder().tradingDay(new Date()).build(),
-				new BovespaDaileQuoteBuilder().tradingDay(calendar.getTime()).build()
+				new BovespaDailyQuoteBuilder().tradingDay(new Date()).build(),
+				new BovespaDailyQuoteBuilder().tradingDay(calendar.getTime()).build()
 		);
 		var folder = Files.createTempDirectory("testTheDataRegistersInCorrectFile").toFile();
 

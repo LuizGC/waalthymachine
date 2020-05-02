@@ -1,7 +1,10 @@
 package com.wealthy.machine.dataaccesslayer;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.Config;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
+import com.wealthy.machine.datamanager.BovespaDataManager;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
@@ -145,6 +148,25 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		assertTrue(savedYears.contains(currentYear), "Should contain the current year!");
 		assertTrue(savedYears.contains(currentYear-1), "Should contain the previous year!");
 		assertTrue(savedYears.contains(currentYear-2), "Should contain two year ago!");
+	}
+
+	@Test
+	public void testShareCodeFileIsWorking() throws IOException {
+		var whereToSave = Files.createTempDirectory("testShareCodeFileIsWorking").toFile();
+		var bovespaFolder = BOVESPA.getFolder(whereToSave);
+		var folderShareCodes = new File(bovespaFolder, "shareCodes");
+		folderShareCodes.mkdirs();
+		var fileShareCodes = new File(folderShareCodes, this.defaultFilename);
+		fileShareCodes.createNewFile();
+		var typeReference = new TypeReference<HashSet<BovespaShareCode>>() {};
+		var mapper = new ObjectMapper();
+		var shareCodes = Set.of(new BovespaShareCode("SANB11"), new BovespaShareCode("BOVA11"));
+		mapper.writeValue(fileShareCodes, shareCodes);
+		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(whereToSave);
+		bovespaShareDataAccessLayer.save(Set.of(new BovespaDailyQuoteBuilder().build()));
+		shareCodes = mapper.readValue(fileShareCodes, typeReference);
+		assertFalse(shareCodes.isEmpty());
+		assertEquals(3, shareCodes.size());
 	}
 }
 

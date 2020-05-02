@@ -1,11 +1,13 @@
 package com.wealthy.machine.sharecode.bovespa;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wealthy.machine.Config;
 import com.wealthy.machine.sharecode.ShareCode;
 import org.slf4j.Logger;
 
 import java.util.Objects;
 
+@JsonDeserialize(using = BovespaShareCodeDeserializer.class)
 public class BovespaShareCode implements ShareCode {
 
 	private final String code;

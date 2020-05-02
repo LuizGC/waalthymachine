@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.Config;
 import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
+import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.quote.bovespa.BovespaDailyQuote;
 import com.wealthy.machine.quote.bovespa.BovespaDailyQuoteDeserializer;
-import com.wealthy.machine.quote.DailyQuote;
 import com.wealthy.machine.sharecode.ShareCode;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import org.slf4j.Logger;
@@ -32,6 +32,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private final String filename;
 	private final Map<ShareCode, ReentrantLock> lockers;
 	private final Executor executor;
+	private final File fileShareCodes;
 
 	public BovespaStockQuoteDataAccessLayer(File storageFolder) {
 		var config = new Config();
@@ -45,6 +46,15 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		this.yearManager = new BovespaYearManager(this.bovespaFolder);
 		this.executor = config.getDefaultExecutor();
 		this.lockers = new ConcurrentHashMap<>();
+		var folderShareCodes = new File(bovespaFolder, "shareCodes");
+		folderShareCodes.mkdirs();
+		this.fileShareCodes = new File(folderShareCodes, filename);
+		try {
+			this.fileShareCodes.createNewFile();
+		} catch (IOException e) {
+			logger.error("Erro while creatinf file shared file", e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -60,9 +70,28 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			}));
 			latch.await();
 			this.yearManager.updateDownloadedYear(dailyQuoteSet);
-		} catch (InterruptedException e) {
+			this.saveShareCodes(dailyShareMap.keySet());
+		} catch (Exception e) {
 			this.logger.error("Long waiting time in saving quotes", e);
 			throw new RuntimeException(e);
+		}
+	}
+
+	private synchronized void saveShareCodes(Set<ShareCode> shareCodes) throws IOException {
+		var setSave = new HashSet<>(shareCodes);
+		setSave.addAll(listShareCodesSaved());
+		var mapper = new ObjectMapper();
+		mapper.writeValue(this.fileShareCodes, setSave);
+	}
+
+	private Set<BovespaShareCode> listShareCodesSaved() {
+		try{
+			var typeReference = new TypeReference<HashSet<BovespaShareCode>>() {};
+			var mapper = new ObjectMapper();
+			var shareCodes = mapper.readValue(this.fileShareCodes, typeReference);
+			return Collections.unmodifiableSet(shareCodes);
+		} catch (Exception e) {
+			return Collections.emptySet();
 		}
 	}
 
@@ -84,8 +113,8 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		});
 	}
 
-	private File getFile(ShareCode key) throws IOException {
-		var keyFolder = new File(this.bovespaFolder, key.getCode());
+	private File getFile(ShareCode shareCode) throws IOException {
+		var keyFolder = new File(this.bovespaFolder, shareCode.getCode());
 		keyFolder.mkdirs();
 		var file = new File(keyFolder, this.filename);
 		file.createNewFile();
@@ -111,5 +140,4 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	public Set<URL> listUnsavedPaths() {
 		return this.yearManager.listUnsavedPaths();
 	}
-
 }

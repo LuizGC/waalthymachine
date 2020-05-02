@@ -17,7 +17,6 @@ public class BovespaDailyQuoteTest {
 		var firstQuote = new BovespaDaileQuoteBuilder().build();
 		var secondQuote = new BovespaDaileQuoteBuilder()
 				.avgPrice(String.valueOf(random.nextDouble()))
-				.company("dsadsadasdsa")
 				.build();
 		assertEquals(firstQuote, secondQuote, "Those quotes must be equals!");
 		secondQuote = new BovespaDaileQuoteBuilder().shareCode("ABCQ1").build();
@@ -34,7 +33,6 @@ public class BovespaDailyQuoteTest {
 		var firstQuote = new BovespaDaileQuoteBuilder().build();
 		var secondQuote = new BovespaDaileQuoteBuilder()
 				.avgPrice(String.valueOf(random.nextDouble()))
-				.company("dsadsadasdsa")
 				.build();
 		assertEquals(firstQuote.hashCode(), secondQuote.hashCode(), "Those quotes hash code must be equals!");
 		secondQuote = new BovespaDaileQuoteBuilder().shareCode("ABCQ1").build();

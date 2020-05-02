@@ -17,7 +17,6 @@ public final class BovespaDailyQuote implements DailyQuote {
 
     private final Date tradingDay;
     private final BovespaShareCode bovespaShareCode;
-    private final String company;
     private final WealthNumber openPrice;
     private final WealthNumber closePrice;
     private final WealthNumber minPrice;
@@ -30,7 +29,6 @@ public final class BovespaDailyQuote implements DailyQuote {
     public BovespaDailyQuote(
             @JsonProperty("tradingDay") Date tradingDay,
             @JsonProperty("shareCode") BovespaShareCode bovespaShareCode,
-            @JsonProperty("company") String company,
             @JsonProperty("openPrice") WealthNumber openPrice,
             @JsonProperty("closePrice") WealthNumber closePrice,
             @JsonProperty("minPrice") WealthNumber minPrice,
@@ -41,7 +39,6 @@ public final class BovespaDailyQuote implements DailyQuote {
         this.logger = new Config().getLogger(this.getClass());
         this.tradingDay = tradingDay;
         this.bovespaShareCode = bovespaShareCode;
-        this.company = company;
         this.openPrice = openPrice;
         this.closePrice = closePrice;
         this.minPrice = minPrice;
@@ -63,11 +60,6 @@ public final class BovespaDailyQuote implements DailyQuote {
     @Override
     public BovespaShareCode getShareCode() {
         return new BovespaShareCode(bovespaShareCode.getCode());
-    }
-
-    @Override
-    public String getCompany() {
-        return company;
     }
 
     @Override

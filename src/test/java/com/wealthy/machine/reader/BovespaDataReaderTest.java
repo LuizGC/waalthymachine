@@ -86,7 +86,6 @@ public class BovespaDataReaderTest {
         var list = reader.read(getTestingZip(lines));
         var b3Quote = list.stream().findFirst().orElseThrow();
         assertEquals(new BovespaShareCode("B3SA3"), b3Quote.getShareCode());
-        assertEquals("B3", b3Quote.getCompany());
         assertEquals(new WealthNumber("40.42"), b3Quote.getOpenPrice());
         assertEquals(new WealthNumber("37.00"), b3Quote.getClosePrice());
         assertEquals(new WealthNumber("35.36"), b3Quote.getMinPrice());

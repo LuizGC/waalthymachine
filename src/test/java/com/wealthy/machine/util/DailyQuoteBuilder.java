@@ -8,7 +8,6 @@ import java.util.Date;
 public abstract class DailyQuoteBuilder {
 	protected Date tradingDay;
 	protected String shareCode;
-	protected String company;
 	protected WealthNumber openPrice;
 	protected WealthNumber closePrice;
 	protected WealthNumber minPrice;
@@ -19,7 +18,6 @@ public abstract class DailyQuoteBuilder {
 	public DailyQuoteBuilder() {
 		this.tradingDay = new Date();
 		this.shareCode = "ABCD3";
-		this.company = "ABC";
 		this.openPrice = new WealthNumber("0.0");
 		this.closePrice = new WealthNumber("0.0");
 		this.minPrice = new WealthNumber("0.0");
@@ -35,11 +33,6 @@ public abstract class DailyQuoteBuilder {
 
 	public DailyQuoteBuilder shareCode(String shareCode) {
 		this.shareCode = shareCode;
-		return this;
-	}
-
-	public DailyQuoteBuilder company(String company) {
-		this.company = company;
 		return this;
 	}
 

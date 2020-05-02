@@ -102,7 +102,6 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		DailyQuote testedQuote = new BovespaDaileQuoteBuilder()
 				.tradingDay(tradingDay)
 				.shareCode(shareCode)
-				.company(company)
 				.openPrice(openPrice)
 				.closePrice(closePrice)
 				.minPrice(minPrice)
@@ -130,7 +129,6 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		var savedQuote = setWithData.stream().findFirst().orElseThrow();
 		assertEquals(tradingDay, savedQuote.getTradingDay());
 		assertEquals(new BovespaShareCode(shareCode), savedQuote.getShareCode());
-		assertEquals(company, savedQuote.getCompany());
 		assertEquals(new WealthNumber(openPrice), savedQuote.getOpenPrice());
 		assertEquals(new WealthNumber(closePrice), savedQuote.getClosePrice());
 		assertEquals(new WealthNumber(minPrice), savedQuote.getMinPrice());

@@ -12,8 +12,6 @@ public interface DailyQuote extends Comparable {
 
     ShareCode getShareCode();
 
-    String getCompany();
-
     WealthNumber getOpenPrice();
 
     WealthNumber getClosePrice();

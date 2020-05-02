@@ -10,7 +10,6 @@ public class BovespaDaileQuoteBuilder extends DailyQuoteBuilder {
 		return new BovespaDailyQuote(
 				tradingDay,
 				new BovespaShareCode(shareCode),
-				company,
 				openPrice,
 				closePrice,
 				minPrice,

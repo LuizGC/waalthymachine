@@ -92,7 +92,6 @@ public class BovespaDataReader implements DataReader {
             return new BovespaDailyQuote(
                     readDate(line, 2, 10), //tradingDay
                     new BovespaShareCode(getShareCode(line)), //stockCode
-                    readString(line, 27, 39), //company
                     readDouble(line, 56, 69), //openPrice
                     readDouble(line, 108, 121), //closePrice
                     readDouble(line, 82, 95), //minPrice

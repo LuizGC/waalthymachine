@@ -1,6 +1,7 @@
 package com.wealthy.machine;
 
 import com.wealthy.machine.dataaccesslayer.StockQuoteDataAccessLayer;
+import com.wealthy.machine.dataaccesslayer.bovespa.BovespaPersistLayerProxy;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.reader.BovespaDataReader;
 import com.wealthy.machine.reader.DataReader;
@@ -21,7 +22,8 @@ public class Worker {
 		var config = new Config();
 		this.logger = config.getLogger(this.getClass());
 		logger.info("Worker started");
-		run(new BovespaDataReader(), new BovespaStockQuoteDataAccessLayer(storageFolder));
+		var bovespaPersistLayerProxy = new BovespaPersistLayerProxy(this.storageFolder);
+		run(new BovespaDataReader(), new BovespaStockQuoteDataAccessLayer(bovespaPersistLayerProxy));
 		logger.info("storageFolder={}", storageFolder);
 		logger.info("Worker ended");
 	}
@@ -35,7 +37,7 @@ public class Worker {
 	}
 
 	public static void main(String... args) throws IOException {
-		var path = args.length == 0 ? Files.createTempDirectory("storage_folder") : Path.of(args[0]);
+		var path = Files.createTempDirectory("storage_folder");
 		System.setProperty("LOG_FOLDER", path.toString());
 		new Worker(path);
 	}

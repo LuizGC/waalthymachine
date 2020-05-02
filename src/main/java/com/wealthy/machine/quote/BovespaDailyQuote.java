@@ -104,9 +104,13 @@ public final class BovespaDailyQuote implements DailyQuote {
         var cal = Calendar.getInstance();
         cal.setTime(getTradingDay());
         var year = cal.get(Calendar.YEAR);
-        var month = cal.get(Calendar.MONTH);
-        var day = cal.get(Calendar.DAY_OF_MONTH);
+        var month = addLeadingZeroIfNecessary(cal.get(Calendar.MONTH));
+        var day = addLeadingZeroIfNecessary(cal.get(Calendar.DAY_OF_MONTH));
         return "" + year + month +  day;
+    }
+
+    private String addLeadingZeroIfNecessary(Integer number) {
+        return String.format("%02d",number);
     }
 
     @Override
@@ -135,7 +139,7 @@ public final class BovespaDailyQuote implements DailyQuote {
             this.logger.error("Stock exchange must be the same");
             throw new RuntimeException();
         }
-        return getTradingDay().compareTo(dailyQuote.getTradingDay());
+        return this.getTextTradingDay().compareTo(dailyQuote.getTextTradingDay());
     }
 
 

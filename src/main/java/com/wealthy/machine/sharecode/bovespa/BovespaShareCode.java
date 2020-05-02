@@ -45,4 +45,5 @@ public class BovespaShareCode implements ShareCode {
 	public int hashCode() {
 		return Objects.hash(getCode());
 	}
+
 }

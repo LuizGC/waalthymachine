@@ -1,5 +1,6 @@
 package com.wealthy.machine.dataaccesslayer;
 
+import com.wealthy.machine.dataaccesslayer.bovespa.BovespaPersistLayerProxy;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaYearManager;
 import com.wealthy.machine.util.BovespaDaileQuoteBuilder;
 import com.wealthy.machine.util.DailyQuoteBuilder;
@@ -12,7 +13,6 @@ import java.time.Year;
 import java.util.Calendar;
 import java.util.Set;
 
-import static com.wealthy.machine.StockExchange.BOVESPA;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,8 +46,7 @@ public class BovespaYearManagerTest {
 
 	private BovespaYearManager getBovespaYearManager() throws IOException {
 		var mainFolder = Files.createTempDirectory("testUpdatingYearListSuccessfully").toFile();
-		var bovespaFolder = BOVESPA.getFolder(mainFolder);
-		return new BovespaYearManager(bovespaFolder);
+		return new BovespaYearManager(new BovespaPersistLayerProxy(mainFolder));
 	}
 
 }

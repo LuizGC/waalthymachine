@@ -11,11 +11,11 @@ import java.util.Properties;
 
 public class Config {
 
-	private static final String BOVESPA_URL;
-	private static final String DAILY_SHARE_DATA_BOVESPA_FILENAME;
+	private static final String DEFAULT_BOVESPA_URL;
 	private static final String NUMBER_SCALE;
 	private static final String INITIAL_YEAR;
-	private static final String YEAR_DOWNLOADED_BOVESPA_FILENAME;
+
+	private static final String DEFAULT_FILENAME;
 
 	static {
 		var appProps = new Properties();
@@ -26,11 +26,10 @@ public class Config {
 						.getResourceAsStream("config.properties")
 		){
 			appProps.load(appConfigPath);
-			BOVESPA_URL = appProps.getProperty("bovespaUrl", "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP");
-			DAILY_SHARE_DATA_BOVESPA_FILENAME = appProps.getProperty("dailyShareDataBovespaFilename", "dailyShare");
+			DEFAULT_BOVESPA_URL = appProps.getProperty("bovespaUrl", "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP");
 			NUMBER_SCALE = appProps.getProperty("numberScale", "2");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
-			YEAR_DOWNLOADED_BOVESPA_FILENAME = appProps.getProperty("yearDownloadedBovespaFilename", "downloadedYear");
+			DEFAULT_FILENAME = appProps.getProperty("defaultFilename", "data");
 
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);
@@ -42,10 +41,6 @@ public class Config {
 	public Config() {
 	}
 
-	public String getDailyShareDataFileName() {
-		return DAILY_SHARE_DATA_BOVESPA_FILENAME;
-	}
-
 	public Integer getNumberScale() {
 		return Integer.valueOf(NUMBER_SCALE);
 	}
@@ -54,20 +49,12 @@ public class Config {
 		return Integer.valueOf(INITIAL_YEAR);
 	}
 
-	public String getYearDownloadedBovespaFilename() {
-		return YEAR_DOWNLOADED_BOVESPA_FILENAME;
-	}
-
-	public String getDailyShareDataBovespaFilename() {
-		return DAILY_SHARE_DATA_BOVESPA_FILENAME;
+	public String getDefaultFilename() {
+		return DEFAULT_FILENAME;
 	}
 
 	public String getDefaultBovespaUrl() {
-		return BOVESPA_URL;
-	}
-
-	public ObjectMapper getJsonMapper() {
-		return new ObjectMapper();
+		return DEFAULT_BOVESPA_URL;
 	}
 
 	public MathContext getMathContext() {

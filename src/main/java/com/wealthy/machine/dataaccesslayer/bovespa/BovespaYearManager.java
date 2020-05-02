@@ -1,12 +1,10 @@
 package com.wealthy.machine.dataaccesslayer.bovespa;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.Config;
+import com.wealthy.machine.dataaccesslayer.persistlayer.PersistLayer;
 import com.wealthy.machine.quote.DailyQuote;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,21 +15,17 @@ import java.util.stream.IntStream;
 
 public class BovespaYearManager {
 
-	private final ObjectMapper mapper;
 	private final Integer initialYear;
 	private final String defaultUrl;
-	private final File yearDownloadedFile;
-	private static final TypeReference<LinkedHashSet<Integer>> TYPE_REFERENCE = new TypeReference<>() {};
-
 	private final Logger logger;
+	private final BovespaPersistLayerProxy proxy;
 
-	public BovespaYearManager(File bovespaFolder) {
+	public BovespaYearManager(BovespaPersistLayerProxy proxy) {
 		var config = new Config();
-		this.mapper = config.getJsonMapper();
 		this.initialYear = config.getInitialYear();
 		this.defaultUrl = config.getDefaultBovespaUrl();
 		this.logger = config.getLogger(this.getClass());
-		this.yearDownloadedFile = new File(bovespaFolder, config.getYearDownloadedBovespaFilename());
+		this.proxy = proxy;
 	}
 
 	public Set<URL> listUnsavedPaths() {
@@ -46,7 +40,7 @@ public class BovespaYearManager {
 
 	private Set<Integer> listSavedYears() {
 		try {
-			var quotesSet = mapper.readValue(this.yearDownloadedFile, TYPE_REFERENCE);
+			var quotesSet = this.proxy.readYear();
 			return Collections.unmodifiableSet(quotesSet);
 		} catch (IOException e) {
 			return Collections.emptySet();
@@ -55,11 +49,10 @@ public class BovespaYearManager {
 
 	public void updateDownloadedYear(Set<DailyQuote> dailyQuoteSet) {
 		var newYearsSet = getNewYearsSet(dailyQuoteSet);
-		var yearSet = new TreeSet<>(listSavedYears());
+		var yearSet = new HashSet<>(listSavedYears());
 		yearSet.addAll(newYearsSet);
 		try{
-			mapper.writeValue(this.yearDownloadedFile, yearSet);
-			logger.info("Completed Year={}", newYearsSet);
+			this.proxy.saveYear(yearSet);
 		} catch (Exception e) {
 			logger.error("There is an issue during saving the daily share set", e);
 			throw new RuntimeException(e);

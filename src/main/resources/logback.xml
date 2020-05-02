@@ -4,8 +4,8 @@
 	<timestamp key="day" datePattern="yyyyMMdd"/>
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>${LOG_FOLDER}/wealth-${day}.log</file>
-		<append>true</append>
-		<immediateFlush>false</immediateFlush>
+		<append>false</append>
+		<immediateFlush>true</immediateFlush>
 		<encoder>
 			<pattern>${LOG_FORMAT}</pattern>
 		</encoder>

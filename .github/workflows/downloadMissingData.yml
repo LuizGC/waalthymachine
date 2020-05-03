@@ -5,7 +5,7 @@ on:
     - cron:  '0 5 * * 2-6'
 
 jobs:
-  download-miss-data:
+  download-missing-data:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

@@ -30,7 +30,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private final BovespaYearManager yearManager;
 	private final File bovespaFolder;
 	private final String filename;
-	private final Map<ShareCode, ReentrantLock> lockers;
+	private volatile Map<ShareCode, ReentrantLock> lockers;
 	private final Executor executor;
 	private final File fileShareCodes;
 
@@ -72,7 +72,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			this.yearManager.updateDownloadedYear(dailyQuoteSet);
 			this.saveShareCodes(dailyShareMap.keySet());
 		} catch (Exception e) {
-			this.logger.error("Long waiting time in saving quotes", e);
+			this.logger.error("Error while processing the quote list", e);
 			throw new RuntimeException(e);
 		}
 	}

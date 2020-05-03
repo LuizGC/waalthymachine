@@ -8,6 +8,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Config {
@@ -16,7 +17,7 @@ public class Config {
 	private static final String NUMBER_SCALE;
 	private static final String INITIAL_YEAR;
 	private static final String DEFAULT_FILENAME;
-	private static final Executor DEFAULT_EXECUTOR;
+	private static final ExecutorService DEFAULT_EXECUTOR;
 
 	static {
 		var appProps = new Properties();
@@ -55,7 +56,7 @@ public class Config {
 	}
 
 
-	public Executor getDefaultExecutor() {
+	public ExecutorService getDefaultExecutor() {
 		return DEFAULT_EXECUTOR;
 	}
 

@@ -3,11 +3,15 @@ package com.wealthy.machine.dataaccesslayer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.Config;
 import com.wealthy.machine.dataaccesslayer.bovespa.BovespaStockQuoteDataAccessLayer;
 import com.wealthy.machine.datamanager.BovespaDataManager;
 import com.wealthy.machine.math.number.WealthNumber;
 import com.wealthy.machine.quote.DailyQuote;
+import com.wealthy.machine.quote.bovespa.BovespaDailyQuote;
+import com.wealthy.machine.quote.bovespa.BovespaDailyQuoteDeserializer;
+import com.wealthy.machine.sharecode.ShareCode;
 import com.wealthy.machine.sharecode.bovespa.BovespaShareCode;
 import com.wealthy.machine.util.BovespaDailyQuoteBuilder;
 import com.wealthy.machine.util.UrlToYearConverter;
@@ -85,7 +89,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 			var arrayQuotes = createSetDiferentsDateQuotes(i);
 			var hashQuotes = new HashSet<>(Arrays.asList(arrayQuotes));
 			bovespaShareDataAccessLayer.save(hashQuotes);
-			var setSaved = bovespaShareDataAccessLayer.list(new BovespaShareCode("ABCD3"));
+			var setSaved = list(new BovespaShareCode("ABCD3"), whereToSave);
 			assertFalse(setSaved.isEmpty());
 			assertTrue(setSaved.containsAll(hashQuotes));
 			assertEquals(arrayQuotes.length, setSaved.size());
@@ -93,6 +97,24 @@ public class BovespaStockQuoteDataAccessLayerTest {
 			for(var j = 0; j < arraySaved.length; j++) {
 				assertEquals(arrayQuotes[j], arraySaved[j]);
 			}
+		}
+	}
+
+
+	private Set<DailyQuote> list(ShareCode shareCode, File whereToSave) {
+		try {
+			var bovespaFolder = BOVESPA.getFolder(whereToSave);
+			var folderShareCodes = new File(bovespaFolder, shareCode.getCode());
+			var fileShareCodes = new File(folderShareCodes, this.defaultFilename);
+			var typeReference = new TypeReference<LinkedHashSet<BovespaDailyQuote>>() {};
+			var mapper = new ObjectMapper();
+			var module = new SimpleModule();
+			module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer((BovespaShareCode) shareCode));
+			mapper.registerModule(module);
+			var quotesSet = mapper.readValue(fileShareCodes, typeReference);
+			return Collections.unmodifiableSet(quotesSet);
+		} catch (IOException e) {
+			return Collections.emptySet();
 		}
 	}
 
@@ -127,7 +149,7 @@ public class BovespaStockQuoteDataAccessLayerTest {
 
 		var bovespaDataLayerAccess = new BovespaStockQuoteDataAccessLayer(folder);
 		bovespaDataLayerAccess.save(setToBeSaved);
-		var setWithData = bovespaDataLayerAccess.list(testedQuote.getShareCode());
+		var setWithData = list(testedQuote.getShareCode(), folder);
 
 		assertFalse(setWithData.isEmpty());
 		assertEquals(1, setWithData.size());
@@ -173,76 +195,6 @@ public class BovespaStockQuoteDataAccessLayerTest {
 		shareCodes = mapper.readValue(fileShareCodes, typeReference);
 		assertFalse(shareCodes.isEmpty());
 		assertEquals(3, shareCodes.size());
-	}
-
-	@Test
-	public void testParallelismProcessingSavingQuotesInCorrectOrder() throws IOException, InterruptedException {
-		var whereToSave = Files.createTempDirectory("testShareCodeFileIsWorking").toFile();
-		var bovespaFolder = BOVESPA.getFolder(whereToSave);
-		var bovespaShareDataAccessLayer = new BovespaStockQuoteDataAccessLayer(whereToSave);
-		var callableList = new ArrayList<Callable<Set<DailyQuote>>>();
-		var executor = new Config().getDefaultExecutor();
-		var quoteBuilder1 = new BovespaDailyQuoteBuilder().shareCode("AAAA3");
-		var quoteBuilder2 = new BovespaDailyQuoteBuilder().shareCode("BBBB3");
-		var quoteBuilder3 = new BovespaDailyQuoteBuilder().shareCode("CCCC3");
-		var quoteBuilder4 = new BovespaDailyQuoteBuilder().shareCode("DDDD3");
-		var quoteBuilder5 = new BovespaDailyQuoteBuilder().shareCode("FFFF3");
-		var quoteBuilder6 = new BovespaDailyQuoteBuilder().shareCode("GGGG3");
-		var quoteBuilder7 = new BovespaDailyQuoteBuilder().shareCode("HHHH3");
-		var quoteBuilder8 = new BovespaDailyQuoteBuilder().shareCode("IIII3");
-
-		for (var i = 0; i < 32; i++) {
-			var calendar = Calendar.getInstance();
-			calendar.add(Calendar.YEAR, i);
-			for (var j = 0; j < 5; j++) {
-				calendar.add(Calendar.DAY_OF_MONTH, j);
-				var tradingDay = calendar.getTime();
-				var quotes = Set.of(
-						quoteBuilder1.tradingDay(tradingDay).build(),
-						quoteBuilder2.tradingDay(tradingDay).build(),
-						quoteBuilder3.tradingDay(tradingDay).build(),
-						quoteBuilder4.tradingDay(tradingDay).build(),
-						quoteBuilder5.tradingDay(tradingDay).build(),
-						quoteBuilder6.tradingDay(tradingDay).build(),
-						quoteBuilder7.tradingDay(tradingDay).build(),
-						quoteBuilder8.tradingDay(tradingDay).build()
-				);
-				callableList.add(() -> {
-					bovespaShareDataAccessLayer.save(quotes);
-					return Collections.unmodifiableSet(quotes);
-				});
-			}
-		}
-
-		var map = executor
-				.invokeAll(callableList)
-				.stream()
-				.map(a -> {
-					var set = new HashSet<DailyQuote>();
-					try {
-						set.addAll(a.get()) ;
-					} catch (Exception e) {
-						set.addAll(Collections.emptySet());
-					}
-					return set;
-				})
-				.flatMap(Collection::stream)
-				.collect(Collectors.groupingBy(DailyQuote::getShareCode));
-
-		map.forEach(((shareCode, dailyQuotes) -> {
-			var orderDailyQuotes = new TreeSet<>(dailyQuotes);
-			var mapper = new ObjectMapper();
-			try {
-				var folderShareCodes = new File(bovespaFolder, shareCode.getCode());
-				var fileShareCodes = new File(folderShareCodes, this.defaultFilename);
-				var orderDailyQuotesJson = mapper.writeValueAsString(orderDailyQuotes);
-				var savedDailyQuoteasJson = Files.readString(fileShareCodes.toPath());
-				assertEquals(orderDailyQuotesJson, savedDailyQuoteasJson);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}));
 	}
 }
 

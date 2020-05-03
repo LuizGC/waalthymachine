@@ -62,12 +62,14 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		try {
 			var dailyShareMap = dailyQuoteSet.stream().collect(Collectors.groupingBy(DailyQuote::getShareCode));
 			var latch = new CountDownLatch(dailyShareMap.size());
-			dailyShareMap.forEach(((shareCode, dailyQuotes) -> {
-				if (this.lockers.get(shareCode) == null) {
-					this.lockers.put(shareCode, new ReentrantLock(false));
-				}
-				this.saveBovespaDailyQuote(shareCode, dailyQuotes, latch);
-			}));
+			synchronized (this) {
+				dailyShareMap.keySet().forEach(shareCode -> {
+					if (this.lockers.get(shareCode) == null) {
+						this.lockers.put(shareCode, new ReentrantLock(false));
+					}
+				});
+			}
+			saveBovespaDailyQuote(dailyShareMap, latch);
 			latch.await();
 			this.yearManager.updateDownloadedYear(dailyQuoteSet);
 			this.saveShareCodes(dailyShareMap.keySet());
@@ -75,6 +77,26 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			this.logger.error("Error while processing the quote list", e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void saveBovespaDailyQuote(Map<ShareCode, List<DailyQuote>> dailyShareMap, CountDownLatch latch) {
+		dailyShareMap.forEach(((shareCode, dailyQuotes) -> {
+			this.executor.execute(() -> {
+				try {
+					this.lockers.get(shareCode).lock();
+					var setToSave = new TreeSet<>(list(shareCode));
+					setToSave.addAll(dailyQuotes);
+					var mapper = new ObjectMapper();
+					mapper.writeValue(getFile(shareCode), setToSave);
+					this.lockers.get(shareCode).unlock();
+				} catch (Exception e) {
+					this.logger.error("There is an issue during saving the daily share set", e);
+					throw new RuntimeException(e);
+				} finally {
+					latch.countDown();
+				}
+			});
+		}));
 	}
 
 	private synchronized void saveShareCodes(Set<ShareCode> shareCodes) throws IOException {
@@ -95,24 +117,6 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		}
 	}
 
-	private void saveBovespaDailyQuote(final ShareCode shareCode, final List<DailyQuote> dailyQuoteSet, final CountDownLatch latch) {
-		this.executor.execute(() -> {
-			try {
-				this.lockers.get(shareCode).lock();
-				var setToSave = new TreeSet<>(list(shareCode));
-				setToSave.addAll(dailyQuoteSet);
-				var mapper = new ObjectMapper();
-				mapper.writeValue(getFile(shareCode), setToSave);
-				this.lockers.get(shareCode).unlock();
-			} catch (Exception e) {
-				this.logger.error("There is an issue during saving the daily share set", e);
-				throw new RuntimeException(e);
-			} finally {
-				latch.countDown();
-			}
-		});
-	}
-
 	private File getFile(ShareCode shareCode) throws IOException {
 		var keyFolder = new File(this.bovespaFolder, shareCode.getCode());
 		keyFolder.mkdirs();
@@ -121,8 +125,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		return file;
 	}
 
-	@Override
-	public Set<DailyQuote> list(ShareCode shareCode) {
+	private Set<DailyQuote> list(ShareCode shareCode) {
 		try {
 			var typeReference = new TypeReference<LinkedHashSet<BovespaDailyQuote>>() {};
 			var mapper = new ObjectMapper();

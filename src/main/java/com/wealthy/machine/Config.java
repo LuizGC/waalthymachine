@@ -32,7 +32,7 @@ public class Config {
 			NUMBER_SCALE = appProps.getProperty("numberScale", "2");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
 			DEFAULT_FILENAME = appProps.getProperty("defaultFilename", "data");
-			DEFAULT_EXECUTOR = Executors.newSingleThreadExecutor();
+			DEFAULT_EXECUTOR = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);
 			logger.error("Error during loading properties", e);

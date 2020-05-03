@@ -63,7 +63,7 @@ public class BovespaYearManager {
 		}
 	}
 
-	public synchronized void updateDownloadedYear(Set<DailyQuote> dailyQuoteSet) {
+	public synchronized void updateDownloadedYears(Set<DailyQuote> dailyQuoteSet) {
 		var newYearsSet = getNewYearsSet(dailyQuoteSet);
 		var yearSet = new HashSet<>(listSavedYears());
 		yearSet.addAll(newYearsSet);

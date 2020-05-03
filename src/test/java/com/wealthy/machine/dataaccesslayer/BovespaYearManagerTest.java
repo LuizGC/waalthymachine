@@ -34,7 +34,7 @@ public class BovespaYearManagerTest {
 			createBovespaDailyQuote(-1).build(),
 			createBovespaDailyQuote(0).build()
 		);
-		yearManager.updateDownloadedYear(quotesSave);
+		yearManager.updateDownloadedYears(quotesSave);
 		var savedYears = new UrlToYearConverter(yearManager.listUnsavedPaths()).listYears();
 		assertTrue(savedYears.contains(CURRENT_YEAR), "Should contain the current year!");
 		assertFalse(savedYears.contains(CURRENT_YEAR-1), "Should not contain the previous year!");

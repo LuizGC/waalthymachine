@@ -30,9 +30,9 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private final BovespaYearManager yearManager;
 	private final File bovespaFolder;
 	private final String filename;
+	private final BovespaShareCodeManager shareCodeManger;
 	private volatile Map<ShareCode, ReentrantLock> lockers;
 	private final Executor executor;
-	private final File fileShareCodes;
 
 	public BovespaStockQuoteDataAccessLayer(File storageFolder) {
 		var config = new Config();
@@ -46,15 +46,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 		this.yearManager = new BovespaYearManager(this.bovespaFolder);
 		this.executor = config.getDefaultExecutor();
 		this.lockers = new ConcurrentHashMap<>();
-		var folderShareCodes = new File(bovespaFolder, "shareCodes");
-		folderShareCodes.mkdirs();
-		this.fileShareCodes = new File(folderShareCodes, filename);
-		try {
-			this.fileShareCodes.createNewFile();
-		} catch (IOException e) {
-			logger.error("Erro while creatinf file shared file", e);
-			throw new RuntimeException(e);
-		}
+		this.shareCodeManger = new BovespaShareCodeManager(bovespaFolder);
 	}
 
 	@Override
@@ -71,8 +63,8 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 			}
 			saveBovespaDailyQuote(dailyShareMap, latch);
 			latch.await();
-			this.yearManager.updateDownloadedYear(dailyQuoteSet);
-			this.saveShareCodes(dailyShareMap.keySet());
+			this.yearManager.updateDownloadedYears(dailyQuoteSet);
+			this.shareCodeManger.updateDownloadedShareCodes(dailyShareMap.keySet());
 		} catch (Exception e) {
 			this.logger.error("Error while processing the quote list", e);
 			throw new RuntimeException(e);
@@ -97,24 +89,6 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 				}
 			});
 		}));
-	}
-
-	private synchronized void saveShareCodes(Set<ShareCode> shareCodes) throws IOException {
-		var setSave = new HashSet<>(shareCodes);
-		setSave.addAll(listShareCodesSaved());
-		var mapper = new ObjectMapper();
-		mapper.writeValue(this.fileShareCodes, setSave);
-	}
-
-	private Set<BovespaShareCode> listShareCodesSaved() {
-		try{
-			var typeReference = new TypeReference<HashSet<BovespaShareCode>>() {};
-			var mapper = new ObjectMapper();
-			var shareCodes = mapper.readValue(this.fileShareCodes, typeReference);
-			return Collections.unmodifiableSet(shareCodes);
-		} catch (Exception e) {
-			return Collections.emptySet();
-		}
 	}
 
 	private File getFile(ShareCode shareCode) throws IOException {

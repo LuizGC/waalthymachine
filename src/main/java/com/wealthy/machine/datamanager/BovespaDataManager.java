@@ -29,7 +29,7 @@ public class BovespaDataManager implements DataManagerCommander {
 	}
 
 	@Override
-	public void execute() {
+	public void getMissingData() {
 		try {
 			var paths = stockShareDataAccessLayer.listUnsavedPaths();
 			var latch = new CountDownLatch(paths.size());

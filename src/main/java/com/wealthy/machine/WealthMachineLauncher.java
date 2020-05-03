@@ -19,7 +19,7 @@ public class WealthMachineLauncher {
 			new BovespaDataManager(storageFolder)
 		};
 		for (var dataDownloader : dataDownloaderList) {
-			dataDownloader.execute();
+			dataDownloader.getMissingData();
 		}
 		logger.info("storageFolder={}", storageFolder);
 	}

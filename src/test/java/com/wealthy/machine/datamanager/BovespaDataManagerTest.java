@@ -27,7 +27,7 @@ public class BovespaDataManagerTest {
 		when(dataReader.read(url)).thenReturn(setBovespaDaily);
 		when(dataAccessLayer.listUnsavedPaths()).thenReturn(Set.of(url));
 
-		dataManager.execute();
+		dataManager.getMissingData();
 
 		verify(dataReader, times(1)).read(url);
 		verify(dataAccessLayer, times(1)).listUnsavedPaths();

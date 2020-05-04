@@ -1,4 +1,4 @@
-name: Download miss daily quotes
+name: Download
 
 on:
   schedule:

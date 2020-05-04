@@ -3,7 +3,6 @@ name: Download miss daily quotes
 on:
   schedule:
     - cron:  '15 7 * * 1-6'
-
 jobs:
   download-missing-data:
     runs-on: ubuntu-latest

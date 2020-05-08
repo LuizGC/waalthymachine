@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static com.wealthy.machine.core.StockExchange.BOVESPA;
 
-public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLayer {
+public class BovespaStockQuoteDataAccess implements StockQuoteDataAccessLayer {
 
 	private final Logger logger;
 	private final BovespaYearDataAccess yearManager;
@@ -34,7 +34,7 @@ public class BovespaStockQuoteDataAccessLayer implements StockQuoteDataAccessLay
 	private volatile Map<ShareCode, ReentrantLock> lockers;
 	private final Executor executor;
 
-	public BovespaStockQuoteDataAccessLayer(File storageFolder) {
+	public BovespaStockQuoteDataAccess(File storageFolder) {
 		var config = new Config();
 		this.logger = config.getLogger(this.getClass());
 		this.filename = config.getDefaultFilename();

@@ -1,7 +1,7 @@
 package com.wealthy.machine;
 
-import com.wealthy.machine.datamanager.BovespaDataManager;
-import com.wealthy.machine.datamanager.DataManagerCommander;
+import com.wealthy.machine.bovespa.processor.BovespaDataProcessor;
+import com.wealthy.machine.core.datamanager.DataManagerCommander;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ public class WealthMachineLauncher {
 		var config = new Config();
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		var dataDownloaderList = new DataManagerCommander[]{
-			new BovespaDataManager(storageFolder)
+			new BovespaDataProcessor(storageFolder)
 		};
 		for (var dataDownloader : dataDownloaderList) {
 			dataDownloader.getMissingData();

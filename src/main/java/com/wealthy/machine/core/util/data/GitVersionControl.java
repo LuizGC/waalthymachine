@@ -65,7 +65,6 @@ public class GitVersionControl {
 		var sshPublicKey = config.getGitSshPublicKey();
 		var sshPrivateKey = config.getGitSshPrivateKey();
 		var passphrase = config.getGitSshPassphrase();
-		this.logger.info(System.getenv("GIT_PUBLIC_SSH_KEY"));
 		this.sshTransportConfigCallback = new SshTransportConfigCallback(sshPrivateKey, sshPublicKey, passphrase);
 		if (sshTransportConfigCallback.isValid()) {
 			this.git = Git
@@ -129,8 +128,9 @@ public class GitVersionControl {
 		} else {
 			String filename = file
 					.toString()
-					.replace(this.git.getRepository().getWorkTree() + "\\", "")
+					.replace(this.git.getRepository().getWorkTree() + File.separator, "")
 					.replace("\\", "/");
+			this.logger.info(filename);
 			add.addFilepattern(filename);
 		}
 	}

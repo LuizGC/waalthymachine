@@ -65,7 +65,7 @@ public class GitVersionControl {
 		var sshPublicKey = config.getGitSshPublicKey();
 		var sshPrivateKey = config.getGitSshPrivateKey();
 		var passphrase = config.getGitSshPassphrase();
-		System.out.println(sshPrivateKey);
+		System.out.println(System.getenv("GIT_PUBLIC_SSH_KEY"));
 		this.sshTransportConfigCallback = new SshTransportConfigCallback(sshPrivateKey, sshPublicKey, passphrase);
 		if (sshTransportConfigCallback.isValid()) {
 			this.git = Git

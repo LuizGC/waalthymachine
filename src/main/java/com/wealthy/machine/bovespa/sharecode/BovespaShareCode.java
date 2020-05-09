@@ -2,7 +2,7 @@ package com.wealthy.machine.bovespa.sharecode;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wealthy.machine.Config;
+import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.sharecode.ShareCode;
 import org.slf4j.Logger;
 
@@ -37,6 +37,7 @@ public class BovespaShareCode implements ShareCode {
 		return code;
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -47,7 +48,12 @@ public class BovespaShareCode implements ShareCode {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getCode());
+		return Objects.hash(this.getClass().getName(), getCode());
+	}
+
+	@Override
+	public int compareTo(ShareCode shareCode) {
+		return this.getCode().compareTo(shareCode.getCode());
 	}
 
 }

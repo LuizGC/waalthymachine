@@ -1,7 +1,7 @@
-package com.wealthy.machine.core.math.number;
+package com.wealthy.machine.core.util.number;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wealthy.machine.Config;
+import com.wealthy.machine.core.Config;
 
 import java.math.BigDecimal;
 import java.util.Objects;

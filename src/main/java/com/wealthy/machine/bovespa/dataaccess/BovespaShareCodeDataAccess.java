@@ -2,9 +2,10 @@ package com.wealthy.machine.bovespa.dataaccess;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wealthy.machine.Config;
-import com.wealthy.machine.core.sharecode.ShareCode;
+import com.wealthy.machine.core.Config;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.core.dataaccess.DataAccess;
+import com.wealthy.machine.core.util.DataFileGetter;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -13,31 +14,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BovespaShareCodeDataAccess {
+public class BovespaShareCodeDataAccess implements DataAccess<BovespaShareCode> {
 	private final File fileShareCodes;
 	private final Logger logger;
-	private final String filename;
 
-	public BovespaShareCodeDataAccess(File bovespaFolder) {
-		var config = new Config();
-		this.logger = config.getLogger(this.getClass());
-		this.filename = config.getDefaultFilename();
-		var folderShareCodes = new File(bovespaFolder, "shareCodes");
-		folderShareCodes.mkdirs();
-		this.fileShareCodes = new File(folderShareCodes, filename);
-		try {
-			this.fileShareCodes.createNewFile();
-		} catch (IOException e) {
-			logger.error("Erro while creatinf file shared file", e);
-			throw new RuntimeException(e);
-		}
+	public BovespaShareCodeDataAccess(DataFileGetter dataFileGetter, Config config) {
+		this.logger = config.getLogger(config.getClass());
+		this.fileShareCodes = dataFileGetter.getFile(config.getShareCodeKey());
 	}
 
-	public synchronized void updateDownloadedShareCodes(Set<ShareCode> shareCodes) throws IOException {
-		var setSave = new HashSet<>(shareCodes);
-		setSave.addAll(listShareCodesSaved());
-		var mapper = new ObjectMapper();
-		mapper.writeValue(this.fileShareCodes, setSave);
+	@Override
+	public synchronized void save(Set<BovespaShareCode> shareCodes) {
+		try {
+			var setSave = new HashSet<>(shareCodes);
+			setSave.addAll(listShareCodesSaved());
+			var mapper = new ObjectMapper();
+			mapper.writeValue(this.fileShareCodes, setSave);
+		} catch (IOException e) {
+			this.logger.error("Error during saving share codes downloaded.");
+			throw new RuntimeException(e);
+		}
 	}
 
 	private Set<BovespaShareCode> listShareCodesSaved() {

@@ -1,4 +1,4 @@
-package com.wealthy.machine.core.math.number;
+package com.wealthy.machine.core.util.number;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

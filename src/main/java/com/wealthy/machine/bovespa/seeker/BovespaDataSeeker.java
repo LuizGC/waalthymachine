@@ -1,12 +1,11 @@
 package com.wealthy.machine.bovespa.seeker;
 
-import com.wealthy.machine.Config;
-import com.wealthy.machine.core.math.number.WealthNumber;
+import com.wealthy.machine.core.Config;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
-import com.wealthy.machine.core.quote.DailyQuote;
-import com.wealthy.machine.core.seeker.DataSeeker;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeValidator;
+import com.wealthy.machine.core.seeker.DataSeeker;
+import com.wealthy.machine.core.util.number.WealthNumber;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;
@@ -25,16 +24,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
-public class BovespaDataSeeker implements DataSeeker {
+public class BovespaDataSeeker implements DataSeeker<BovespaDailyQuote> {
 
     private final Logger logger;
 
-    public BovespaDataSeeker() {
-        var config = new Config();
+    public BovespaDataSeeker(Config config) {
         this.logger = config.getLogger(this.getClass());
     }
 
-    public Set<DailyQuote> read(URL zipFileUrl) {
+    public Set<BovespaDailyQuote> read(URL zipFileUrl) {
         this.logger.info("Starting download url={}", zipFileUrl);
         try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
             if (zipStream.getNextEntry() == null) {
@@ -50,7 +48,7 @@ public class BovespaDataSeeker implements DataSeeker {
         }
     }
 
-    private Set<DailyQuote> readEntry(InputStream zipStream) throws IOException {
+    private Set<BovespaDailyQuote> readEntry(InputStream zipStream) throws IOException {
         try (
                 var readableByteChannel = Channels.newChannel(zipStream);
                 var bos = new ByteArrayOutputStream();

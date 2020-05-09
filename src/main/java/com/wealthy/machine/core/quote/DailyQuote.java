@@ -1,13 +1,12 @@
 package com.wealthy.machine.core.quote;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wealthy.machine.core.StockExchange;
-import com.wealthy.machine.core.math.number.WealthNumber;
 import com.wealthy.machine.core.sharecode.ShareCode;
+import com.wealthy.machine.core.util.number.WealthNumber;
 
 import java.util.Date;
 
-public interface DailyQuote extends Comparable {
+public interface DailyQuote extends Comparable<DailyQuote> {
 
     Date getTradingDay();
 
@@ -25,7 +24,5 @@ public interface DailyQuote extends Comparable {
     WealthNumber getAvgPrice();
 
     WealthNumber getVolume();
-
-    StockExchange getStockExchangeName();
 
 }

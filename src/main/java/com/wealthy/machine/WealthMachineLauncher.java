@@ -54,26 +54,23 @@ public class WealthMachineLauncher {
 	}
 
 	public static void main(String... args) throws IOException, InterruptedException {
-		var path = args.length == 0 ? Files.createTempDirectory("storage_folder") : Path.of(args[0]);
+		var path = Files.createTempDirectory("storage_folder");
 		var storageFolder = path.toFile();
 		System.setProperty("LOG_FOLDER", storageFolder.toString());
 		var config = new Config();
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		logger.info("Data updating has started!");
-		var dataUpdaters = new DataUpdaterFacade[] {
-			new BovespaDataUpdaterUpdaterFacade(storageFolder, config)
-		};
-		for(var dataUpdater : dataUpdaters){
-			var missingUrls = dataUpdater.listMissingUrl();
-			var tasks = missingUrls
-					.stream()
-					.map(url -> new ParallelDownloader(dataUpdater, url))
-					.collect(Collectors.toUnmodifiableSet());
-			var urlsDownloaded = execute(tasks);
-			dataUpdater.updateDownloadedUrl(urlsDownloaded);
-			dataUpdater.updateDownloadedShareCodes();
-		}
+		var dataUpdater = new BovespaDataUpdaterUpdaterFacade(storageFolder, config);
+		var missingUrls = dataUpdater.listMissingUrl();
+		var tasks = missingUrls
+				.stream()
+				.map(url -> new ParallelDownloader(dataUpdater, url))
+				.collect(Collectors.toUnmodifiableSet());
+		var urlsDownloaded = execute(tasks);
+		dataUpdater.updateDownloadedUrl(urlsDownloaded);
+		dataUpdater.updateDownloadedShareCodes();
 		logger.info("Data updating has finished!");
+		logger.info("All data were on {} folder", storageFolder);
 	}
 
 }

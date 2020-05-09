@@ -130,7 +130,6 @@ public class GitVersionControl {
 					.toString()
 					.replace(this.git.getRepository().getWorkTree() + File.separator, "")
 					.replace("\\", "/");
-			this.logger.info(filename);
 			add.addFilepattern(filename);
 		}
 	}

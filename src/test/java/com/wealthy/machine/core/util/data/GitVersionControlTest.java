@@ -64,7 +64,9 @@ public class GitVersionControlTest {
 		Config config = new Config();
 		var branchName = "test_" + new Random().nextInt();
 		var git = new GitVersionControl(storageFolder, branchName, config);
-		var file = new File(storageFolder, branchName);
+		var file = new File(storageFolder, "deepFolder");
+		file.mkdirs();
+		file = new File(file, branchName);
 		Files.write(file.toPath(), branchName.getBytes());
 		git.push();
 		storageFolder = Files.createTempDirectory("new_storage_folder").toFile();

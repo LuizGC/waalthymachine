@@ -1,33 +1,26 @@
 package com.wealthy.machine.bovespa.dataaccess;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuoteDeserializer;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.core.dataaccess.DataAccess;
-import com.wealthy.machine.core.quote.DailyQuote;
-import com.wealthy.machine.core.sharecode.ShareCode;
-import com.wealthy.machine.core.util.DataFileGetter;
-import org.slf4j.Logger;
+import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BovespaDailyQuoteDataAccess implements DataAccess<BovespaDailyQuote> {
 
-	private final Logger logger;
-	private final DataFileGetter dataFileGetter;
+	private final JsonDataFileHandler jsonDataFileHandler;
 
 	private final HashSet<BovespaShareCode> shareCodeDownloaded;
 
-	public BovespaDailyQuoteDataAccess(DataFileGetter dataFileGetter, Config config) {
-		this.logger = config.getLogger(this.getClass());
-		this.dataFileGetter = dataFileGetter;
+	public BovespaDailyQuoteDataAccess(JsonDataFileHandler jsonDataFileHandler) {
+		this.jsonDataFileHandler = jsonDataFileHandler;
 		this.shareCodeDownloaded = new HashSet<>();
 	}
 
@@ -40,34 +33,10 @@ public class BovespaDailyQuoteDataAccess implements DataAccess<BovespaDailyQuote
 	}
 
 	private void saveBovespaDailyQuote(BovespaShareCode shareCode, List<BovespaDailyQuote> dailyQuotes) {
-		try {
-			var setToSave = new TreeSet<>(list(shareCode));
-			setToSave.addAll(dailyQuotes);
-			var mapper = new ObjectMapper();
-			mapper.writeValue(getFile(shareCode), setToSave);
-			this.shareCodeDownloaded.add(shareCode);
-		} catch (IOException e) {
-			this.logger.error("Error during saving: {} code", shareCode.getCode());
-		}
-	}
-
-	private Set<DailyQuote> list(ShareCode shareCode) {
-		try {
-			var typeReference = new TypeReference<LinkedHashSet<BovespaDailyQuote>>() {};
-			var mapper = new ObjectMapper();
-			var module = new SimpleModule();
-			module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer((BovespaShareCode) shareCode));
-			mapper.registerModule(module);
-			var quotesSet = mapper.readValue(getFile(shareCode), typeReference);
-			return Collections.unmodifiableSet(quotesSet);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Collections.emptySet();
-		}
-	}
-
-	private File getFile(ShareCode shareCode) {
-		return dataFileGetter.getFile(shareCode.getCode());
+		var module = new SimpleModule();
+		module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
+		this.jsonDataFileHandler.save(shareCode.getCode(), dailyQuotes, BovespaDailyQuote.class, module);
+		this.shareCodeDownloaded.add(shareCode);
 	}
 
 	public Set<BovespaShareCode> getShareCodeDownloaded() {

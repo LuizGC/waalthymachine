@@ -3,11 +3,11 @@ package com.wealthy.machine;
 import com.wealthy.machine.bovespa.BovespaDataUpdaterUpdaterFacade;
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.DataUpdaterFacade;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -20,16 +20,20 @@ public class WealthMachineLauncher {
 
 		private final DataUpdaterFacade dataUpdater;
 		private final URL url;
+		private final Logger logger;
 
-		private ParallelDownloader(DataUpdaterFacade dataUpdater, URL url) {
+		private ParallelDownloader(DataUpdaterFacade dataUpdater, URL url, Logger logger) {
 			this.dataUpdater = dataUpdater;
 			this.url = url;
+			this.logger = logger;
 		}
 
 		@Override
 		public URL call() {
+			logger.info("Starting process the {}", url);
 			var missingData = dataUpdater.getMissingData(url);
 			dataUpdater.save(missingData);
+			logger.info("Finishing process the {}", url);
 			return url;
 		}
 	}
@@ -64,7 +68,7 @@ public class WealthMachineLauncher {
 		var missingUrls = dataUpdater.listMissingUrl();
 		var tasks = missingUrls
 				.stream()
-				.map(url -> new ParallelDownloader(dataUpdater, url))
+				.map(url -> new ParallelDownloader(dataUpdater, url, logger))
 				.collect(Collectors.toUnmodifiableSet());
 		var urlsDownloaded = execute(tasks);
 		dataUpdater.updateDownloadedUrl(urlsDownloaded);

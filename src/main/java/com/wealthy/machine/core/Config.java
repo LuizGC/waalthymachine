@@ -16,6 +16,10 @@ public class Config {
 	private static final String INITIAL_YEAR;
 	private static final String NUMBER_SCALE;
 	private static final String SHARE_CODE_KEY;
+	private static final String REPOSITORY_ENV_VAR_NAME ;
+	private static final String GIT_SSH_PUBLIC_KEY_ENV_VAR_NAME;
+	private static final String GIT_SSH_PRIVATE_KEY_ENV_VAR_NAME;
+	private static final String GIT_SSH_PHASSPHRASE_KEY_ENV_VAR_NAME;
 
 	static {
 		var appProps = new Properties();
@@ -32,6 +36,10 @@ public class Config {
 			SHARE_CODE_KEY = appProps.getProperty("shareCodeKey", "shareCodes");
 			DEFAULT_FILENAME = appProps.getProperty("defaultFilename", "data");
 			DOWNLOADED_URL_KEY = appProps.getProperty("downloadedUrlKey", "downloadedUrls");
+			REPOSITORY_ENV_VAR_NAME = appProps.getProperty("repositoryEnvVarName", "DATA_REPOSITORY");
+			GIT_SSH_PRIVATE_KEY_ENV_VAR_NAME = appProps.getProperty("gitSshPrivateKeyEnvName", "GIT_PRIVATE_SSH_KEY");
+			GIT_SSH_PUBLIC_KEY_ENV_VAR_NAME = appProps.getProperty("gitSshPublicKeyEnvName", "GIT_PUBLIC_SSH_KEY");
+			GIT_SSH_PHASSPHRASE_KEY_ENV_VAR_NAME = appProps.getProperty("gitSshPassphraseKeyEnvName", "GIT_PASSPHRASE_SSH_KEY");
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);
 			logger.error("Error during loading properties", e);
@@ -78,5 +86,21 @@ public class Config {
 
 	public String getDownloadedUrlKey() {
 		return DOWNLOADED_URL_KEY;
+	}
+
+	public String getRepositoryPath() {
+		return System.getenv(REPOSITORY_ENV_VAR_NAME);
+	}
+
+	public String getGitSshPublicKey() {
+		return System.getenv(GIT_SSH_PUBLIC_KEY_ENV_VAR_NAME);
+	}
+
+	public String getGitSshPrivateKey() {
+		return System.getenv(GIT_SSH_PRIVATE_KEY_ENV_VAR_NAME);
+	}
+
+	public String getGitSshPassphrase() {
+		return System.getenv(GIT_SSH_PHASSPHRASE_KEY_ENV_VAR_NAME);
 	}
 }

@@ -3,6 +3,8 @@ package com.wealthy.machine;
 import com.wealthy.machine.bovespa.BovespaDataUpdaterUpdaterFacade;
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.DataUpdaterFacade;
+import com.wealthy.machine.core.util.data.GitVersionControl;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -57,11 +59,12 @@ public class WealthMachineLauncher {
 		}
 	}
 
-	public static void main(String... args) throws IOException, InterruptedException {
+	public static void main(String... args) throws IOException, InterruptedException, GitAPIException {
 		var path = Files.createTempDirectory("storage_folder");
 		var storageFolder = path.toFile();
 		System.setProperty("LOG_FOLDER", storageFolder.toString());
 		var config = new Config();
+		var git = new GitVersionControl(storageFolder, "bovespa", config);
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		logger.info("Data updating has started!");
 		var dataUpdater = new BovespaDataUpdaterUpdaterFacade(storageFolder, config);
@@ -75,6 +78,7 @@ public class WealthMachineLauncher {
 		dataUpdater.updateDownloadedShareCodes();
 		logger.info("Data updating has finished!");
 		logger.info("All data were on {} folder", storageFolder);
+		git.push();
 	}
 
 }

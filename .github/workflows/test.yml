@@ -23,4 +23,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Build with Gradle
+      env:
+        GIT_PRIVATE_SSH_KEY: ${{ secrets.GIT_PRIVATE_SSH_KEY }}
+        GIT_PUBLIC_SSH_KEY: ${{ secrets.GIT_PUBLIC_SSH_KEY }}
+        DATA_REPOSITORY: ${{ secrets.DATA_REPOSITORY }}
       run: ./gradlew test

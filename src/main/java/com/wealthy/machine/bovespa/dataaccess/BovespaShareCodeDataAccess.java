@@ -2,8 +2,11 @@ package com.wealthy.machine.bovespa.dataaccess;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wealthy.machine.core.Config;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeDeserializer;
+import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeSerializer;
+import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.dataaccess.DataAccess;
 import com.wealthy.machine.core.util.DataFileGetter;
 import org.slf4j.Logger;
@@ -40,6 +43,10 @@ public class BovespaShareCodeDataAccess implements DataAccess<BovespaShareCode> 
 		try{
 			var typeReference = new TypeReference<HashSet<BovespaShareCode>>() {};
 			var mapper = new ObjectMapper();
+			var module = new SimpleModule();
+			module.addDeserializer(BovespaShareCode.class, new BovespaShareCodeDeserializer());
+			module.addSerializer(BovespaShareCode.class, new BovespaShareCodeSerializer());
+			mapper.registerModule(module);
 			var shareCodes = mapper.readValue(this.fileShareCodes, typeReference);
 			return Collections.unmodifiableSet(shareCodes);
 		} catch (Exception e) {

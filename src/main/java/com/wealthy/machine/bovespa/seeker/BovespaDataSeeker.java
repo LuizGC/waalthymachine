@@ -1,10 +1,9 @@
 package com.wealthy.machine.bovespa.seeker;
 
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeValidator;
-import com.wealthy.machine.core.seeker.DataSeeker;
+import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.number.WealthNumber;
 import org.slf4j.Logger;
 
@@ -24,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
-public class BovespaDataSeeker implements DataSeeker<BovespaDailyQuote> {
+public class BovespaDataSeeker {
 
     private final Logger logger;
 

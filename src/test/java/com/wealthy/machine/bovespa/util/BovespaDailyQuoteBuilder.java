@@ -1,8 +1,8 @@
 package com.wealthy.machine.bovespa.util;
 
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
-import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.util.DailyQuoteBuilder;
 
 public class BovespaDailyQuoteBuilder extends DailyQuoteBuilder {

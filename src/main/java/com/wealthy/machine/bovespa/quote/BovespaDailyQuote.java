@@ -1,8 +1,8 @@
 package com.wealthy.machine.bovespa.quote;
 
-import com.wealthy.machine.core.util.number.WealthNumber;
-import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.core.quote.DailyQuote;
+import com.wealthy.machine.core.util.number.WealthNumber;
 
 import java.util.Calendar;
 import java.util.Date;

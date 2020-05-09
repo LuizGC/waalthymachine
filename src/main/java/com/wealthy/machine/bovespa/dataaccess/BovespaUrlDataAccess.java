@@ -1,19 +1,17 @@
 package com.wealthy.machine.bovespa.dataaccess;
 
-import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import com.wealthy.machine.core.Config;
-import com.wealthy.machine.core.dataaccess.DataAccess;
-import com.wealthy.machine.core.seeker.MissingUrlSeeker;
+import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import org.slf4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Year;
-import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BovespaUrlDataAccess implements DataAccess<URL>, MissingUrlSeeker {
+public class BovespaUrlDataAccess {
 
 	private final Integer initialYear;
 	private final String defaultUrl;
@@ -29,12 +27,10 @@ public class BovespaUrlDataAccess implements DataAccess<URL>, MissingUrlSeeker {
 		this.jsonDataFileHandler = jsonDataFileHandler;
 	}
 
-	@Override
 	public synchronized void save(Set<URL> newYearsSet) {
 		this.jsonDataFileHandler.save(this.downloadedUrlKey, newYearsSet, URL.class);
 	}
 
-	@Override
 	public Set<URL> listMissingUrl() {
 		var savedYearSet = this.jsonDataFileHandler.list(downloadedUrlKey, URL.class);
 		return IntStream

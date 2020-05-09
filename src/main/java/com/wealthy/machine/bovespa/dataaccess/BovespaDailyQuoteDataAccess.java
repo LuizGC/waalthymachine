@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuoteDeserializer;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
-import com.wealthy.machine.core.dataaccess.DataAccess;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BovespaDailyQuoteDataAccess implements DataAccess<BovespaDailyQuote> {
+public class BovespaDailyQuoteDataAccess {
 
 	private final JsonDataFileHandler jsonDataFileHandler;
 
@@ -24,7 +23,6 @@ public class BovespaDailyQuoteDataAccess implements DataAccess<BovespaDailyQuote
 		this.shareCodeDownloaded = new HashSet<>();
 	}
 
-	@Override
 	public synchronized void save(Set<BovespaDailyQuote> dailyQuoteSet) {
 			dailyQuoteSet
 					.stream()

@@ -3,6 +3,7 @@ package com.wealthy.machine.bovespa.sharecode;
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.sharecode.ShareCode;
 import org.slf4j.Logger;
+
 import java.util.Objects;
 
 public class BovespaShareCode implements ShareCode {

@@ -47,6 +47,8 @@ public class GitVersionControlTest {
 		Config config = mock(Config.class);
 		when(config.getLogger(GitVersionControl.class)).thenReturn(LoggerFactory.getLogger(GitVersionControl.class));
 		when(config.getRepositoryPath()).thenReturn("test123");
+		when(config.getGitSshPublicKey()).thenReturn("test123");
+		when(config.getGitSshPrivateKey()).thenReturn("test123");
 		assertThrows(GitAPIException.class, () -> new GitVersionControl(storageFolder, "test", config));
 	}
 

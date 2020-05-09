@@ -9,7 +9,7 @@ import java.util.Objects;
 @JsonSerialize(using = WealthNumberSerializer.class)
 public class WealthNumber {
 
-	private BigDecimal number;
+	private final BigDecimal number;
 
 	public WealthNumber(String number) {
 		var config = new Config();

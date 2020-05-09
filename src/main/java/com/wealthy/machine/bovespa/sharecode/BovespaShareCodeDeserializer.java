@@ -13,7 +13,7 @@ public class BovespaShareCodeDeserializer extends StdDeserializer<BovespaShareCo
 	}
 
 	@Override
-	public BovespaShareCode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public BovespaShareCode deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		return new BovespaShareCode(p.getText());
 	}
 }

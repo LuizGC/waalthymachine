@@ -5,5 +5,5 @@ import java.util.Set;
 
 public interface MissingUrlSeeker {
 
-	public Set<URL> listMissingUrl();
+	Set<URL> listMissingUrl();
 }

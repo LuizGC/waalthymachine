@@ -21,7 +21,7 @@ public class BovespaDailyQuoteDeserializer extends StdDeserializer<BovespaDailyQ
 	}
 
 	@Override
-	public BovespaDailyQuote deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public BovespaDailyQuote deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		JsonNode node = p.getCodec().readTree(p);
 		var tradingDate = new Date(node.get("tradingDay").asLong());
 		var openPrice = node.get("openPrice").asText();

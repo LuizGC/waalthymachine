@@ -1,4 +1,4 @@
-package com.wealthy.machine.core.quote;
+package com.wealthy.machine.bovespa.quote;
 
 import com.wealthy.machine.bovespa.util.BovespaDailyQuoteBuilder;
 import org.junit.jupiter.api.Test;

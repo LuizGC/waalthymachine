@@ -1,8 +1,8 @@
-package com.wealthy.machine.core.seeker;
+package com.wealthy.machine.bovespa.seeker;
 
-import com.wealthy.machine.bovespa.seeker.BovespaDataSeeker;
-import com.wealthy.machine.core.math.number.WealthNumber;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.core.Config;
+import com.wealthy.machine.core.util.number.WealthNumber;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -67,14 +67,14 @@ public class BovespaDataSeekerTest {
                 "012003021202BA3         010AMBEV       ON *         R$  000000004310000000000431000000000043100000000004310000000000431000000000043100000000004600000001000000000000210000000000000009051000000000000000009999123100010000000000000000BRAMBVACNOR4107",
                 "012003021202B3SA31234   010AMBEV       ON *         R$  000000004310000000000431000000000043100000000004310000000000431000000000043100000000004600000001000000000000210000000000000009051000000000000000009999123100010000000000000000BRAMBVACNOR4107"
         );
-        var reader = new BovespaDataSeeker();
+        var reader = new BovespaDataSeeker(new Config());
         var list = reader.read(getTestingZip(lines));
         assertEquals(7, list.size());
     }
 
     @Test
     public void invalidUrl() {
-        final var reader = new BovespaDataSeeker();
+        final var reader = new BovespaDataSeeker(new Config());
         assertThrows(RuntimeException.class, () -> reader.read(new URL("https://www.uol.com.br/")));
     }
 
@@ -83,7 +83,7 @@ public class BovespaDataSeekerTest {
         var lines =  Set.of(
                 "012020042402B3SA3       010B3          ON      NM   R$  000000000404200000000040590000000003536000000000373000000000037000000000003699000000000370088894000000000034044700000000127007596300000000000000009999123100000010000000000000BRB3SAACNOR6110"
         );
-        var reader = new BovespaDataSeeker();
+        var reader = new BovespaDataSeeker(new Config());
         var list = reader.read(getTestingZip(lines));
         var b3Quote = list.stream().findFirst().orElseThrow();
         assertEquals(new BovespaShareCode("B3SA3"), b3Quote.getShareCode());

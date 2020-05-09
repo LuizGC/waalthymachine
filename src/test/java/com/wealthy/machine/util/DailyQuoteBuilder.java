@@ -1,6 +1,6 @@
 package com.wealthy.machine.util;
 
-import com.wealthy.machine.core.math.number.WealthNumber;
+import com.wealthy.machine.core.util.number.WealthNumber;
 import com.wealthy.machine.core.quote.DailyQuote;
 
 import java.util.Date;

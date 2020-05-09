@@ -58,7 +58,7 @@ public class GitVersionControlTest {
 	}
 
 	@Test
-	public void constructor_CorrectGivenRepository_ShouldDownloadTheRandomFile() throws GitAPIException, IOException {
+	public void push_CorrectGivenRepository_ShouldDownloadTheRandomFile() throws GitAPIException, IOException {
 		Config config = new Config();
 		var branchName = "test_" + new Random().nextInt();
 		var git = new GitVersionControl(storageFolder, branchName, config);

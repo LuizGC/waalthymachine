@@ -23,4 +23,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Build with Gradle
+      env:
+        DOES_IT_WORKS: ${{ secrets.doesItWorks }}
       run: ./gradlew test

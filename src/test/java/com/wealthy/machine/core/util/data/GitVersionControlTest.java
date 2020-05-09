@@ -64,14 +64,18 @@ public class GitVersionControlTest {
 		Config config = new Config();
 		var branchName = "test_" + new Random().nextInt();
 		var git = new GitVersionControl(storageFolder, branchName, config);
-		var file = new File(storageFolder, "deepFolder");
+		var file = new File(storageFolder, branchName + "_folder");
 		file.mkdirs();
 		file = new File(file, branchName);
 		Files.write(file.toPath(), branchName.getBytes());
 		git.push();
 		storageFolder = Files.createTempDirectory("new_storage_folder").toFile();
 		new GitVersionControl(storageFolder, branchName, config);
-		assertTrue(new File(storageFolder, branchName).exists());
+		file = new File(storageFolder, branchName + "_folder");
+		assertTrue(file.exists());
+		file = new File(file, branchName);
+		assertTrue(file.exists());
+		assertEquals(Files.readString(file.toPath()), branchName);
 	}
 
 }

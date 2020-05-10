@@ -69,7 +69,6 @@ public class GitVersionControl {
 		if (sshTransportConfigCallback.isValid()) {
 			this.git = Git
 					.cloneRepository()
-					.setTransportConfigCallback(sshTransportConfigCallback)
 					.setURI(repositoryPath)
 					.setDirectory(storageFolder)
 					.call();

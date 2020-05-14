@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-public final class BovespaDailyQuote implements DailyQuote {
+public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDailyQuote>{
 
 	private final Date tradingDay;
 	private final BovespaShareCode bovespaShareCode;
@@ -98,7 +98,7 @@ public final class BovespaDailyQuote implements DailyQuote {
 	}
 
 	@Override
-	public int compareTo(DailyQuote dailyQuote) {
+	public int compareTo(BovespaDailyQuote dailyQuote) {
 		if (this.getShareCode().equals(dailyQuote.getShareCode())) {
 			return this.getTextTradingDay().compareTo(getTextTradingDay(dailyQuote.getTradingDay()));
 		}

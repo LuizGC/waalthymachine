@@ -62,7 +62,6 @@ public class WealthMachineLauncher {
 	public static void main(String... args) throws IOException, InterruptedException, GitAPIException {
 		var path = Files.createTempDirectory("storage_folder");
 		var storageFolder = path.toFile();
-		System.setProperty("LOG_FOLDER", storageFolder.toString());
 		var config = new Config();
 		var git = new GitVersionControl(storageFolder, "bovespa", config);
 		var logger = config.getLogger(WealthMachineLauncher.class);

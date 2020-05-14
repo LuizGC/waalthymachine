@@ -6,7 +6,7 @@ import com.wealthy.machine.core.util.number.WealthNumber;
 
 import java.util.Date;
 
-public interface DailyQuote extends Comparable<DailyQuote> {
+public interface DailyQuote {
 
     Date getTradingDay();
 

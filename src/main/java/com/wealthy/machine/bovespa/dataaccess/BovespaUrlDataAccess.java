@@ -28,15 +28,16 @@ public class BovespaUrlDataAccess {
 	}
 
 	public synchronized void save(Set<URL> newYearsSet) {
-		this.jsonDataFileHandler.save(this.downloadedUrlKey, newYearsSet, URL.class);
+		var urlText = newYearsSet.stream().map(URL::toString).collect(Collectors.toUnmodifiableSet());
+		this.jsonDataFileHandler.save(this.downloadedUrlKey, urlText, String.class);
 	}
 
 	public Set<URL> listMissingUrl() {
-		var savedYearSet = this.jsonDataFileHandler.list(downloadedUrlKey, URL.class);
+		var savedYearSet = this.jsonDataFileHandler.list(downloadedUrlKey, String.class);
 		return IntStream
 				.range(initialYear, Year.now().getValue() + 1)
-				.mapToObj(this::createUrl)
 				.filter(url -> !savedYearSet.contains(url))
+				.mapToObj(this::createUrl)
 				.collect(Collectors.toUnmodifiableSet());
 	}
 

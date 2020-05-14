@@ -8,10 +8,7 @@ import com.wealthy.machine.core.util.DataFileGetter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class JsonDataFileHandler {
 
@@ -23,11 +20,11 @@ public class JsonDataFileHandler {
 		this.dataFileGetter = dataFileGetter;
 	}
 
-	public <T> void save(String key, Collection<T> items, Class<T> clazz) {
+	public <T extends Comparable<T>> void save(String key, Collection<T> items, Class<T> clazz) {
 		save(key, items, clazz, null);
 	}
 
-	public <T> void save(String key, Collection<T> items, Class<T> clazz, Module module) {
+	public <T extends Comparable<T>> void save(String key, Collection<T> items, Class<T> clazz, Module module) {
 		try {
 			ObjectMapper mapper = getObjectMapper(module);
 			var setToSave = new TreeSet<>(items);
@@ -38,15 +35,19 @@ public class JsonDataFileHandler {
 		}
 	}
 
-	public  <T> Set<T> list(String key, Class<T> clazz) {
+	public <T extends Comparable<T>> Set<T> list(String key, Class<T> clazz) {
 		return list(key, clazz, null);
 	}
 
-	public  <T> Set<T> list(String key, Class<T> clazz, Module module) {
+	public  <T extends Comparable<T>> Set<T> list(String key, Class<T> clazz, Module module) {
 		try {
 			ObjectMapper mapper = getObjectMapper(module);
 			JavaType type = mapper.getTypeFactory().constructCollectionType(TreeSet.class, clazz);
-			var quotesSet = mapper.<Set<T>>readValue(dataFileGetter.getFile(key), type);
+			var file = dataFileGetter.getFile(key);
+			var quotesSet = new TreeSet<T>();
+			if (file.length() > 0) {
+				quotesSet = mapper.readValue(file, type);
+			}
 			return Collections.unmodifiableSet(quotesSet);
 		} catch (IOException e) {
 			this.logger.error("Error during listing {} key", key);

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 
 import java.util.Objects;
 
-public class BovespaShareCode implements ShareCode {
+public class BovespaShareCode implements ShareCode, Comparable<BovespaShareCode> {
 
 	private final String code;
 	private final Logger logger;
@@ -48,7 +48,7 @@ public class BovespaShareCode implements ShareCode {
 	}
 
 	@Override
-	public int compareTo(ShareCode shareCode) {
+	public int compareTo(BovespaShareCode shareCode) {
 		return this.getCode().compareTo(shareCode.getCode());
 	}
 

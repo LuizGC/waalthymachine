@@ -32,6 +32,7 @@ public class JsonDataFileHandler {
 			mapper.writeValue(dataFileGetter.getFile(key), setToSave);
 		} catch (IOException e) {
 			this.logger.error("Error during saving {} key", key);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -63,9 +63,9 @@ public class WealthMachineLauncher {
 		var path = Files.createTempDirectory("storage_folder");
 		var storageFolder = path.toFile();
 		var config = new Config();
-		var git = new GitVersionControl(storageFolder, "bovespa", config);
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		logger.info("Data updating has started!");
+		var git = new GitVersionControl(storageFolder, "bovespa", config);
 		var dataUpdater = new BovespaDataUpdaterUpdaterFacade(storageFolder, config);
 		var missingUrls = dataUpdater.listMissingUrl();
 		var tasks = missingUrls
@@ -76,7 +76,6 @@ public class WealthMachineLauncher {
 		dataUpdater.updateDownloadedUrl(urlsDownloaded);
 		dataUpdater.updateDownloadedShareCodes();
 		logger.info("Data updating has finished!");
-		logger.info("All data were on {} folder", storageFolder);
 		git.push();
 	}
 

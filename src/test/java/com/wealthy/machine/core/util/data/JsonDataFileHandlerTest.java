@@ -85,17 +85,8 @@ class JsonDataFileHandlerTest {
 	public void list_ProblemWithFile_ShouldThrowException() {
 		var key = "list_ProblemWithFile_ShouldThrowException";
 		var fileWithData = fileGetter.getFile(key);
-		fileWithData.setReadable(false, false);
-		IOUtil.writeText("[\"a\",\"b\",\"c\"]", fileWithData);
-		try(
-				var randomAccessFile = new RandomAccessFile(fileWithData, "rw");
-				var randomAccessFileChannel = randomAccessFile.getChannel()
-		) {
-			randomAccessFileChannel.lock();
-			assertThrows(RuntimeException.class, () -> jsonDataFile.list(key, String.class));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		IOUtil.writeText("list_ProblemWithFile_ShouldThrowException", fileWithData);
+		assertThrows(RuntimeException.class, () -> jsonDataFile.list(key, String.class));
 	}
 
 }

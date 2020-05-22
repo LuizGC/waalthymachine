@@ -9,7 +9,6 @@ import java.util.Properties;
 public class Config {
 
 	private static final String DEFAULT_BOVESPA_URL;
-	private static final String DEFAULT_FILENAME;
 	private static final String DOWNLOADED_URL_KEY;
 	private static final String INITIAL_YEAR;
 	private static final String SHARE_CODE_KEY;
@@ -30,7 +29,6 @@ public class Config {
 			DEFAULT_BOVESPA_URL = appProps.getProperty("bovespaUrl", "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
 			SHARE_CODE_KEY = appProps.getProperty("shareCodeKey", "shareCodes");
-			DEFAULT_FILENAME = appProps.getProperty("defaultFilename", "data");
 			DOWNLOADED_URL_KEY = appProps.getProperty("downloadedUrlKey", "downloadedUrls");
 			REPOSITORY_ENV_VAR_NAME = appProps.getProperty("repositoryEnvVarName", "DATA_REPOSITORY");
 			GIT_SSH_PRIVATE_KEY_ENV_VAR_NAME = appProps.getProperty("gitSshPrivateKeyEnvName", "GIT_PRIVATE_SSH_KEY");
@@ -48,10 +46,6 @@ public class Config {
 
 	public Integer getInitialYear() {
 		return Integer.valueOf(INITIAL_YEAR);
-	}
-
-	public String getDefaultFilename() {
-		return DEFAULT_FILENAME;
 	}
 
 	public String getDefaultBovespaUrl() {

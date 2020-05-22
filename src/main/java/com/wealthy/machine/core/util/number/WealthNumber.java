@@ -1,9 +1,9 @@
 package com.wealthy.machine.core.util.number;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wealthy.machine.core.Config;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 @JsonSerialize(using = WealthNumberSerializer.class)
@@ -12,9 +12,8 @@ public class WealthNumber {
 	private final BigDecimal number;
 
 	public WealthNumber(String number) {
-		var config = new Config();
-		this.number = new BigDecimal(number, config.getMathContext())
-				.setScale(config.getNumberScale(), config.getRoundingMode());
+		this.number = new BigDecimal(number)
+				.setScale(2, RoundingMode.HALF_EVEN);
 	}
 
 	@Override

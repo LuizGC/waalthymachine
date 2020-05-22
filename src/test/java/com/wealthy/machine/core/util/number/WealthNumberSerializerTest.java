@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 class WealthNumberSerializerTest {
 
 	@Test
-	void serialize() throws IOException {
+	void serialize_CallWriteNumber_ShouldCallJsonGeneratorWriteNumber() throws IOException {
 		var serializer = new WealthNumberSerializer();
 		var number = mock(WealthNumber.class);
 		var jsonGenerator = mock(JsonGenerator.class);

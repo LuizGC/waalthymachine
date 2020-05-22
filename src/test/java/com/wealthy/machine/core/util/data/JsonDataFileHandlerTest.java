@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.io.IOUtil;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +27,7 @@ class JsonDataFileHandlerTest {
 	@BeforeEach
 	public void setup() {
 		var config = mock(Config.class);
+		when(config.getLogger(any())).thenReturn(mock(Logger.class));
 		this.fileGetter = mock(DataFileGetter.class);
 		this.jsonDataFile = new JsonDataFileHandler(fileGetter, config);
 	}
@@ -65,7 +67,7 @@ class JsonDataFileHandlerTest {
 		module.addSerializer(String.class, serializer);
 		jsonDataFile.save(key, Set.of("b", "c", "a"), String.class, module);
 		verify(serializer, times(3))
-				.serialize(any(), any(JsonGenerator.class), any(SerializerProvider.class));
+				.serialize(anyString(), any(JsonGenerator.class), any(SerializerProvider.class));
 	}
 
 	@Test
@@ -94,11 +96,17 @@ class JsonDataFileHandlerTest {
 	}
 
 	@Test
-	public void save_ProblemWithFile_ShouldThrowException() {
+	public void save_ProblemWithFile_ShouldThrowException() throws IOException {
 		var key = "save_EmptyFile_ShouldReturnEmptyList";
-		when(this.fileGetter.getFile(key)).thenReturn(null);
+		var testFile = Files.createTempFile(key, ".json");
+		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
+		var serializer = (JsonSerializer<String>) mock(JsonSerializer.class);
+		doThrow(new IOException()).when(serializer)
+				.serialize(anyString(), any(JsonGenerator.class), any(SerializerProvider.class));
+		var module = new SimpleModule();
+		module.addSerializer(String.class, serializer);
 		assertThrows(RuntimeException.class, () -> {
-			jsonDataFile.save(key, Set.of("b", "c", "a"), String.class);
+			jsonDataFile.save(key, Set.of("b", "c", "a"), String.class, module);
 		});
 	}
 
@@ -108,7 +116,9 @@ class JsonDataFileHandlerTest {
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
 		IOUtil.writeText("is not an array", testFile.toFile());
-		assertThrows(RuntimeException.class, () -> jsonDataFile.list(key, String.class));
+		assertThrows(RuntimeException.class, () ->
+				jsonDataFile.list(key, String.class)
+		);
 	}
 
 }

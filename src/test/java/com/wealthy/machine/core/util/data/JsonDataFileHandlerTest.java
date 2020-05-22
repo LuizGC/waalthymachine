@@ -71,7 +71,7 @@ class JsonDataFileHandlerTest {
 	}
 
 	@Test
-	public void save_SaveManyDifferentsSetWithSomeRepeatedData_ShouldSaveWithoutRepeat() throws IOException {
+	public void save_SaveManyDifferenceSetWithSomeRepeatedData_ShouldSaveWithoutRepeat() throws IOException {
 		var key = "save_PassingModule_ShouldUsingSerializer";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());

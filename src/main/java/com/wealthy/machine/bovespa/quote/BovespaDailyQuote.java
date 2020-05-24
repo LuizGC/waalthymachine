@@ -102,7 +102,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 		if (this.getShareCode().equals(dailyQuote.getShareCode())) {
 			return this.getTextTradingDay().compareTo(getTextTradingDay(dailyQuote.getTradingDay()));
 		}
-		return this.getShareCode().compareTo(dailyQuote.getShareCode());
+		throw new RuntimeException("Share code are not the same");
 	}
 
 	private String getTextTradingDay() {

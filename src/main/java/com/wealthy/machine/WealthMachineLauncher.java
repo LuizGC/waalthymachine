@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class WealthMachineLauncher {
 
-
 	public static void main(String... args) throws IOException, GitAPIException {
 		var path = Files.createTempDirectory("storage_folder");
 		var storageFolder = path.toFile();

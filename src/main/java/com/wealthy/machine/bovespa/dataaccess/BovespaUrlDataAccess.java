@@ -2,7 +2,6 @@ package com.wealthy.machine.bovespa.dataaccess;
 
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
-import org.slf4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,29 +14,27 @@ public class BovespaUrlDataAccess {
 
 	private final Integer initialYear;
 	private final String defaultUrl;
-	private final Logger logger;
 	private final JsonDataFileHandler jsonDataFileHandler;
 	private final String downloadedUrlKey;
 
 	public BovespaUrlDataAccess(JsonDataFileHandler jsonDataFileHandler, Config config) {
 		this.initialYear = config.getInitialYear();
 		this.defaultUrl = config.getDefaultBovespaUrl();
-		this.logger = config.getLogger(this.getClass());
-		this.downloadedUrlKey = config.getDownloadedUrlKey();
 		this.jsonDataFileHandler = jsonDataFileHandler;
+		this.downloadedUrlKey = "downloadedUrls";
 	}
 
 	public synchronized void save(Set<URL> newYearsSet) {
-		var urlText = newYearsSet.stream().map(URL::toString).collect(Collectors.toUnmodifiableSet());
-		this.jsonDataFileHandler.save(this.downloadedUrlKey, urlText, String.class);
+		var urlsText = newYearsSet.stream().map(URL::toString).collect(Collectors.toUnmodifiableSet());
+		this.jsonDataFileHandler.save(this.downloadedUrlKey, urlsText, String.class);
 	}
 
 	public Set<URL> listMissingUrl() {
 		var savedYearSet = this.jsonDataFileHandler.list(downloadedUrlKey, String.class);
 		return IntStream
 				.range(initialYear, Year.now().getValue() + 1)
-				.filter(url -> !savedYearSet.contains(url))
 				.mapToObj(this::createUrl)
+				.filter(url -> !savedYearSet.contains(url.toString()))
 				.collect(Collectors.toUnmodifiableSet());
 	}
 
@@ -46,7 +43,6 @@ public class BovespaUrlDataAccess {
 			String urlPath = defaultUrl.replace("{{YYYY}}", String.valueOf(year));
 			return new URL(urlPath);
 		} catch (MalformedURLException e) {
-			logger.error("Error during Bovespa Url creation.", e);
 			throw new RuntimeException(e);
 		}
 	}

@@ -8,20 +8,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BovespaShareCodeTest {
 
 	@Test
-	public void testShareCodeLengthIsRightSize() {
+	public void constructor_WhenShareCodeIsInvalid_ShouldThrowException() {
 		assertThrows(RuntimeException.class, () -> new BovespaShareCode("SANB11FX"));
 		assertThrows(RuntimeException.class, () -> new BovespaShareCode("SANB"));
-	}
-
-	@Test
-	public void testShareCodeHasOnlyAlphaNumericBetweenFourCharacters() {
-		var shareCodeTest = "SANB11";
-		var shareCode = new BovespaShareCode(shareCodeTest);
-		assertEquals(shareCode.getCode(), shareCodeTest);
-		shareCodeTest = "SANB11F";
-		shareCode = new BovespaShareCode(shareCodeTest);
-		assertEquals(shareCode.getCode(), shareCodeTest);
 		assertThrows(RuntimeException.class, () -> new BovespaShareCode("SAN 11F"));
 	}
 
+	@Test
+	public void equals_WhenShareCodeHasTheSameCode_ShouldBeEquals() {
+		var shareCodeTest = "SANB11";
+		var shareCode1 = new BovespaShareCode(shareCodeTest);
+		var shareCode2 = new BovespaShareCode(shareCodeTest);
+		assertEquals(shareCode1, shareCode2);
+	}
+
+	@Test
+	public void compareTo_WhenAlphabeticOrder_ShouldBeMinusOne() {
+		var shareCode1 = new BovespaShareCode("AAAA11");
+		var shareCode2 = new BovespaShareCode("BBBB5");
+		assertEquals(-1, shareCode1.compareTo(shareCode2));
+	}
 }

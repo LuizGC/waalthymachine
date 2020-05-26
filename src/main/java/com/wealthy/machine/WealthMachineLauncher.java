@@ -14,19 +14,21 @@ import java.nio.file.Files;
 public class WealthMachineLauncher {
 
 	public static void main(String... args) throws IOException, GitAPIException {
-		var storageFolder = Files.createTempDirectory("storage_folder").toFile();
 		var config = new Config();
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		logger.info("Data updating has started!");
-		var git = new GitVersionControl(storageFolder, "bovespa", config);
-		var dataFileGetter = new DataFileGetter(storageFolder);
-		var dataFileHandler = new JsonDataFileHandler(dataFileGetter);
 		var dataUpdaters = new DataUpdater[]{new BovespaDataUpdater()};
 		for (DataUpdater dataUpdater : dataUpdaters) {
+			logger.info("Starting={}", dataUpdater.getClass());
+			var storageFolder = Files.createTempDirectory("storage_folder").toFile();
+			var git = new GitVersionControl(storageFolder, "bovespa", config);
+			var dataFileGetter = new DataFileGetter(storageFolder);
+			var dataFileHandler = new JsonDataFileHandler(dataFileGetter);
 			dataUpdater.execute(dataFileHandler, config);
+			git.push();
+			logger.info("Ended={}", dataUpdater.getClass());
 		}
 		logger.info("Data updating has finished!");
-		git.push();
 	}
 
 }

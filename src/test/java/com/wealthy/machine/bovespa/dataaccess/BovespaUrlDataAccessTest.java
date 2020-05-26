@@ -1,6 +1,5 @@
 package com.wealthy.machine.bovespa.dataaccess;
 
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

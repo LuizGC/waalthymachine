@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeDeserializer;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeSerializer;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
 import java.util.Set;

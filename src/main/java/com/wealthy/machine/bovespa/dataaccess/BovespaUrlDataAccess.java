@@ -1,6 +1,5 @@
 package com.wealthy.machine.bovespa.dataaccess;
 
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
 import java.net.MalformedURLException;

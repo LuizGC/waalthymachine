@@ -79,7 +79,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 		return volume;
 	}
 
-	private String addLeadingZeroIfNecessary(Integer number) {
+	private String addLeadingZeroIfNecessary(int number) {
 		return String.format("%02d",number);
 	}
 

@@ -103,15 +103,15 @@ public class BovespaDataSeeker {
 		}
 	}
 
-	private Date readDate(String line, Integer begin, Integer end) throws ParseException {
+	private Date readDate(String line, int begin, int end) throws ParseException {
 		return new SimpleDateFormat("yyyyMMdd").parse(readString(line, begin, end));
 	}
 
-	private String readString(String line, Integer begin, Integer end) {
+	private String readString(String line, int begin, int end) {
 		return line.substring(begin, end).trim();
 	}
 
-	private WealthNumber readDouble(String line, Integer begin, Integer end) {
+	private WealthNumber readDouble(String line, int begin, int end) {
 		var text = readString(line, begin, end);
 		var number = new BigDecimal(text).movePointLeft(2);
 		return new WealthNumber(number.toPlainString());

@@ -40,11 +40,11 @@ public class Config {
 	public Config() {
 	}
 
-	public Integer getInitialYear() {
-		return Integer.valueOf(INITIAL_YEAR);
+	public int getInitialYear() {
+		return Integer.parseInt(INITIAL_YEAR);
 	}
 
-	public String getDefaultBovespaUrl() {
+	public String getDataPath() {
 		return DEFAULT_BOVESPA_URL;
 	}
 

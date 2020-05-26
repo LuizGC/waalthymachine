@@ -28,7 +28,7 @@ public class BovespaDataUpdaterUpdaterFacade implements DataUpdaterFacade {
 		this.dataSeeker = new BovespaDataSeeker(config);
 		this.dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		this.shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
-		this.urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config);
+		this.urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
 	}
 
 	@Override

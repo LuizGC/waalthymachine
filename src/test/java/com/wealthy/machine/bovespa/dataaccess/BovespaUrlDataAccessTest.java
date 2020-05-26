@@ -17,18 +17,17 @@ import static org.mockito.Mockito.*;
 class BovespaUrlDataAccessTest {
 
 	private JsonDataFileHandler jsonDataFileHandler;
-	private Config config;
 	private static final String URL_FORMAT = "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP";
+	private static final int INITIAL_YEAR = 2010;
 
 	@BeforeEach
 	void setUp() {
 		this.jsonDataFileHandler = mock(JsonDataFileHandler.class);
-		this.config = mock(Config.class);
 	}
 
 	@Test
 	void save_WhenTheUrlsIsRight_SaveSuccessfully() throws MalformedURLException {
-		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, this.config);
+		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, INITIAL_YEAR, URL_FORMAT);
 		var set = Set.of(new URL(URL_FORMAT));
 		urlDataAccess.save(set);
 		ArgumentCaptor<Set<String>> argument = ArgumentCaptor.forClass(Set.class);
@@ -43,10 +42,8 @@ class BovespaUrlDataAccessTest {
 			URL_FORMAT.replace("{{YYYY}}", "2016"),
 			URL_FORMAT.replace("{{YYYY}}", "2017")
 		);
-		when(config.getInitialYear()).thenReturn(2010);
-		when(config.getDefaultBovespaUrl()).thenReturn(URL_FORMAT);
 		when(jsonDataFileHandler.list(anyString(),eq(String.class))).thenReturn(savedUrls);
-		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, this.config);
+		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, INITIAL_YEAR, URL_FORMAT);
 		urlDataAccess
 				.listMissingUrl()
 				.stream()
@@ -56,10 +53,8 @@ class BovespaUrlDataAccessTest {
 
 	@Test
 	void listMissingUrl_WhenTheDefaultUrlIsInvalid_ShouldThrowException() {
-		when(config.getInitialYear()).thenReturn(2010);
-		when(config.getDefaultBovespaUrl()).thenReturn("invelid url");
 		when(jsonDataFileHandler.list(anyString(),eq(String.class))).thenReturn(Set.of(""));
-		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, this.config);
+		var urlDataAccess = new BovespaUrlDataAccess(this.jsonDataFileHandler, 2010, "invalid Url");
 		assertThrows(RuntimeException.class, urlDataAccess::listMissingUrl);
 	}
 

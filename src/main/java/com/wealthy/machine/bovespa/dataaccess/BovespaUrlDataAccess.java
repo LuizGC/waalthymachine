@@ -12,14 +12,14 @@ import java.util.stream.IntStream;
 
 public class BovespaUrlDataAccess {
 
-	private final Integer initialYear;
+	private final int initialYear;
 	private final String defaultUrl;
 	private final JsonDataFileHandler jsonDataFileHandler;
 	private final String downloadedUrlKey;
 
-	public BovespaUrlDataAccess(JsonDataFileHandler jsonDataFileHandler, Config config) {
-		this.initialYear = config.getInitialYear();
-		this.defaultUrl = config.getDefaultBovespaUrl();
+	public BovespaUrlDataAccess(JsonDataFileHandler jsonDataFileHandler, int initialYear, String defaultUrl) {
+		this.initialYear = initialYear;
+		this.defaultUrl = defaultUrl;
 		this.jsonDataFileHandler = jsonDataFileHandler;
 		this.downloadedUrlKey = "downloadedUrls";
 	}
@@ -38,7 +38,7 @@ public class BovespaUrlDataAccess {
 				.collect(Collectors.toUnmodifiableSet());
 	}
 
-	private URL createUrl(Integer year) {
+	private URL createUrl(int year) {
 		try {
 			String urlPath = defaultUrl.replace("{{YYYY}}", String.valueOf(year));
 			return new URL(urlPath);

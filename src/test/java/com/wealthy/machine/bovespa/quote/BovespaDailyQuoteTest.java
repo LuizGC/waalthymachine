@@ -52,14 +52,16 @@ public class BovespaDailyQuoteTest {
 	}
 
 	@Test
-	public void compareTo_WhenShareCodeAreDifferent_ShouldThrowException() {
+	public void compareTo_WhenShareCodeAreDifferent_ShouldReturnOne() {
+		var firstShareCode = "ABCD1";
 		var firstQuote = new BovespaDailyQuoteBuilder()
-				.shareCode("ABCD1")
+				.shareCode(firstShareCode)
 				.build();
+		var secondShareCode = "ZXCV1";
 		var secondQuote = new BovespaDailyQuoteBuilder()
-				.shareCode("ZXCV1")
+				.shareCode(secondShareCode)
 				.build();
-		assertThrows(RuntimeException.class, () -> firstQuote.compareTo(secondQuote));
+		assertEquals(firstShareCode.compareTo(secondShareCode), firstQuote.compareTo(secondQuote));
 	}
 
 	@Test

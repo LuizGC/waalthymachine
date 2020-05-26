@@ -14,9 +14,9 @@ public class BovespaShareCodeDataAccess {
 	private final JsonDataFileHandler jsonDataFile;
 	private final String shareCodeKey;
 
-	public BovespaShareCodeDataAccess(JsonDataFileHandler jsonDataFile, Config config) {
+	public BovespaShareCodeDataAccess(JsonDataFileHandler jsonDataFile) {
 		this.jsonDataFile = jsonDataFile;
-		this.shareCodeKey = config.getShareCodeKey();
+		this.shareCodeKey = "shareCodes";
 	}
 
 	public synchronized void save(Set<BovespaShareCode> shareCodes) {

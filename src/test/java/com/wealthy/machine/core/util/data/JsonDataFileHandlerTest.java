@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.DataFileGetter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.io.IOUtil;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,10 +24,8 @@ class JsonDataFileHandlerTest {
 
 	@BeforeEach
 	public void setup() {
-		var config = mock(Config.class);
-		when(config.getLogger(any())).thenReturn(mock(Logger.class));
 		this.fileGetter = mock(DataFileGetter.class);
-		this.jsonDataFile = new JsonDataFileHandler(fileGetter, config);
+		this.jsonDataFile = new JsonDataFileHandler(fileGetter);
 	}
 
 	@AfterEach

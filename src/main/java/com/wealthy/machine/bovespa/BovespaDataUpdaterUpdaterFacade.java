@@ -24,8 +24,8 @@ public class BovespaDataUpdaterUpdaterFacade implements DataUpdaterFacade {
 
 	public BovespaDataUpdaterUpdaterFacade(File storageFolder, Config config) {
 		var fileGetter = new DataFileGetter(storageFolder);
-		var jsonDataFile = new JsonDataFileHandler(fileGetter, config);
 		this.dataSeeker = new BovespaDataSeeker(config);
+		var jsonDataFile = new JsonDataFileHandler(fileGetter);
 		this.dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		this.shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		this.urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
@@ -53,7 +53,7 @@ public class BovespaDataUpdaterUpdaterFacade implements DataUpdaterFacade {
 
 	@Override
 	public void updateDownloadedShareCodes() {
-		var shareCodes = this.dailyQuoteDataAccess.getShareCodeDownloaded();
+		var shareCodes = this.dailyQuoteDataAccess.listDownloadedShareCode();
 		this.shareCodeDataAccess.save(shareCodes);
 	}
 }

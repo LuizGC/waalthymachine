@@ -7,20 +7,20 @@ import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class BovespaDailyQuoteDataAccess {
 
 	private final JsonDataFileHandler jsonDataFileHandler;
 
-	private final HashSet<BovespaShareCode> shareCodeDownloaded;
+	private final Set<BovespaShareCode> shareCodeDownloaded;
 
 	public BovespaDailyQuoteDataAccess(JsonDataFileHandler jsonDataFileHandler) {
 		this.jsonDataFileHandler = jsonDataFileHandler;
-		this.shareCodeDownloaded = new HashSet<>();
+		this.shareCodeDownloaded = new TreeSet<>();
 	}
 
 	public synchronized void save(Set<BovespaDailyQuote> dailyQuoteSet) {
@@ -37,7 +37,7 @@ public class BovespaDailyQuoteDataAccess {
 		this.shareCodeDownloaded.add(shareCode);
 	}
 
-	public Set<BovespaShareCode> getShareCodeDownloaded() {
+	public Set<BovespaShareCode> listDownloadedShareCode() {
 		return Collections.unmodifiableSet(shareCodeDownloaded);
 	}
 

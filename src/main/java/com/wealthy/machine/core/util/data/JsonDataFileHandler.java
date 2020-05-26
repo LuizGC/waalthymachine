@@ -3,9 +3,7 @@ package com.wealthy.machine.core.util.data;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.DataFileGetter;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -16,10 +14,8 @@ import java.util.TreeSet;
 public class JsonDataFileHandler {
 
 	private final DataFileGetter dataFileGetter;
-	private final Logger logger;
 
-	public JsonDataFileHandler(DataFileGetter dataFileGetter, Config config) {
-		this.logger = config.getLogger(this.getClass());
+	public JsonDataFileHandler(DataFileGetter dataFileGetter) {
 		this.dataFileGetter = dataFileGetter;
 	}
 
@@ -34,8 +30,7 @@ public class JsonDataFileHandler {
 			setToSave.addAll(list(key, clazz, module));
 			mapper.writeValue(dataFileGetter.getFile(key), setToSave);
 		} catch (IOException e) {
-			this.logger.error("Error during saving {} key", key);
-			throw new RuntimeException(e);
+			throw new RuntimeException("Error during saving " + key, e);
 		}
 	}
 
@@ -54,8 +49,7 @@ public class JsonDataFileHandler {
 			}
 			return Collections.unmodifiableSet(quotesSet);
 		} catch (IOException e) {
-			this.logger.error("Error during listing {} key", key);
-			throw new RuntimeException(e);
+			throw new RuntimeException("Error during listing " + key, e);
 		}
 	}
 

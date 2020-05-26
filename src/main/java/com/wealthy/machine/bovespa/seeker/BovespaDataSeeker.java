@@ -25,25 +25,16 @@ import java.util.zip.ZipInputStream;
 
 public class BovespaDataSeeker {
 
-	private final Logger logger;
-
-	public BovespaDataSeeker(Config config) {
-		this.logger = config.getLogger(this.getClass());
-	}
-
 	public Set<BovespaDailyQuote> read(URL zipFileUrl) {
-		this.logger.info("Starting download url={}", zipFileUrl);
 		try (ZipInputStream zipStream = new ZipInputStream(zipFileUrl.openStream())) {
 			if (zipStream.getNextEntry() == null) {
 				throw new IOException("Zip is not valid!");
 			} else {
 				var quotes = readEntry(zipStream);
-				this.logger.info("Download completed url={}", zipFileUrl);
 				return quotes;
 			}
 		} catch (IOException e) {
-			this.logger.error("Problem to process zip file", e);
-			throw new RuntimeException(e);
+			throw new RuntimeException("Problem to process zip file", e);
 		}
 	}
 
@@ -98,8 +89,7 @@ public class BovespaDataSeeker {
 					readDouble(line, 170, 188) //volume
 			);
 		} catch (ParseException e) {
-			this.logger.error("The Bovespa quote date is invalid.", e);
-			throw new RuntimeException(e);
+			throw new RuntimeException("The Bovespa quote date is invalid.", e);
 		}
 	}
 

@@ -26,7 +26,7 @@ public class WealthMachineLauncher {
 			dataUpdater.execute(dataFileHandler, config);
 		}
 		logger.info("Data updating has finished!");
-		//git.push();
+		git.push();
 	}
 
 }

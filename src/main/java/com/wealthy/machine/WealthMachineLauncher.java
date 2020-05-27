@@ -21,7 +21,8 @@ public class WealthMachineLauncher {
 		for (DataUpdater dataUpdater : dataUpdaters) {
 			logger.info("Starting={}", dataUpdater.getClass());
 			var storageFolder = Files.createTempDirectory("storage_folder").toFile();
-			var git = new GitVersionControl(storageFolder, "bovespa", config);
+			var branchName = dataUpdater.getStockExchangeName();
+			var git = new GitVersionControl(storageFolder, branchName, config);
 			var dataFileGetter = new DataFileGetter(storageFolder);
 			var dataFileHandler = new JsonDataFileHandler(dataFileGetter);
 			dataUpdater.execute(dataFileHandler, config);

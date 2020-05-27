@@ -34,5 +34,10 @@ public class BovespaDataUpdater implements DataUpdater {
 		shareCodeDataAccess.save(downloadedShareCodes);
 	}
 
+	@Override
+	public String getStockExchangeName() {
+		return "bovespa";
+	}
+
 }
 

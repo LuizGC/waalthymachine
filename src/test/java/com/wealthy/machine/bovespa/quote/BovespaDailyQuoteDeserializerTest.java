@@ -35,25 +35,22 @@ class BovespaDailyQuoteDeserializerTest {
 		var closePrice = new WealthNumber("2.2");
 		var minPrice = new WealthNumber("3.3");
 		var maxPrice = new WealthNumber("4");
-		var avgPrice = new WealthNumber("5");
 		var volume = new WealthNumber("6");
 
-		when(jsonNode.get("tradingDay")).thenReturn(new LongNode(tradingDay.getTime()));
-		when(jsonNode.get("openPrice")).thenReturn(new TextNode(openPrice.toString()));
-		when(jsonNode.get("closePrice")).thenReturn(new TextNode(closePrice.toString()));
-		when(jsonNode.get("minPrice")).thenReturn(new TextNode(minPrice.toString()));
-		when(jsonNode.get("maxPrice")).thenReturn(new TextNode(maxPrice.toString()));
-		when(jsonNode.get("avgPrice")).thenReturn(new TextNode(avgPrice.toString()));
-		when(jsonNode.get("volume")).thenReturn(new TextNode(volume.toString()));
+		when(jsonNode.get("time")).thenReturn(new LongNode(tradingDay.getTime()));
+		when(jsonNode.get("open")).thenReturn(new TextNode(openPrice.toString()));
+		when(jsonNode.get("close")).thenReturn(new TextNode(closePrice.toString()));
+		when(jsonNode.get("low")).thenReturn(new TextNode(minPrice.toString()));
+		when(jsonNode.get("high")).thenReturn(new TextNode(maxPrice.toString()));
+		when(jsonNode.get("value")).thenReturn(new TextNode(volume.toString()));
 
 		var dailyQuote = deserializer.deserialize(jsonParser, deserializationContext);
 
-		assertEquals(tradingDay, dailyQuote.getTime());
-		assertEquals(openPrice, dailyQuote.getOpen());
-		assertEquals(closePrice, dailyQuote.getClose());
-		assertEquals(minPrice, dailyQuote.getLow());
-		assertEquals(maxPrice, dailyQuote.getHigh());
-		assertEquals(avgPrice, dailyQuote.getAvgPrice());
+		assertEquals(tradingDay, dailyQuote.getTradingDay());
+		assertEquals(openPrice, dailyQuote.getOpenPrice());
+		assertEquals(closePrice, dailyQuote.getClosePrice());
+		assertEquals(minPrice, dailyQuote.getLowPrice());
+		assertEquals(maxPrice, dailyQuote.getHighPrice());
 		assertEquals(volume, dailyQuote.getVolume());
 		assertEquals(shareCode, dailyQuote.getShareCode());
 	}

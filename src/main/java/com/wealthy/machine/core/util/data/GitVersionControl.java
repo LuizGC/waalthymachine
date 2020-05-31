@@ -83,7 +83,7 @@ public class GitVersionControl {
 
 	public synchronized void push() throws GitAPIException {
 		if(this.git != null) {
-			logger.info("Uploading data from repository");
+			logger.info("Uploading data to repository");
 			var add = this.git.add();
 			addAll(this.git.getRepository().getWorkTree(), add);
 			add.call();

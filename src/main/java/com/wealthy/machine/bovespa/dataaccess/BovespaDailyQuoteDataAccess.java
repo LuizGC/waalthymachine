@@ -3,6 +3,7 @@ package com.wealthy.machine.bovespa.dataaccess;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuoteDeserializer;
+import com.wealthy.machine.bovespa.quote.BovespaDailyQuoteSerializer;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 
@@ -33,6 +34,7 @@ public class BovespaDailyQuoteDataAccess {
 	private void saveBovespaDailyQuote(BovespaShareCode shareCode, List<BovespaDailyQuote> dailyQuotes) {
 		var module = new SimpleModule();
 		module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
+		module.addSerializer(BovespaDailyQuote.class, new BovespaDailyQuoteSerializer());
 		this.jsonDataFileHandler.append(shareCode.getCode(), dailyQuotes, BovespaDailyQuote.class, module);
 		this.shareCodeDownloaded.add(shareCode);
 	}

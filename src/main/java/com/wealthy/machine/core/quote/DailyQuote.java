@@ -1,6 +1,5 @@
 package com.wealthy.machine.core.quote;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wealthy.machine.core.sharecode.ShareCode;
 import com.wealthy.machine.core.util.number.WealthNumber;
 
@@ -8,20 +7,17 @@ import java.util.Date;
 
 public interface DailyQuote {
 
-    Date getTime();
+    Date getTradingDay();
 
-    @JsonIgnore
     ShareCode getShareCode();
 
-    WealthNumber getOpen();
+    WealthNumber getOpenPrice();
 
-    WealthNumber getClose();
+    WealthNumber getClosePrice();
 
-    WealthNumber getLow();
+    WealthNumber getLowPrice();
 
-    WealthNumber getHigh();
-
-    WealthNumber getAvgPrice();
+    WealthNumber getHighPrice();
 
     WealthNumber getVolume();
 

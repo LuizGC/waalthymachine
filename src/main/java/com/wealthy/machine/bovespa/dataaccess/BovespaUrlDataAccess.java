@@ -5,9 +5,12 @@ import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Year;
+import java.util.Calendar;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.util.Calendar.YEAR;
 
 public class BovespaUrlDataAccess {
 
@@ -30,10 +33,13 @@ public class BovespaUrlDataAccess {
 
 	public Set<URL> listMissingUrl() {
 		var savedYearSet = this.jsonDataFileHandler.list(downloadedUrlKey, String.class);
+		var calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		var lastUrlDownloaded = createUrl(calendar.get(YEAR));
 		return IntStream
 				.range(initialYear, Year.now().getValue() + 1)
 				.mapToObj(this::createUrl)
-				.filter(url -> !savedYearSet.contains(url.toString()))
+				.filter(url -> lastUrlDownloaded.equals(url) || !savedYearSet.contains(url.toString()))
 				.collect(Collectors.toUnmodifiableSet());
 	}
 

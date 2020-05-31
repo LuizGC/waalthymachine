@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDailyQuote>{
+public final class BovespaDailyQuote implements DailyQuote, Comparable<BovespaDailyQuote>{
 
 	private final Date tradingDay;
 	private final BovespaShareCode bovespaShareCode;
@@ -16,7 +16,6 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	private final WealthNumber closePrice;
 	private final WealthNumber minPrice;
 	private final WealthNumber maxPrice;
-	private final WealthNumber avgPrice;
 	private final WealthNumber volume;
 
 	public BovespaDailyQuote(
@@ -26,7 +25,6 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 			WealthNumber closePrice,
 			WealthNumber minPrice,
 			WealthNumber maxPrice,
-			WealthNumber avgPrice,
 			WealthNumber volume
 	) {
 		this.tradingDay = tradingDay;
@@ -35,12 +33,11 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 		this.closePrice = closePrice;
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
-		this.avgPrice = avgPrice;
 		this.volume = volume;
 	}
 
 	@Override
-	public Date getTime() {
+	public Date getTradingDay() {
 		return tradingDay;
 	}
 
@@ -50,28 +47,23 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	}
 
 	@Override
-	public WealthNumber getOpen() {
+	public WealthNumber getOpenPrice() {
 		return openPrice;
 	}
 
 	@Override
-	public WealthNumber getClose() {
+	public WealthNumber getClosePrice() {
 		return closePrice;
 	}
 
 	@Override
-	public WealthNumber getLow() {
+	public WealthNumber getLowPrice() {
 		return minPrice;
 	}
 
 	@Override
-	public WealthNumber getHigh() {
+	public WealthNumber getHighPrice() {
 		return maxPrice;
-	}
-
-	@Override
-	public WealthNumber getAvgPrice() {
-		return avgPrice;
 	}
 
 	@Override
@@ -106,7 +98,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	}
 
 	private String getTextTradingDay() {
-		return getTextTradingDay(getTime());
+		return getTextTradingDay(getTradingDay());
 	}
 
 	private String getTextTradingDay(Date tradingDay) {

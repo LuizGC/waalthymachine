@@ -3,9 +3,7 @@ package com.wealthy.machine.bovespa.seeker;
 import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCodeValidator;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.number.WealthNumber;
-import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -85,7 +83,6 @@ public class BovespaDataSeeker {
 					readDouble(line, 108, 121), //closePrice
 					readDouble(line, 82, 95), //minPrice
 					readDouble(line, 69, 82), //maxPrice
-					readDouble(line, 97, 108), //avgPrice
 					readDouble(line, 170, 188) //volume
 			);
 		} catch (ParseException e) {

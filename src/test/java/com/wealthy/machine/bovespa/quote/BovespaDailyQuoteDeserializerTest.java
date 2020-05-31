@@ -37,12 +37,12 @@ class BovespaDailyQuoteDeserializerTest {
 		var maxPrice = new WealthNumber("4");
 		var volume = new WealthNumber("6");
 
-		when(jsonNode.get("time")).thenReturn(new LongNode(tradingDay.getTime()));
-		when(jsonNode.get("open")).thenReturn(new TextNode(openPrice.toString()));
-		when(jsonNode.get("close")).thenReturn(new TextNode(closePrice.toString()));
-		when(jsonNode.get("low")).thenReturn(new TextNode(minPrice.toString()));
-		when(jsonNode.get("high")).thenReturn(new TextNode(maxPrice.toString()));
-		when(jsonNode.get("value")).thenReturn(new TextNode(volume.toString()));
+		when(jsonNode.get("tradingDate")).thenReturn(new LongNode(tradingDay.getTime()));
+		when(jsonNode.get("openPrice")).thenReturn(new TextNode(openPrice.toString()));
+		when(jsonNode.get("closePrice")).thenReturn(new TextNode(closePrice.toString()));
+		when(jsonNode.get("minPrice")).thenReturn(new TextNode(minPrice.toString()));
+		when(jsonNode.get("maxPrice")).thenReturn(new TextNode(maxPrice.toString()));
+		when(jsonNode.get("volume")).thenReturn(new TextNode(volume.toString()));
 
 		var dailyQuote = deserializer.deserialize(jsonParser, deserializationContext);
 

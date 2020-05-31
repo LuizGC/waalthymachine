@@ -22,12 +22,12 @@ public class BovespaDailyQuoteDeserializer extends StdDeserializer<BovespaDailyQ
 	@Override
 	public BovespaDailyQuote deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		JsonNode node = p.getCodec().readTree(p);
-		var tradingDate = new Date(node.get("time").asLong());
-		var openPrice = node.get("open").asText();
-		var closePrice = node.get("close").asText();
-		var minPrice = node.get("low").asText();
-		var maxPrice = node.get("high").asText();
-		var volume = node.get("value").asText();
+		var tradingDate = new Date(node.get("tradingDay").asLong());
+		var openPrice = node.get("openPrice").asText();
+		var closePrice = node.get("closePrice").asText();
+		var minPrice = node.get("lowPrice").asText();
+		var maxPrice = node.get("highPrice").asText();
+		var volume = node.get("volume").asText();
 		return new BovespaDailyQuote(
 				tradingDate,
 				shareCode,

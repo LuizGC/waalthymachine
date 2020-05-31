@@ -22,7 +22,7 @@ public class BovespaShareCodeDataAccess {
 		var module = new SimpleModule();
 		module.addDeserializer(BovespaShareCode.class, new BovespaShareCodeDeserializer());
 		module.addSerializer(BovespaShareCode.class, new BovespaShareCodeSerializer());
-		jsonDataFile.save(this.shareCodeKey, shareCodes, BovespaShareCode.class, module);
+		jsonDataFile.override(this.shareCodeKey, shareCodes, module);
 	}
 
 }

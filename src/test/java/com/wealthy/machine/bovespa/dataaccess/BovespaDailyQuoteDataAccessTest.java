@@ -28,7 +28,7 @@ class BovespaDailyQuoteDataAccessTest {
 		);
 		dataAccess.save(dataSet);
 		verify(jsonDataFileHandler, times(2))
-				.save(anyString(), anyCollection(), eq(BovespaDailyQuote.class), any(SimpleModule.class));
+				.append(anyString(), anyCollection(), eq(BovespaDailyQuote.class), any(SimpleModule.class));
 	}
 
 	@Test

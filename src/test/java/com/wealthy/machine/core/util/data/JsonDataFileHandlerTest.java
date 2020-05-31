@@ -47,7 +47,7 @@ class JsonDataFileHandlerTest {
 		var key = "save_EmptyFile_ShouldReturnEmptyList";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
-		jsonDataFile.save(key, Set.of("b", "c", "a"), String.class);
+		jsonDataFile.append(key, Set.of("b", "c", "a"), String.class);
 		var fileWithData = fileGetter.getFile(key);
 		var fileData = Files.readString(fileWithData.toPath());
 		assertEquals("[\"a\",\"b\",\"c\"]", fileData);
@@ -61,7 +61,7 @@ class JsonDataFileHandlerTest {
 		var serializer = (JsonSerializer<String>) mock(JsonSerializer.class);
 		var module = new SimpleModule();
 		module.addSerializer(String.class, serializer);
-		jsonDataFile.save(key, Set.of("b", "c", "a"), String.class, module);
+		jsonDataFile.append(key, Set.of("b", "c", "a"), String.class, module);
 		verify(serializer, times(3))
 				.serialize(anyString(), any(JsonGenerator.class), any(SerializerProvider.class));
 	}
@@ -71,11 +71,11 @@ class JsonDataFileHandlerTest {
 		var key = "save_PassingModule_ShouldUsingSerializer";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
-		jsonDataFile.save(key, Set.of("b", "c", "a"), String.class);
-		jsonDataFile.save(key, Set.of("g", "t", "r"), String.class);
-		jsonDataFile.save(key, Set.of("a", "r", "s", "test"), String.class);
-		jsonDataFile.save(key, Set.of("test1", "test2", "test3", "test4"), String.class);
-		jsonDataFile.save(key, Set.of("b", "a", "d", "c"), String.class);
+		jsonDataFile.append(key, Set.of("b", "c", "a"), String.class);
+		jsonDataFile.append(key, Set.of("g", "t", "r"), String.class);
+		jsonDataFile.append(key, Set.of("a", "r", "s", "test"), String.class);
+		jsonDataFile.append(key, Set.of("test1", "test2", "test3", "test4"), String.class);
+		jsonDataFile.append(key, Set.of("b", "a", "d", "c"), String.class);
 		var expectedResult = "[\"a\",\"b\",\"c\",\"d\",\"g\",\"r\",\"s\",\"t\",\"test\",\"test1\",\"test2\",\"test3\",\"test4\"]";
 		var fileText = Files.readString(testFile);
 		assertEquals(expectedResult, fileText);
@@ -102,7 +102,7 @@ class JsonDataFileHandlerTest {
 		var module = new SimpleModule();
 		module.addSerializer(String.class, serializer);
 		assertThrows(RuntimeException.class, () -> {
-			jsonDataFile.save(key, Set.of("b", "c", "a"), String.class, module);
+			jsonDataFile.append(key, Set.of("b", "c", "a"), String.class, module);
 		});
 	}
 
@@ -115,6 +115,19 @@ class JsonDataFileHandlerTest {
 		assertThrows(RuntimeException.class, () ->
 				jsonDataFile.list(key, String.class)
 		);
+	}
+
+	@Test
+	public void override_TwoDifferentSave_ShouldOverrideData() throws IOException {
+		var key = "override_TwoDifferentSave_ShouldOverrideData";
+		var testFile = Files.createTempFile(key, ".json");
+		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
+		jsonDataFile.override(key, Set.of("b", "c", "a"), null);
+		jsonDataFile.override(key, Set.of("x", "t", "r"), null);
+		var expectedResult = "[\"r\",\"t\",\"x\"]";
+		var fileText = Files.readString(testFile);
+		assertEquals(expectedResult, fileText);
+
 	}
 
 }

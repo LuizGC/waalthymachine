@@ -33,7 +33,7 @@ public class BovespaDailyQuoteDataAccess {
 	private void saveBovespaDailyQuote(BovespaShareCode shareCode, List<BovespaDailyQuote> dailyQuotes) {
 		var module = new SimpleModule();
 		module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
-		this.jsonDataFileHandler.save(shareCode.getCode(), dailyQuotes, BovespaDailyQuote.class, module);
+		this.jsonDataFileHandler.append(shareCode.getCode(), dailyQuotes, BovespaDailyQuote.class, module);
 		this.shareCodeDownloaded.add(shareCode);
 	}
 

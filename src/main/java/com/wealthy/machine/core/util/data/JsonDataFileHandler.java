@@ -19,15 +19,20 @@ public class JsonDataFileHandler {
 		this.dataFileGetter = dataFileGetter;
 	}
 
-	public <T extends Comparable<T>> void save(String key, Collection<T> items, Class<T> clazz) {
-		save(key, items, clazz, null);
+	public <T extends Comparable<T>> void append(String key, Collection<T> items, Class<T> clazz) {
+		append(key, items, clazz, null);
 	}
 
-	public <T extends Comparable<T>> void save(String key, Collection<T> items, Class<T> clazz, Module module) {
+	public <T extends Comparable<T>> void append(String key, Collection<T> items, Class<T> clazz, Module module) {
+		var setToSave = new TreeSet<>(items);
+		setToSave.addAll(list(key, clazz, module));
+		override(key, setToSave, module);
+	}
+
+	public <T extends Comparable<T>> void override(String key, Collection<T> items, Module module) {
 		try {
 			ObjectMapper mapper = getObjectMapper(module);
 			var setToSave = new TreeSet<>(items);
-			setToSave.addAll(list(key, clazz, module));
 			mapper.writeValue(dataFileGetter.getFile(key), setToSave);
 		} catch (IOException e) {
 			throw new RuntimeException("Error during saving " + key, e);

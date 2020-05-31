@@ -25,7 +25,7 @@ public class BovespaUrlDataAccess {
 
 	public synchronized void save(Set<URL> newYearsSet) {
 		var urlsText = newYearsSet.stream().map(URL::toString).collect(Collectors.toUnmodifiableSet());
-		this.jsonDataFileHandler.save(this.downloadedUrlKey, urlsText, String.class);
+		this.jsonDataFileHandler.append(this.downloadedUrlKey, urlsText, String.class);
 	}
 
 	public Set<URL> listMissingUrl() {

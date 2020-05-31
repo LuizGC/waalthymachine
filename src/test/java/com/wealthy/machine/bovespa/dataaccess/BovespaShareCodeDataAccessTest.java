@@ -18,6 +18,6 @@ class BovespaShareCodeDataAccessTest {
 		var dataAccess = new BovespaShareCodeDataAccess(jsonDataFileHandler);
 		var dataSet = Set.of(new BovespaShareCode("SANB11"));
 		dataAccess.save(dataSet);
-		verify(jsonDataFileHandler).save(anyString(), eq(dataSet), any(), any());
+		verify(jsonDataFileHandler).override(anyString(), eq(dataSet), any());
 	}
 }

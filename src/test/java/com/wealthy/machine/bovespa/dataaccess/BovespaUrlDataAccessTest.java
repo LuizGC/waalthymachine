@@ -30,7 +30,7 @@ class BovespaUrlDataAccessTest {
 		var set = Set.of(new URL(URL_FORMAT));
 		urlDataAccess.save(set);
 		ArgumentCaptor<Set<String>> argument = ArgumentCaptor.forClass(Set.class);
-		verify(this.jsonDataFileHandler).save(anyString(), argument.capture(), eq(String.class));
+		verify(this.jsonDataFileHandler).append(anyString(), argument.capture(), eq(String.class));
 		assertIterableEquals(Set.of(URL_FORMAT), argument.getValue());
 	}
 

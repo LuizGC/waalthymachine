@@ -100,7 +100,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	@Override
 	public int compareTo(BovespaDailyQuote dailyQuote) {
 		if (this.getShareCode().equals(dailyQuote.getShareCode())) {
-			return this.getTextTradingDay().compareTo(getTextTradingDay(dailyQuote.getTradingDay()));
+			return this.getTextTradingDay().compareTo(dailyQuote.getTextTradingDay());
 		}
 		return this.getShareCode().compareTo(dailyQuote.getShareCode());
 	}

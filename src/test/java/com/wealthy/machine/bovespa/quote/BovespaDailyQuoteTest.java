@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
+import static java.util.Calendar.JUNE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -68,11 +69,11 @@ public class BovespaDailyQuoteTest {
 	@Test
 	public void compareTo_WhenHoursAreDifferentButDateAreEquals_ShouldReturnZero() {
 		var calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR, 19);
+		calendar.set(1989, JUNE, 26, 20, 0);
 		var firstQuote = new BovespaDailyQuoteBuilder()
 				.tradingDay(calendar.getTime())
 				.build();
-		calendar.set(Calendar.HOUR, 20);
+		calendar.set(1989, JUNE, 26, 21, 0);
 		var secondQuote = new BovespaDailyQuoteBuilder()
 				.tradingDay(calendar.getTime())
 				.build();

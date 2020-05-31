@@ -40,7 +40,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	}
 
 	@Override
-	public Date getTradingDay() {
+	public Date getTime() {
 		return tradingDay;
 	}
 
@@ -50,22 +50,22 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	}
 
 	@Override
-	public WealthNumber getOpenPrice() {
+	public WealthNumber getOpen() {
 		return openPrice;
 	}
 
 	@Override
-	public WealthNumber getClosePrice() {
+	public WealthNumber getClose() {
 		return closePrice;
 	}
 
 	@Override
-	public WealthNumber getMinPrice() {
+	public WealthNumber getLow() {
 		return minPrice;
 	}
 
 	@Override
-	public WealthNumber getMaxPrice() {
+	public WealthNumber getHigh() {
 		return maxPrice;
 	}
 
@@ -106,7 +106,7 @@ public final class BovespaDailyQuote implements DailyQuote,Comparable<BovespaDai
 	}
 
 	private String getTextTradingDay() {
-		return getTextTradingDay(getTradingDay());
+		return getTextTradingDay(getTime());
 	}
 
 	private String getTextTradingDay(Date tradingDay) {

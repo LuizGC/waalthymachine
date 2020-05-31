@@ -48,11 +48,11 @@ class BovespaDailyQuoteDeserializerTest {
 
 		var dailyQuote = deserializer.deserialize(jsonParser, deserializationContext);
 
-		assertEquals(tradingDay, dailyQuote.getTradingDay());
-		assertEquals(openPrice, dailyQuote.getOpenPrice());
-		assertEquals(closePrice, dailyQuote.getClosePrice());
-		assertEquals(minPrice, dailyQuote.getMinPrice());
-		assertEquals(maxPrice, dailyQuote.getMaxPrice());
+		assertEquals(tradingDay, dailyQuote.getTime());
+		assertEquals(openPrice, dailyQuote.getOpen());
+		assertEquals(closePrice, dailyQuote.getClose());
+		assertEquals(minPrice, dailyQuote.getLow());
+		assertEquals(maxPrice, dailyQuote.getHigh());
 		assertEquals(avgPrice, dailyQuote.getAvgPrice());
 		assertEquals(volume, dailyQuote.getVolume());
 		assertEquals(shareCode, dailyQuote.getShareCode());

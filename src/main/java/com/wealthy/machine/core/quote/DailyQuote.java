@@ -8,18 +8,18 @@ import java.util.Date;
 
 public interface DailyQuote {
 
-    Date getTradingDay();
+    Date getTime();
 
     @JsonIgnore
     ShareCode getShareCode();
 
-    WealthNumber getOpenPrice();
+    WealthNumber getOpen();
 
-    WealthNumber getClosePrice();
+    WealthNumber getClose();
 
-    WealthNumber getMinPrice();
+    WealthNumber getLow();
 
-    WealthNumber getMaxPrice();
+    WealthNumber getHigh();
 
     WealthNumber getAvgPrice();
 

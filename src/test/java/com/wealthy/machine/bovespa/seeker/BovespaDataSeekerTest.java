@@ -1,7 +1,6 @@
 package com.wealthy.machine.bovespa.seeker;
 
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
-import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.util.number.WealthNumber;
 import org.junit.jupiter.api.Test;
 
@@ -87,10 +86,10 @@ public class BovespaDataSeekerTest {
         var list = reader.read(getTestingZip(lines));
         var b3Quote = list.stream().findFirst().orElseThrow();
         assertEquals(new BovespaShareCode("B3SA3"), b3Quote.getShareCode());
-        assertEquals(new WealthNumber("40.42"), b3Quote.getOpenPrice());
-        assertEquals(new WealthNumber("37.00"), b3Quote.getClosePrice());
-        assertEquals(new WealthNumber("35.36"), b3Quote.getMinPrice());
-        assertEquals(new WealthNumber("40.59"), b3Quote.getMaxPrice());
+        assertEquals(new WealthNumber("40.42"), b3Quote.getOpen());
+        assertEquals(new WealthNumber("37.00"), b3Quote.getClose());
+        assertEquals(new WealthNumber("35.36"), b3Quote.getLow());
+        assertEquals(new WealthNumber("40.59"), b3Quote.getHigh());
         assertEquals(new WealthNumber("37.30"), b3Quote.getAvgPrice());
         assertEquals(new WealthNumber("1270075963.00"), b3Quote.getVolume());
     }

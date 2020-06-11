@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.wealthy.machine.core.util.technicalanlysis.type.SupportType.TIME;
-import static com.wealthy.machine.core.util.technicalanlysis.type.SupportType.VOLUME;
-
 public class BovespaTechnicalAnalysisData {
 
 	public boolean createAnalysisFile(ShareCode shareCode) {
@@ -24,28 +21,14 @@ public class BovespaTechnicalAnalysisData {
 			var primeNumbers = new EratosthenesSieve().findPrimeNumber(totalDaysToProcess);
 			var datafile = new File(shareCode.getCode() + File.separator + "datafile");
 			var mapper = new ObjectMapper();
-			var list = mapper.readValue(datafile, new TypeReference<List<Map<String, String>>>() {
+			var list = mapper.readValue(datafile, new TypeReference<List<Map<String, Double>>>() {
 			});
-			var queue = new LimitedQueue<Map<String, String>>(primeNumbers.last());
-			var matrix = new ArrayList<Object[]>();
-			var header = new ArrayList<String>();
-			header.add(TIME.toString());
-			header.add(VOLUME.toString());
-			for (var valueType : ValueType.values()) {
-				header.add(valueType.toString());
-				for (var primeNumber : primeNumbers) {
-					for (var analysis : AvailableTechnicalAnalysis.values()) {
-						header.add(analysis.createName(valueType, primeNumber));
-					}
-				}
-			}
-			matrix.add(header.toArray());
+			var queue = new LimitedQueue<Map<String, Double>>(primeNumbers.last());
+			var matrix = new ArrayList<Double[]>();
 			for (var cleanMap : list) {
 				queue.add(cleanMap);
 				if (queue.isCompletelyFilled()) {
-					var line = new ArrayList<String>();
-					line.add(TIME.getValue(cleanMap));
-					line.add(VOLUME.getValue(cleanMap));
+					var line = new ArrayList<Double>();
 					for (var valueType : ValueType.values()) {
 						line.add(valueType.getValue(cleanMap));
 						for (var primeNumber : primeNumbers) {
@@ -54,7 +37,7 @@ public class BovespaTechnicalAnalysisData {
 							}
 						}
 					}
-					matrix.add(line.toArray());
+					matrix.add(line.toArray(new Double[0]));
 				}
 			}
 			var hasAnalysisFile = !matrix.isEmpty();

@@ -10,18 +10,13 @@ import java.util.Map;
 
 public class SimpleMovingAverage implements TechnicalAnalysisCommander {
 
-	public String calculate(final ValueType type, List<Map<String, String>> elements) {
+	public Double calculate(final ValueType type, List<Map<String, Double>> elements) {
 		return elements
 				.stream()
-				.map(e -> new BigDecimal(e.get(type.getJsonFileAccessKey())))
+				.map(e -> BigDecimal.valueOf(e.get(type.getJsonFileAccessKey())))
 				.reduce(BigDecimal.ZERO, BigDecimal::add)
 				.divide(BigDecimal.valueOf(elements.size()), RoundingMode.HALF_EVEN)
 				.setScale(2, RoundingMode.HALF_EVEN)
-				.toPlainString();
-	}
-
-	@Override
-	public String createName(ValueType valueType, Integer primeNumber) {
-		return valueType + " Simple Moving Average " + primeNumber;
+				.doubleValue();
 	}
 }

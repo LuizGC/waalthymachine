@@ -17,11 +17,8 @@ public enum AvailableTechnicalAnalysis {
 		this.analysisCommander = simpleMovingAverage;
 	}
 
-	public String calculate(ValueType type, List<Map<String, String>> elements) {
+	public Double calculate(ValueType type, List<Map<String, Double>> elements) {
 		return this.analysisCommander.calculate(type, elements);
 	}
 
-	public String createName(ValueType valueType, Integer primeNumber) {
-		return this.analysisCommander.createName(valueType, primeNumber);
-	}
 }

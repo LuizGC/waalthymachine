@@ -7,8 +7,6 @@ import java.util.Map;
 
 public interface TechnicalAnalysisCommander {
 
-	String calculate(ValueType type, List<Map<String, String>> elements);
-
-	String createName(ValueType valueType, Integer primeNumber);
+	Double calculate(ValueType type, List<Map<String, Double>> elements);
 
 }

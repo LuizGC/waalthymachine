@@ -12,7 +12,7 @@ public enum ValueType {
 		this.accessKey = accessKey;
 	}
 
-	public String getValue(Map<String, String> cleanMap) {
+	public Double getValue(Map<String, Double> cleanMap) {
 		return cleanMap.get(accessKey);
 	}
 

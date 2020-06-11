@@ -19,7 +19,6 @@ public class BovespaDataUpdater implements DataUpdater {
 		var dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		var shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		var urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
-		logger.info("Starting updating Bovespa Daily Quotes");
 		var urlsDownloaded = urlDataAccess
 				.listMissingUrl()
 				.stream()

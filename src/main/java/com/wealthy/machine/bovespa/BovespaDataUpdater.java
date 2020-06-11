@@ -2,6 +2,7 @@ package com.wealthy.machine.bovespa;
 
 import com.wealthy.machine.bovespa.dataaccess.BovespaDailyQuoteDataAccess;
 import com.wealthy.machine.bovespa.dataaccess.BovespaShareCodeDataAccess;
+import com.wealthy.machine.bovespa.dataaccess.BovespaTechnicalAnalysisData;
 import com.wealthy.machine.bovespa.dataaccess.BovespaUrlDataAccess;
 import com.wealthy.machine.bovespa.seeker.BovespaDataSeeker;
 import com.wealthy.machine.core.Config;
@@ -19,6 +20,7 @@ public class BovespaDataUpdater implements DataUpdater {
 		var dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		var shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		var urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
+		var technicalAnalysisData = new BovespaTechnicalAnalysisData();
 		var urlsDownloaded = urlDataAccess
 				.listMissingUrl()
 				.stream()
@@ -30,7 +32,11 @@ public class BovespaDataUpdater implements DataUpdater {
 				})
 				.collect(Collectors.toUnmodifiableSet());
 		urlDataAccess.save(urlsDownloaded);
-		var downloadedShareCodes = dailyQuoteDataAccess.listDownloadedShareCode();
+		var downloadedShareCodes = dailyQuoteDataAccess
+				.listDownloadedShareCode()
+				.stream()
+				.filter(technicalAnalysisData::createAnalysisFile)
+				.collect(Collectors.toUnmodifiableSet());
 		shareCodeDataAccess.save(downloadedShareCodes);
 	}
 

@@ -4,7 +4,6 @@ import com.wealthy.machine.bovespa.BovespaDataUpdater;
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.DataUpdater;
 import com.wealthy.machine.core.util.DataFileGetter;
-import com.wealthy.machine.core.util.data.GitVersionControl;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -21,12 +20,9 @@ public class WealthMachineLauncher {
 		for (DataUpdater dataUpdater : dataUpdaters) {
 			logger.info("Starting={}", dataUpdater.getClass());
 			var storageFolder = Files.createTempDirectory("storage_folder").toFile();
-			var branchName = dataUpdater.getStockExchangeName();
-			var git = new GitVersionControl(storageFolder, branchName, config);
 			var dataFileGetter = new DataFileGetter(storageFolder);
 			var dataFileHandler = new JsonDataFileHandler(dataFileGetter);
 			dataUpdater.execute(dataFileHandler, config);
-			git.push();
 			logger.info("Ended={}", dataUpdater.getClass());
 		}
 		logger.info("Data updating has finished!");

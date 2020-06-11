@@ -6,5 +6,4 @@ public interface DataUpdater {
 
 	void execute(JsonDataFileHandler jsonDataFile, Config config);
 
-	String getStockExchangeName();
 }

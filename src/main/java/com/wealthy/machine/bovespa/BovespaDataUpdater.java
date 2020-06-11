@@ -19,8 +19,9 @@ public class BovespaDataUpdater implements DataUpdater {
 		var dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		var shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		var urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
-		var missingUrls = urlDataAccess.listMissingUrl();
-		var urlsDownloaded = missingUrls
+		logger.info("Starting updating Bovespa Daily Quotes");
+		var urlsDownloaded = urlDataAccess
+				.listMissingUrl()
 				.stream()
 				.peek(url -> {
 					logger.info("Starting download url={}", url);
@@ -32,11 +33,6 @@ public class BovespaDataUpdater implements DataUpdater {
 		urlDataAccess.save(urlsDownloaded);
 		var downloadedShareCodes = dailyQuoteDataAccess.listDownloadedShareCode();
 		shareCodeDataAccess.save(downloadedShareCodes);
-	}
-
-	@Override
-	public String getStockExchangeName() {
-		return "bovespa";
 	}
 
 }

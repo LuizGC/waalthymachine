@@ -22,7 +22,7 @@ public class BovespaTechnicalAnalysisData {
 		try {
 			var totalDaysToProcess = 80;
 			var primeNumbers = new EratosthenesSieve().findPrimeNumber(totalDaysToProcess);
-			var datafile = new File(shareCode.getCode() + File.pathSeparator + "datafile");
+			var datafile = new File(shareCode.getCode() + File.separator + "datafile");
 			var mapper = new ObjectMapper();
 			var list = mapper.readValue(datafile, new TypeReference<List<Map<String, String>>>() {
 			});

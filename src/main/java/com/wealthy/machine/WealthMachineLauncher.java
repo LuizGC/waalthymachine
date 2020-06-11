@@ -5,14 +5,13 @@ import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.DataUpdater;
 import com.wealthy.machine.core.util.DataFileGetter;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
 public class WealthMachineLauncher {
 
-	public static void main(String... args) throws IOException, GitAPIException {
+	public static void main(String... args) throws IOException {
 		var config = new Config();
 		var logger = config.getLogger(WealthMachineLauncher.class);
 		logger.info("Data updating has started!");

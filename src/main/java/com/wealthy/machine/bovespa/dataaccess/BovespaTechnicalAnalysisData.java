@@ -1,53 +1,63 @@
 package com.wealthy.machine.bovespa.dataaccess;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wealthy.machine.core.sharecode.ShareCode;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.wealthy.machine.bovespa.quote.BovespaDailyQuote;
+import com.wealthy.machine.bovespa.quote.BovespaDailyQuoteDeserializer;
+import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
+import com.wealthy.machine.bovespa.type.ValueType;
+import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.core.technicalanlysis.AvailableTechnicalAnalysis;
-import com.wealthy.machine.core.util.technicalanlysis.EratosthenesSieve;
+import com.wealthy.machine.core.util.data.JsonDataFileHandler;
+import com.wealthy.machine.core.util.number.WealthNumber;
 import com.wealthy.machine.core.util.technicalanlysis.LimitedQueue;
-import com.wealthy.machine.core.util.technicalanlysis.type.ValueType;
+import com.wealthy.machine.core.util.technicalanlysis.PrimeNumberFinder;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
 
 public class BovespaTechnicalAnalysisData {
 
-	public boolean createAnalysisFile(ShareCode shareCode) {
+	private final int totalDaysToProcess;
+	private final SortedSet<Integer> primeNumbers;
+	private final LimitedQueue<DailyQuote> queue;
+	private final JsonDataFileHandler dataFileHandler;
+
+	public BovespaTechnicalAnalysisData(int totalDaysToProcess, JsonDataFileHandler dataFileHandler, PrimeNumberFinder primeNumberFinder) {
+		this.totalDaysToProcess = totalDaysToProcess;
+		this.dataFileHandler = dataFileHandler;
+		this.primeNumbers = primeNumberFinder.findPrimeNumber(totalDaysToProcess);
+		this.queue = new LimitedQueue<>(primeNumbers.last());
+	}
+
+	public boolean createAnalysisFile(BovespaShareCode shareCode) {
 		try {
-			var totalDaysToProcess = 80;
-			var primeNumbers = new EratosthenesSieve().findPrimeNumber(totalDaysToProcess);
-			var datafile = new File(shareCode.getCode() + File.separator + "datafile");
-			var mapper = new ObjectMapper();
-			var list = mapper.readValue(datafile, new TypeReference<List<Map<String, Double>>>() {
-			});
-			var queue = new LimitedQueue<Map<String, Double>>(primeNumbers.last());
-			var matrix = new ArrayList<Double[]>();
-			for (var cleanMap : list) {
-				queue.add(cleanMap);
+			var module = new SimpleModule();
+			module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
+			var list = dataFileHandler.list(shareCode.getCode(), BovespaDailyQuote.class, module);
+			var matrix = new ArrayList<List<WealthNumber>>();
+			for (var dailyQuote : list) {
+				queue.add(dailyQuote);
 				if (queue.isCompletelyFilled()) {
-					var line = new ArrayList<Double>();
+					var line = new ArrayList<WealthNumber>();
 					for (var valueType : ValueType.values()) {
-						line.add(valueType.getValue(cleanMap));
+						line.add(valueType.getValue(dailyQuote));
 						for (var primeNumber : primeNumbers) {
 							for (var analysis : AvailableTechnicalAnalysis.values()) {
 								line.add(analysis.calculate(valueType, queue.sublist(primeNumber)));
 							}
 						}
 					}
-					matrix.add(line.toArray(new Double[0]));
+					matrix.add(line);
 				}
 			}
-			var hasAnalysisFile = !matrix.isEmpty();
+			var hasAnalysisFile = matrix.size() > totalDaysToProcess;
 			if (hasAnalysisFile) {
-				mapper.writeValue(new File(datafile.getParentFile(), "analysisdata"), matrix.toArray());
+				dataFileHandler.override(shareCode.getCode() + "_ANALYSIS", matrix);
 			}
 			return hasAnalysisFile;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
 		}
 
 	}

@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthy.machine.core.util.DataFileGetter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class JsonDataFileHandler {
 
@@ -29,21 +26,25 @@ public class JsonDataFileHandler {
 		override(key, setToSave, module);
 	}
 
-	public <T extends Comparable<T>> void override(String key, Collection<T> items, Module module) {
+	public <T> void override(String key, Collection<T> items, Module module) {
 		try {
 			ObjectMapper mapper = getObjectMapper(module);
-			var setToSave = new TreeSet<>(items);
+			var setToSave = new ArrayList<>(items);
 			mapper.writeValue(dataFileGetter.getFile(key), setToSave);
 		} catch (IOException e) {
 			throw new RuntimeException("Error during saving " + key, e);
 		}
 	}
 
+	public <T> void override(String key, Collection<T> items) {
+		this.override(key, items, null);
+	}
+
 	public <T extends Comparable<T>> Set<T> list(String key, Class<T> clazz) {
 		return list(key, clazz, null);
 	}
 
-	public  <T extends Comparable<T>> Set<T> list(String key, Class<T> clazz, Module module) {
+	public <T extends Comparable<T>> Set<T> list(String key, Class<T> clazz, Module module) {
 		try {
 			ObjectMapper mapper = getObjectMapper(module);
 			JavaType type = mapper.getTypeFactory().constructCollectionType(TreeSet.class, clazz);

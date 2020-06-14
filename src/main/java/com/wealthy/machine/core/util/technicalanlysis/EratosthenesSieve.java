@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class EratosthenesSieve {
+public class EratosthenesSieve implements PrimeNumberFinder {
 	public SortedSet<Integer> findPrimeNumber(int limit) {
 		var primeNumbers = new TreeSet<Integer>();
 		if (limit > 2) {

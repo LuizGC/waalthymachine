@@ -8,10 +8,12 @@ import com.wealthy.machine.bovespa.seeker.BovespaDataSeeker;
 import com.wealthy.machine.core.Config;
 import com.wealthy.machine.core.DataUpdater;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
+import com.wealthy.machine.core.util.technicalanlysis.EratosthenesSieve;
 
 import java.util.stream.Collectors;
 
 public class BovespaDataUpdater implements DataUpdater {
+
 
 	@Override
 	public void execute(JsonDataFileHandler jsonDataFile, Config config) {
@@ -20,7 +22,7 @@ public class BovespaDataUpdater implements DataUpdater {
 		var dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		var shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		var urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
-		var technicalAnalysisData = new BovespaTechnicalAnalysisData();
+		var technicalAnalysisData = new BovespaTechnicalAnalysisData(config.getTotalAnalysisDays(), jsonDataFile, new EratosthenesSieve());
 		var urlsDownloaded = urlDataAccess
 				.listMissingUrl()
 				.stream()

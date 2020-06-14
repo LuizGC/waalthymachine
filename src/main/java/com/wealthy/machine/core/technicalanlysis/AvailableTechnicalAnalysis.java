@@ -1,11 +1,12 @@
 package com.wealthy.machine.core.technicalanlysis;
 
 
+import com.wealthy.machine.bovespa.type.ValueType;
+import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.core.technicalanlysis.movingaverage.SimpleMovingAverage;
-import com.wealthy.machine.core.util.technicalanlysis.type.ValueType;
+import com.wealthy.machine.core.util.number.WealthNumber;
 
 import java.util.List;
-import java.util.Map;
 
 public enum AvailableTechnicalAnalysis {
 
@@ -17,7 +18,7 @@ public enum AvailableTechnicalAnalysis {
 		this.analysisCommander = simpleMovingAverage;
 	}
 
-	public Double calculate(ValueType type, List<Map<String, Double>> elements) {
+	public WealthNumber calculate(ValueType type, List<DailyQuote> elements) {
 		return this.analysisCommander.calculate(type, elements);
 	}
 

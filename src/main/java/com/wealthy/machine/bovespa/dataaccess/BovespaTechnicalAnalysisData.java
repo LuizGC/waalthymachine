@@ -15,6 +15,8 @@ import com.wealthy.machine.core.util.technicalanlysis.PrimeNumberFinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class BovespaTechnicalAnalysisData {
 
@@ -26,7 +28,11 @@ public class BovespaTechnicalAnalysisData {
 	public BovespaTechnicalAnalysisData(int totalDaysToProcess, JsonDataFileHandler dataFileHandler, PrimeNumberFinder primeNumberFinder) {
 		this.totalDaysToProcess = totalDaysToProcess;
 		this.dataFileHandler = dataFileHandler;
-		this.primeNumbers = primeNumberFinder.findPrimeNumber(totalDaysToProcess);
+		this.primeNumbers = primeNumberFinder
+				.findPrimeNumber(totalDaysToProcess)
+				.stream()
+				.skip(4)
+				.collect(Collectors.toCollection(TreeSet::new));
 		this.queue = new LimitedQueue<>(primeNumbers.last());
 	}
 

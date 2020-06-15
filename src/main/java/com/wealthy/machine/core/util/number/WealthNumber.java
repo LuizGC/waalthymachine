@@ -12,6 +12,8 @@ public class WealthNumber {
 	private final BigDecimal number;
 
 	public final static WealthNumber ZERO = new WealthNumber("0");
+	public final static WealthNumber ONE = new WealthNumber("1");
+	public final static WealthNumber TWO = new WealthNumber("2");
 
 	public WealthNumber(String number) {
 		this.number = new BigDecimal(number)
@@ -24,13 +26,22 @@ public class WealthNumber {
 
 	public WealthNumber divide(WealthNumber valueOf) {
 		var newNumber = this.number
-				.divide(valueOf.number, RoundingMode.HALF_EVEN)
-				.setScale(2, RoundingMode.HALF_EVEN);
+				.divide(valueOf.number, RoundingMode.HALF_EVEN);
 		return new WealthNumber(newNumber.toPlainString());
 	}
 
 	public WealthNumber add(WealthNumber number) {
 		var newNumber = this.number.add(number.number);
+		return new WealthNumber(newNumber.toPlainString());
+	}
+
+	public WealthNumber subtract(WealthNumber number) {
+		var newNumber = this.number.subtract(number.number);
+		return new WealthNumber(newNumber.toPlainString());
+	}
+
+	public WealthNumber multiply(WealthNumber number) {
+		var newNumber = this.number.multiply(number.number);
 		return new WealthNumber(newNumber.toPlainString());
 	}
 

@@ -11,6 +11,8 @@ public class WealthNumber {
 
 	private final BigDecimal number;
 
+	public final static WealthNumber ZERO = new WealthNumber("0");
+
 	public WealthNumber(String number) {
 		this.number = new BigDecimal(number)
 				.setScale(2, RoundingMode.HALF_EVEN);
@@ -20,9 +22,16 @@ public class WealthNumber {
 		this(String.valueOf(value));
 	}
 
-	@Override
-	public String toString() {
-		return number.toPlainString();
+	public WealthNumber divide(WealthNumber valueOf) {
+		var newNumber = this.number
+				.divide(valueOf.number, RoundingMode.HALF_EVEN)
+				.setScale(2, RoundingMode.HALF_EVEN);
+		return new WealthNumber(newNumber.toPlainString());
+	}
+
+	public WealthNumber add(WealthNumber number) {
+		var newNumber = this.number.add(number.number);
+		return new WealthNumber(newNumber.toPlainString());
 	}
 
 	@Override
@@ -38,15 +47,8 @@ public class WealthNumber {
 		return Objects.hash(number);
 	}
 
-	public WealthNumber add(WealthNumber number) {
-		var newNumber = this.number.add(number.number);
-		return new WealthNumber(newNumber.toPlainString());
-	}
-
-	public WealthNumber divide(WealthNumber valueOf) {
-		var newNumber = this.number
-				.divide(valueOf.number, RoundingMode.HALF_EVEN)
-				.setScale(2, RoundingMode.HALF_EVEN);
-		return new WealthNumber(newNumber.toPlainString());
+	@Override
+	public String toString() {
+		return number.toPlainString();
 	}
 }

@@ -1,4 +1,4 @@
-package com.wealthy.machine.bovespa.type;
+package com.wealthy.machine.bovespa.quote.type;
 
 import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.core.util.number.WealthNumber;

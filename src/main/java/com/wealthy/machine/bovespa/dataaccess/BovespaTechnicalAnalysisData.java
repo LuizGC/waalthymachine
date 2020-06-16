@@ -7,13 +7,13 @@ import com.wealthy.machine.bovespa.quote.type.ValueType;
 import com.wealthy.machine.bovespa.sharecode.BovespaShareCode;
 import com.wealthy.machine.core.quote.DailyQuote;
 import com.wealthy.machine.core.technicalanlysis.AvailableTechnicalAnalysis;
+import com.wealthy.machine.core.util.collection.ComparatorListAdapter;
+import com.wealthy.machine.core.util.collection.LimitedQueue;
 import com.wealthy.machine.core.util.data.JsonDataFileHandler;
 import com.wealthy.machine.core.util.number.WealthNumber;
-import com.wealthy.machine.core.util.technicalanlysis.LimitedQueue;
 import com.wealthy.machine.core.util.technicalanlysis.PrimeNumberFinder;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class BovespaTechnicalAnalysisData {
 			var module = new SimpleModule();
 			module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
 			var list = dataFileHandler.list(shareCode.getCode(), BovespaDailyQuote.class, module);
-			var matrix = new ArrayList<List<WealthNumber>>();
+			var matrix = new ArrayList<ComparatorListAdapter<WealthNumber>>();
 			for (var dailyQuote : list) {
 				queue.add(dailyQuote);
 				if (queue.isCompletelyFilled()) {
@@ -54,7 +54,7 @@ public class BovespaTechnicalAnalysisData {
 							}
 						}
 					}
-					matrix.add(line);
+					matrix.add(new ComparatorListAdapter<>(line, matrix.size()));
 				}
 			}
 			var hasAnalysisFile = matrix.size() > totalDaysToProcess;

@@ -1,4 +1,4 @@
-package com.wealthy.machine.core.util.technicalanlysis;
+package com.wealthy.machine.core.util.collection;
 
 import java.util.Collections;
 import java.util.LinkedList;

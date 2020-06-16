@@ -58,12 +58,16 @@ class JsonDataFileHandlerTest {
 		var key = "save_PassingModule_ShouldUsingSerializer";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
-		var serializer = (JsonSerializer<String>) mock(JsonSerializer.class);
+		var serializer = getJsonSerializerMock();
 		var module = new SimpleModule();
 		module.addSerializer(String.class, serializer);
 		jsonDataFile.append(key, Set.of("b", "c", "a"), String.class, module);
 		verify(serializer, times(3))
 				.serialize(anyString(), any(JsonGenerator.class), any(SerializerProvider.class));
+	}
+
+	private JsonSerializer<String> getJsonSerializerMock() {
+		return (JsonSerializer<String>) mock(JsonSerializer.class);
 	}
 
 	@Test
@@ -96,14 +100,12 @@ class JsonDataFileHandlerTest {
 		var key = "save_EmptyFile_ShouldReturnEmptyList";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
-		var serializer = (JsonSerializer<String>) mock(JsonSerializer.class);
+		var serializer = getJsonSerializerMock();
 		doThrow(new IOException()).when(serializer)
 				.serialize(anyString(), any(JsonGenerator.class), any(SerializerProvider.class));
 		var module = new SimpleModule();
 		module.addSerializer(String.class, serializer);
-		assertThrows(RuntimeException.class, () -> {
-			jsonDataFile.append(key, Set.of("b", "c", "a"), String.class, module);
-		});
+		assertThrows(RuntimeException.class, () -> jsonDataFile.append(key, Set.of("b", "c", "a"), String.class, module));
 	}
 
 	@Test
@@ -122,12 +124,11 @@ class JsonDataFileHandlerTest {
 		var key = "override_TwoDifferentSave_ShouldOverrideData";
 		var testFile = Files.createTempFile(key, ".json");
 		when(this.fileGetter.getFile(key)).thenReturn(testFile.toFile());
-		jsonDataFile.override(key, Set.of("b", "c", "a"), null);
+		jsonDataFile.override(key, Set.of("b", "c", "a"));
 		jsonDataFile.override(key, Set.of("x", "t", "r"), null);
 		var expectedResult = "[\"r\",\"t\",\"x\"]";
 		var fileText = Files.readString(testFile);
 		assertEquals(expectedResult, fileText);
-
 	}
 
 }

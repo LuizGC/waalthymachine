@@ -1,4 +1,4 @@
-package com.wealthy.machine.core.util.technicalanlysis;
+package com.wealthy.machine.core.util.collection;
 
 import org.junit.jupiter.api.Test;
 

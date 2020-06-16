@@ -1,12 +1,11 @@
 package com.wealthy.machine.core.util.number;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-@JsonSerialize(using = WealthNumberSerializer.class)
 public class WealthNumber {
 
 	private final BigDecimal number;
@@ -61,5 +60,10 @@ public class WealthNumber {
 	@Override
 	public String toString() {
 		return number.toPlainString();
+	}
+
+	@JsonValue
+	public BigDecimal serializedValue() {
+		return number;
 	}
 }

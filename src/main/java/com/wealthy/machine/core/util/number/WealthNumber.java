@@ -63,7 +63,7 @@ public class WealthNumber {
 	}
 
 	@JsonValue
-	public BigDecimal serializedValue() {
-		return number;
+	public double doubleValue() {
+		return number.doubleValue();
 	}
 }

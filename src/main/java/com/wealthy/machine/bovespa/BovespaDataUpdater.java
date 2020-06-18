@@ -36,7 +36,7 @@ public class BovespaDataUpdater implements DataUpdater {
 		urlDataAccess.save(urlsDownloaded);
 		var downloadedShareCodes = dailyQuoteDataAccess
 				.listDownloadedShareCode()
-				.parallelStream()
+				.stream()
 				.filter(technicalAnalysisData::createAnalysisFile)
 				.collect(Collectors.toUnmodifiableSet());
 		shareCodeDataAccess.save(downloadedShareCodes);

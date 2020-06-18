@@ -25,6 +25,6 @@ class ComparatorListAdapterTest {
 		list.add(new ComparatorListAdapter<>(List.of(new WealthNumber("50"), new WealthNumber("12")), 2));
 		jsonFileHandler.override(key, list);
 		var fileText = Files.readString(fileGetter.getFile(key).toPath());
-		assertEquals("[[30.00,28.00],[50.00,12.00]]", fileText);
+		assertEquals("[[30.0,28.0],[50.0,12.0]]", fileText);
 	}
 }

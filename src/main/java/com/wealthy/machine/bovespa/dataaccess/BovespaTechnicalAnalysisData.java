@@ -20,14 +20,11 @@ import java.util.stream.Collectors;
 
 public class BovespaTechnicalAnalysisData {
 
-	private final int totalDaysToProcess;
 	private final SortedSet<Integer> primeNumbers;
-	private final LimitedQueue<DailyQuote> queue;
 	private final JsonDataFileHandler dataFileHandler;
 	private final int minimumAnalysed;
 
 	public BovespaTechnicalAnalysisData(int totalDaysToProcess, int minimumAnalysed, JsonDataFileHandler dataFileHandler, PrimeNumberFinder primeNumberFinder) {
-		this.totalDaysToProcess = totalDaysToProcess;
 		this.minimumAnalysed = minimumAnalysed;
 		this.dataFileHandler = dataFileHandler;
 		this.primeNumbers = primeNumberFinder
@@ -35,32 +32,32 @@ public class BovespaTechnicalAnalysisData {
 				.stream()
 				.skip(4)
 				.collect(Collectors.toCollection(TreeSet::new));
-		this.queue = new LimitedQueue<>(primeNumbers.last());
 	}
 
 	public boolean createAnalysisFile(BovespaShareCode shareCode) {
 		try {
+			var queue = new LimitedQueue<DailyQuote>(primeNumbers.last());
 			var module = new SimpleModule();
 			module.addDeserializer(BovespaDailyQuote.class, new BovespaDailyQuoteDeserializer(shareCode));
 			var list = dataFileHandler.list(shareCode.getCode(), BovespaDailyQuote.class, module);
-			var matrix = new ArrayList<ComparatorListAdapter<WealthNumber>>();
-			for (var dailyQuote : list) {
-				queue.add(dailyQuote);
-				if (queue.isCompletelyFilled()) {
-					var line = new ArrayList<WealthNumber>();
-					for (var valueType : ValueType.values()) {
-						line.add(valueType.getValue(dailyQuote));
-						for (var primeNumber : primeNumbers) {
-							for (var analysis : AvailableTechnicalAnalysis.values()) {
-								line.add(analysis.calculate(valueType, queue.sublist(primeNumber)));
+			var hasAnalysisFile = list.size() > minimumAnalysed;
+			if (hasAnalysisFile) {
+				var matrix = new ArrayList<ComparatorListAdapter<WealthNumber>>();
+				for (var dailyQuote : list) {
+					queue.add(dailyQuote);
+					if (queue.isCompletelyFilled()) {
+						var line = new ArrayList<WealthNumber>();
+						for (var valueType : ValueType.values()) {
+							line.add(valueType.getValue(dailyQuote));
+							for (var primeNumber : primeNumbers) {
+								for (var analysis : AvailableTechnicalAnalysis.values()) {
+									line.add(analysis.calculate(valueType, queue.sublist(primeNumber)));
+								}
 							}
 						}
+						matrix.add(new ComparatorListAdapter<>(line, matrix.size()));
 					}
-					matrix.add(new ComparatorListAdapter<>(line, matrix.size()));
 				}
-			}
-			var hasAnalysisFile = matrix.size() > minimumAnalysed;
-			if (hasAnalysisFile) {
 				dataFileHandler.override(shareCode.getCode() + "_ANALYSIS", matrix);
 			}
 			return hasAnalysisFile;

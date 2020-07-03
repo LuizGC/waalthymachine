@@ -25,7 +25,7 @@ public class BovespaDataUpdater implements DataUpdater {
 		var technicalAnalysisData = new BovespaTechnicalAnalysisData(config.getTotalAnalysisDays(), config.getMinimumAnalysed(), jsonDataFile, new EratosthenesSieve());
 		var urlsDownloaded = urlDataAccess
 				.listMissingUrl()
-				.stream()
+				.parallelStream()
 				.peek(url -> {
 					logger.info("Starting download url={}", url);
 					var dataSet = dataSeeker.read(url);
@@ -36,9 +36,15 @@ public class BovespaDataUpdater implements DataUpdater {
 		urlDataAccess.save(urlsDownloaded);
 		var downloadedShareCodes = dailyQuoteDataAccess
 				.listDownloadedShareCode()
-				.stream()
-				.filter(technicalAnalysisData::createAnalysisFile)
-				.collect(Collectors.toUnmodifiableSet());
+				.parallelStream()
+				.filter((quote) -> {
+					logger.info("Processing Analysis File {}", quote.getCode());
+					var analysisFileIsCreated = technicalAnalysisData.createAnalysisFile(quote);
+					if (analysisFileIsCreated) {
+						logger.info("Analysis File {} created.", quote.getCode());
+					}
+					return analysisFileIsCreated;
+				}).collect(Collectors.toUnmodifiableSet());
 		shareCodeDataAccess.save(downloadedShareCodes);
 	}
 

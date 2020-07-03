@@ -22,7 +22,7 @@ public class BovespaDataUpdater implements DataUpdater {
 		var dailyQuoteDataAccess = new BovespaDailyQuoteDataAccess(jsonDataFile);
 		var shareCodeDataAccess = new BovespaShareCodeDataAccess(jsonDataFile);
 		var urlDataAccess = new BovespaUrlDataAccess(jsonDataFile, config.getInitialYear(), config.getDataPath());
-		var technicalAnalysisData = new BovespaTechnicalAnalysisData(config.getTotalAnalysisDays(), jsonDataFile, new EratosthenesSieve());
+		var technicalAnalysisData = new BovespaTechnicalAnalysisData(config.getTotalAnalysisDays(), config.getMinimumAnalysed(), jsonDataFile, new EratosthenesSieve());
 		var urlsDownloaded = urlDataAccess
 				.listMissingUrl()
 				.stream()

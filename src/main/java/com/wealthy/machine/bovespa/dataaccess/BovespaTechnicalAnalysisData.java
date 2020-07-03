@@ -24,9 +24,11 @@ public class BovespaTechnicalAnalysisData {
 	private final SortedSet<Integer> primeNumbers;
 	private final LimitedQueue<DailyQuote> queue;
 	private final JsonDataFileHandler dataFileHandler;
+	private final int minimumAnalysed;
 
-	public BovespaTechnicalAnalysisData(int totalDaysToProcess, JsonDataFileHandler dataFileHandler, PrimeNumberFinder primeNumberFinder) {
+	public BovespaTechnicalAnalysisData(int totalDaysToProcess, int minimumAnalysed, JsonDataFileHandler dataFileHandler, PrimeNumberFinder primeNumberFinder) {
 		this.totalDaysToProcess = totalDaysToProcess;
+		this.minimumAnalysed = minimumAnalysed;
 		this.dataFileHandler = dataFileHandler;
 		this.primeNumbers = primeNumberFinder
 				.findPrimeNumber(totalDaysToProcess)
@@ -57,7 +59,7 @@ public class BovespaTechnicalAnalysisData {
 					matrix.add(new ComparatorListAdapter<>(line, matrix.size()));
 				}
 			}
-			var hasAnalysisFile = matrix.size() > totalDaysToProcess;
+			var hasAnalysisFile = matrix.size() > minimumAnalysed;
 			if (hasAnalysisFile) {
 				dataFileHandler.override(shareCode.getCode() + "_ANALYSIS", matrix);
 			}

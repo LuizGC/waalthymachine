@@ -11,6 +11,7 @@ public class Config {
 	private static final String DEFAULT_BOVESPA_URL;
 	private static final String INITIAL_YEAR;
 	private static final String TOTAL_ANALYSIS_DAYS;
+	private static final String MINIMUM_ANALYSED;
 
 	static {
 		var appProps = new Properties();
@@ -24,6 +25,7 @@ public class Config {
 			DEFAULT_BOVESPA_URL = appProps.getProperty("bovespaUrl", "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{{YYYY}}.ZIP");
 			INITIAL_YEAR = appProps.getProperty("initialYear", "2000");
 			TOTAL_ANALYSIS_DAYS = appProps.getProperty("totalAnalysisDays", "80");
+			MINIMUM_ANALYSED = appProps.getProperty("minimumAnalysed", "500");
 		} catch (IOException e) {
 			var logger = LoggerFactory.getLogger(Config.class);
 			logger.error("Error during loading properties", e);
@@ -48,5 +50,9 @@ public class Config {
 
 	public int getTotalAnalysisDays() {
 		return Integer.parseInt(TOTAL_ANALYSIS_DAYS);
+	}
+
+	public Integer getMinimumAnalysed() {
+		return Integer.parseInt(MINIMUM_ANALYSED);
 	}
 }

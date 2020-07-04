@@ -42,7 +42,7 @@ public class BovespaDataSeeker {
 				var bos = new ByteArrayOutputStream();
 				var out = Channels.newChannel(bos)
 		){
-			var bb = ByteBuffer.allocate(2048);
+			var bb = ByteBuffer.allocate(4096);
 			while ((readableByteChannel.read(bb)) > 0) {
 				bb.flip();
 				out.write(bb);

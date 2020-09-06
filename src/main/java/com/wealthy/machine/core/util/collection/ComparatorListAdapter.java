@@ -16,7 +16,7 @@ public class ComparatorListAdapter<T> implements Comparable<ComparatorListAdapte
 	}
 
 	@Override
-	public int compareTo(ComparatorListAdapter otherPosition) {
+	public int compareTo(ComparatorListAdapter<T> otherPosition) {
 		return this.position.compareTo(otherPosition.position);
 	}
 
